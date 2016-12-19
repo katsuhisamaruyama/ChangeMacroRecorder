@@ -6,7 +6,6 @@
 
 package org.jtool.macrorecorder.internal.recorder;
 
-import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
@@ -22,7 +21,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.text.undo.DocumentUndoManagerRegistry;
 import org.eclipse.text.undo.IDocumentUndoManager;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
@@ -207,7 +205,6 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      */
     @Override
     void recordDocumentMacro(DocumentMacro macro) {
-        // setCutPasteMacro(macro);
         recorder.recordRawMacro(macro);
         
         if (macro.isCut() || macro.isPaste()) {
@@ -226,29 +223,6 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
             
         } else {
             dumpMacro(macro);
-        }
-    }
-    
-    /**
-     * Tests if a macro indicates the cut or paste and sets its type according to its result.
-     * @param macro a macro that might be a cut or paste one
-     */
-    @SuppressWarnings("unused")
-    private void setCutPasteMacro(DocumentMacro macro) {
-        if (recorder.getLastRawMacro() == null) {
-            return;
-        }
-        
-        Macro lastMacro = recorder.getLastRawMacro();
-        
-        if (lastMacro instanceof CommandMacro) {
-            CommandMacro emacro = (CommandMacro)lastMacro;
-            
-            if (emacro.getCommandId().equals(IWorkbenchCommandConstants.EDIT_CUT)) {
-                macro.setAction(DocumentMacro.Action.CUT.toString());
-            } else if (emacro.getCommandId().equals(IWorkbenchCommandConstants.EDIT_PASTE)) {
-                macro.setAction(DocumentMacro.Action.PASTE.toString());
-            }
         }
     }
     

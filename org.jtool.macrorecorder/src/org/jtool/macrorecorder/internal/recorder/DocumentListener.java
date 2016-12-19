@@ -40,16 +40,14 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
     private String deletedText;
     
     /**
-     * The kinds of a macro.
+     * A flag that indicates if an undo action currently progressed.
      */
-    private enum InProgress {
-        UNDO, REDO, NONE;
-    }
+    private boolean undoInprogress = false;
     
     /**
-     * An instance that indicates a macro currently progressed.
+     * A flag that indicates if an redo action currently progressed.
      */
-    private InProgress inprogress;
+    private boolean redoInprogress = false;
     
     /**
      * Creates an object that records document events.
@@ -76,7 +74,14 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
                 return;
             }
         }
-        
+    }
+    
+    /**
+     * Receives a document event has been performed.
+     * @param event the document event describing the document change
+     */
+    @Override
+    public void documentChanged(DocumentEvent event) {
         if (insertedText.length() == 0 && deletedText.length() == 0) {
             return;
         }
@@ -84,7 +89,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         String path = docRecorder.getPath();
         String branch = docRecorder.getGlobalMacroRecorder().getBranch(path);
         
-        if (inprogress == InProgress.UNDO) {
+        if (undoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.UNDO,
                                           path, branch, event.getOffset(), insertedText, deletedText);
@@ -96,7 +101,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
                 docRecorder.recordDocumentMacro(macro);
             }
             
-        } else if (inprogress == InProgress.REDO) {
+        } else if (redoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.REDO,
                                           path, branch, event.getOffset(), insertedText, deletedText);
@@ -125,14 +130,6 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
     }
     
     /**
-     * Receives a document event has been performed.
-     * @param event the document event describing the document change
-     */
-    @Override
-    public void documentChanged(DocumentEvent event) {
-    }
-    
-    /**
      * Receives a document undo event when the document is involved in an undo-related change.
      * @param event the document undo event describing the particular notification
      */
@@ -151,28 +148,28 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, path, branch, TriggerMacro.Timing.BEGIN);
                 docRecorder.recordMacro(tmacro);
             }
-            inprogress = InProgress.UNDO;
+            undoInprogress = true;
             
         } else if (eventType == DocumentUndoEvent.ABOUT_TO_REDO) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, path, branch, TriggerMacro.Timing.BEGIN);
                 docRecorder.recordMacro(tmacro);
             }
-            inprogress = InProgress.REDO;
+            redoInprogress = true;
             
         } else if (eventType == DocumentUndoEvent.UNDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, path, branch, TriggerMacro.Timing.END);
                 docRecorder.recordMacro(tmacro);
             }
-            inprogress = InProgress.NONE;
+            undoInprogress = false;
             
         } else if (eventType == DocumentUndoEvent.REDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, path, branch, TriggerMacro.Timing.END);
                 docRecorder.recordMacro(tmacro);
             }
-            inprogress = InProgress.NONE;
+            redoInprogress = false;
         }
     }
     
