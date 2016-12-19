@@ -113,8 +113,6 @@ public class MacroRecorder implements IMacroRecorder {
      * @param macro the raw macro sent to the listeners
      */
     public void notifyRawMacro(Macro macro) {
-        
-        
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);
         for (IMacroListener listener : macroListeners) {
             listener.rawMacroAdded(evt);
