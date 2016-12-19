@@ -29,6 +29,11 @@ class CommandListener implements IExecutionListener {
     private GlobalMacroRecorder globalRecorder;
     
     /**
+     * A trigger macro that represents an executed refactoring.
+     */
+    private TriggerMacro refactoringBeginMacro;
+    
+    /**
      * Creates an object that records command execution events.
      * @param recorder a recorder that records global macros
      */
@@ -79,23 +84,7 @@ class CommandListener implements IExecutionListener {
             docRecorder.applyDiff(false);
         }
         
-        try {
-            String id = event.getCommand().getCategory().getId();
-            if (id.endsWith("category.refactoring")) {
-                if (path != null) {
-                    globalRecorder.setPathToBeRefactored(path);
-                    globalRecorder.setSelectedPath(null);
-                }
-                
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                                          path, branch, TriggerMacro.Timing.BEGIN, commandId);
-                
-                if (docRecorder != null) {
-                    docRecorder.recordMacro(tmacro);
-                }
-            }
-        } catch (NotDefinedException e) {
-        }
+        beginRefactoring(commandId, event, path, branch);
         
         setInProgressAction(commandId, true);
     }
@@ -107,6 +96,8 @@ class CommandListener implements IExecutionListener {
      */
     @Override
     public void postExecuteSuccess(String commandId, Object returnValue) {
+        endRefactoring(commandId);
+        
         setInProgressAction(commandId, false);
     }
     
@@ -117,6 +108,8 @@ class CommandListener implements IExecutionListener {
      */
     @Override
     public void postExecuteFailure(String commandId, ExecutionException exception) {
+        endRefactoring(commandId);
+        
         setInProgressAction(commandId, false);
     }
     
@@ -136,6 +129,57 @@ class CommandListener implements IExecutionListener {
                    commandId.equalsIgnoreCase(IWorkbenchCommandConstants.FILE_SAVE_ALL)) {
             globalRecorder.setSaveInProgress(true);
         }
+    }
+    
+    /**
+     * Records a trigger macro when this command macro represents a refactoring.
+     * @param commandId the identifier of the command that is about to execute
+     * @param event the event that will be passed to the <code>execute</code> method
+     * @param path the path of a file or a package on which this macro was performed
+     * @param branch the branch name of a file or a package on which this macro was performed
+     */
+    private void beginRefactoring(String commandId, ExecutionEvent event, String path, String branch) {
+        refactoringBeginMacro = null;
+        
+        try {
+            String id = event.getCommand().getCategory().getId();
+            if (id.endsWith("category.refactoring")) {
+                if (path != null) {
+                    globalRecorder.setPathToBeRefactored(path);
+                    globalRecorder.setSelectedPath(null);
+                }
+                
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
+                                          path, branch, TriggerMacro.Timing.BEGIN, commandId);
+                DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
+                if (docRecorder != null) {
+                    docRecorder.recordMacro(tmacro);
+                    refactoringBeginMacro = tmacro;
+                }
+            }
+        } catch (NotDefinedException e) {
+        }
+    }
+    
+    /**
+     * Records a trigger macro that represents the end of the executed refactoring.
+     * @param commandId the identifier of the command that has executed
+     */
+    private void endRefactoring(String commandId) {
+        if (refactoringBeginMacro != null) {
+            String path = refactoringBeginMacro.getPath();
+            String branch = refactoringBeginMacro.getBranch();
+            
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
+                                      path, branch, TriggerMacro.Timing.END, commandId);
+            DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
+            if (docRecorder != null) {
+                docRecorder.recordMacro(tmacro);
+                globalRecorder.setPathToBeRefactored(null);
+            }
+        }
+        
+        refactoringBeginMacro = null;
     }
     
     /**
