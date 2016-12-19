@@ -275,6 +275,12 @@ class GlobalMacroRecorder {
      * @param macro the macro to be recorded
      */
     void recordMacro(Macro macro) {
+        String path = macro.getPath();
+        DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
+        if (docRecorder != null) {
+            docRecorder.dumpLastDocumentMacro();
+        }
+        
         recorder.recordRawMacro(macro);
         recorder.recordMacro(macro);
     }
@@ -284,14 +290,17 @@ class GlobalMacroRecorder {
      * @param macro the resource macro to be recorded
      */
     void recordMacro(CommandMacro macro) {
+        String path = macro.getPath();
+        DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
+        if (docRecorder != null) {
+            docRecorder.dumpLastDocumentMacro();
+        }
+        
         recorder.recordRawMacro(macro);
         recorder.recordMacro(macro);
         
         if (macro.getCommandId().equals(IWorkbenchCommandConstants.EDIT_COPY) ||
             macro.getCommandId().equals("org.eclipse.jdt.ui.edit.text.java.copy.qualified.name")) {
-            
-            String path = macro.getPath();
-            DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
             if (docRecorder != null) {
                 docRecorder.recordCopyMacro(macro);
             }
