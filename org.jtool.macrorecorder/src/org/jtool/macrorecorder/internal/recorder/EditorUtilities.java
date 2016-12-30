@@ -207,7 +207,7 @@ class EditorUtilities {
      */
     static IDocument getDocument(IEditorPart editor) {
         IFile file = getInputFile(editor);
-        if (file != null) {
+        if (file == null) {
             return null;
         }
         return getDocument(file);
