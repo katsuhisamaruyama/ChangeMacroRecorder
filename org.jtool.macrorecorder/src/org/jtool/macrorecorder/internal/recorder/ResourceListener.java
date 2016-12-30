@@ -420,7 +420,7 @@ class ResourceListener implements IResourceChangeListener {
             }
         } catch (CoreException e) {
         }
-        return null;
+        return "";
     }
     
     /**
