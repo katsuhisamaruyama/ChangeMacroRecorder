@@ -133,7 +133,6 @@ class EditorUtilities {
      */
     static ContentAssistantFacade getContentAssistantFacade(IEditorPart editor) {
         ISourceViewerExtension4 viewer = EditorUtilities.getSourceViewerExtension4(editor);
-        
         if (viewer != null) {
             return viewer.getContentAssistantFacade();
         }
@@ -146,6 +145,10 @@ class EditorUtilities {
      * @return the file existing on the editor, or <code>null</code> if none
      */
     static IFile getInputFile(IEditorPart editor) {
+        if (editor == null) {
+            return null;
+        }
+        
         IEditorInput input = editor.getEditorInput();
         if (input instanceof IFileEditorInput) {
             IFile file = ((IFileEditorInput)input).getFile();
@@ -170,10 +173,10 @@ class EditorUtilities {
      * @return the path of the file, which is relative to the path of the workspace
      */
     static String getInputFilePath(IFile file) {
-        if (file != null) {
-            return file.getFullPath().toString();
+        if (file == null) {
+            return null;
         }
-        return null;
+        return file.getFullPath().toString();
     }
     
     /**
@@ -205,9 +208,9 @@ class EditorUtilities {
     static IDocument getDocument(IEditorPart editor) {
         IFile file = getInputFile(editor);
         if (file != null) {
-            return getDocument(file);
+            return null;
         }
-        return null;
+        return getDocument(file);
     }
     
     /**
@@ -217,10 +220,10 @@ class EditorUtilities {
      */
     static String getSourceCode(IEditorPart editor) {
         IDocument doc = getDocument(editor);
-        if (doc != null) {
-            return doc.get();
+        if (doc == null) {
+            return null;
         }
-        return null;
+        return doc.get();
     }
     
     /**
