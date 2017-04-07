@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -49,7 +49,7 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Returns the compressor that compresses macros.
+     * Returns the compressor that compresses change macros.
      * @return the macro compressor
      */
     public IMacroCompressor getMacroCompressor() {
@@ -57,7 +57,7 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Sets a compressor that compresses macros.
+     * Sets a compressor that compresses change macros.
      * @param compressor the compressor
      */
     public void setMacroCompressor(IMacroCompressor compressor) {
@@ -66,21 +66,21 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Starts the recording of document macros performed on an editor.
+     * Starts the recording of change macros.
      */
     public void start() {
         internalRecorder.start();
     }
     
     /**
-     * Stops the recording of menu and document macros.
+     * Stops the recording of change macros.
      */
     public void stop() {
         internalRecorder.stop();
     }
     
     /**
-     * Adds a listener that receives a macro event.
+     * Adds a listener that receives a change macro event.
      * @param listener the event listener to be added
      */
     public void addMacroListener(IMacroListener listener) {
@@ -89,7 +89,7 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Removes a listener that receives a macro event.
+     * Removes a listener that receives a change macro event.
      * @param listener the event listener to be removed
      */
     public void removeMacroListener(IMacroListener listener) {
@@ -98,8 +98,8 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Sends a macro event to all the listeners.
-     * @param macro the macro sent to the listeners
+     * Sends a change macro event to all the listeners.
+     * @param macro the change macro sent to the listeners
      */
     public void notifyMacro(Macro macro) {
         MacroEvent evt = new MacroEvent(MacroEvent.Type.GENERIC_MACRO, macro);
@@ -109,8 +109,8 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Sends a raw macro event to all the listeners.
-     * @param macro the raw macro sent to the listeners
+     * Sends a raw change macro event to all the listeners.
+     * @param macro the raw change macro sent to the listeners
      */
     public void notifyRawMacro(Macro macro) {
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);

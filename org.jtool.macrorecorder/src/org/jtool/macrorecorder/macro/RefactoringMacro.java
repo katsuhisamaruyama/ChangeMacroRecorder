@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -9,7 +9,7 @@ package org.jtool.macrorecorder.macro;
 import java.util.Map;
 
 /**
- * Stores a refactpring macro.
+ * Stores a refactoring macro.
  * @author Katsuhisa Maruyama
  */
 public class RefactoringMacro extends Macro {

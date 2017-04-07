@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -9,7 +9,7 @@ package org.jtool.macrorecorder.recorder;
 import org.jtool.macrorecorder.macro.Macro;
 
 /**
- * Manages an event containing a macro.
+ * Manages an event containing a change macro.
  * @author Katsuhisa Maruyama
  */
 public class MacroEvent {
@@ -22,19 +22,19 @@ public class MacroEvent {
     }
     
     /**
-     * A macro sent to listeners.
+     * A change macro sent to listeners.
      */
     private Macro macro;
     
     /**
-     * The type of a macro sent to listeners.
+     * The type of a change macro sent to listeners.
      */
     private Type type;
     
     /**
-     * Creates an object containing a macro.
-     * @param type the type of the macro
-     * @param macro the macro
+     * Creates an object containing a change macro.
+     * @param type the type of the change macro
+     * @param macro the change macro
      */
     public MacroEvent(Type type, Macro macro) {
         assert type != null;
@@ -52,8 +52,8 @@ public class MacroEvent {
     }
     
     /**
-     * Returns the macro of an event that listeners receive.
-     * @return the macro contained in the received event
+     * Returns the change macro of an event that listeners receive.
+     * @return the change macro contained in the received event
      */
     public Macro getMacro() {
         return macro;
