@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -42,7 +42,7 @@ public class GitMacro extends Macro {
     private Set<String> filesRemoved;
     
     /**
-     * Creates an object storing information on an resource change macro.
+     * Creates an object storing information about an resource change macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
@@ -50,7 +50,7 @@ public class GitMacro extends Macro {
      * @param afiles files added to the index
      * @param rfiles files removed from the index
      */
-    public GitMacro(Action action, String path, String branch, Set<String> mfiles, Set<String> afiles, Set<String> rfiles) {
+    public GitMacro(Action action, MacroPath path, String branch, Set<String> mfiles, Set<String> afiles, Set<String> rfiles) {
         super(action.toString(), path, branch);
         this.branch = branch;
         this.filesModified = mfiles;

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -8,6 +8,7 @@ package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.FileMacro;
 import org.jtool.macrorecorder.macro.GitMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.events.IndexChangedListener;
@@ -95,15 +96,15 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
         
         String branch = macro.getBranch();
         for (String fname : macro.getAddedFiles()) {
-            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_ADDED, fname, branch, "", "UTF-8");
+            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_ADDED, new MacroPath(fname), branch, "", "UTF-8");
             globalRecorder.recordMacro(fmacro);
         }
         for (String fname : macro.getRemovedFiles()) {
-            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_REMOVED, fname, branch, "", "UTF-8");
+            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_REMOVED, new MacroPath(fname), branch, "", "UTF-8");
             globalRecorder.recordMacro(fmacro);
         }
         for (String fname : macro.getAddedFiles()) {
-            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_MODIFIED, fname, branch, "", "UTF-8");
+            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_MODIFIED, new MacroPath(fname), branch, "", "UTF-8");
             globalRecorder.recordMacro(fmacro);
         }
     }
@@ -138,7 +139,7 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
             String gitPath = git.getRepository().getDirectory().getAbsolutePath();
             String repoPath = removeLastPathElement(gitPath);
             
-            return new GitMacro(action, repoPath, branch,
+            return new GitMacro(action, new MacroPath(repoPath), branch,
                        status.getModified(), status.getAdded(), status.getRemoved());
         } catch (IOException e) {
         } catch (NoWorkTreeException e) {

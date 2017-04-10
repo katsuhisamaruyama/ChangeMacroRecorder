@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -25,13 +25,13 @@ public class CodeCompletionMacro extends Macro {
     private String name;
     
     /**
-     * Creates an object storing information on a code completion macro.
+     * Creates an object storing information about a code completion macro.
      * @param action the action of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
      * @param name the name of a code assistance class
      */
-    public CodeCompletionMacro(Action action, String path, String branch, String name) {
+    public CodeCompletionMacro(Action action, MacroPath path, String branch, String name) {
         super(action.toString(), path, branch);
         this.name = name;
     }

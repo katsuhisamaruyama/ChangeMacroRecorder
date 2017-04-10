@@ -27,7 +27,9 @@ Eclipse 4.6 (Neon) or later
 
 ## Install
 
-Download the latest release of a jar file and put it in the 'plugins' directory under the Eclipse installation. Eclipse needs to be  restarted.
+Download the latest release of the jar file in the directory
+<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/plugins>
+and put it in the 'plugins' directory under the Eclipse installation. Eclipse needs to be  restarted.
 
 ## Usage
 

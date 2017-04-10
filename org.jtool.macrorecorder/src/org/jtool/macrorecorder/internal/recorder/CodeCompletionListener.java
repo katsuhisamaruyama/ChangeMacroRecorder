@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionListener;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -52,7 +53,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_BEGIN;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, new MacroPath(path), branch, commandId);
         docRecorder.recordCodeCompletionMacro(cmacro);
     }
     
@@ -76,7 +77,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_END;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, new MacroPath(path), branch, commandId);
         docRecorder.recordCodeCompletionMacro(cmacro);
     }
     

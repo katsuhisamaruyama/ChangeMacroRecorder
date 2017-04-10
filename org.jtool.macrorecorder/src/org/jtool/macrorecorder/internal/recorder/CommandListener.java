@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -8,6 +8,7 @@ package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -76,7 +77,7 @@ class CommandListener implements IExecutionListener {
         }
         String branch = globalRecorder.getBranch(path);
         
-        CommandMacro macro = new CommandMacro(CommandMacro.Action.EXEC, path, branch, commandId);
+        CommandMacro macro = new CommandMacro(CommandMacro.Action.EXEC, new MacroPath(path), branch, commandId);
         globalRecorder.recordMacro(macro);
         
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
@@ -150,7 +151,7 @@ class CommandListener implements IExecutionListener {
                 }
                 
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                                          path, branch, TriggerMacro.Timing.BEGIN, commandId);
+                                        new MacroPath(path), branch, TriggerMacro.Timing.BEGIN, commandId);
                 DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
                 if (docRecorder != null) {
                     docRecorder.recordMacro(tmacro);
@@ -171,7 +172,7 @@ class CommandListener implements IExecutionListener {
             String branch = refactoringBeginMacro.getBranch();
             
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                                      path, branch, TriggerMacro.Timing.END, commandId);
+                                    new MacroPath(path), branch, TriggerMacro.Timing.END, commandId);
             DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
             if (docRecorder != null) {
                 docRecorder.recordMacro(tmacro);

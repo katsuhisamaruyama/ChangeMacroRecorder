@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -37,7 +37,7 @@ public class FileMacro extends Macro {
     private String srcDstPath;
     
     /**
-     * Creates an object storing information on a file macro.
+     * Creates an object storing information about a file macro.
      * @param action the type of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
@@ -45,7 +45,7 @@ public class FileMacro extends Macro {
      * @param charset the name of a charset of the file
      * @param sdpath the path of the source or destination of the rename or move
      */
-    public FileMacro(Action action, String path, String branch, String code, String charset, String sdpath) {
+    public FileMacro(Action action, MacroPath path, String branch, String code, String charset, String sdpath) {
         super(action.toString(), path, branch);
         this.code = code;
         this.charset = charset;
@@ -53,15 +53,15 @@ public class FileMacro extends Macro {
     }
     
     /**
-     * Creates an object storing information on a file macro.
+     * Creates an object storing information about a file macro.
      * @param action the type of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
      * @param code the contents of source code of the file
      * @param charset the name of a charset of the file
      */
-    public FileMacro(Action action, String path, String branch, String code, String charset) {
-        this(action, path, branch, code, charset, path);
+    public FileMacro(Action action, MacroPath path, String branch, String code, String charset) {
+        this(action, path, branch, code, charset, path.getPath());
     }
     
     /**

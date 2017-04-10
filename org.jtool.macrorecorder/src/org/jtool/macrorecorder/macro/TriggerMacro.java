@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -37,28 +37,27 @@ public class TriggerMacro extends Macro {
     private String commandId;
     
     /**
-     * Creates an object storing information on a macro.
+     * Creates an object storing information about a trigger macro.
      * @param action the action of this macro
-     * @param path the path of a file or a package on which this macro was performed
-     * @param branch the branch name of a file or a package on which this macro was performed
-     * @param timing the timing of a trigger of the macro
-     * @param commandId the string representing the contents of this macro
+     * @param path the path of a file or a package on which this trigger macro was performed
+     * @param branch the branch name of a file or a package on which this trigger macro was performed
+     * @param timing the timing of a trigger of this trigger macro
+     * @param commandId the string representing this contents of this trigger macro
      */
-    public TriggerMacro(Action action, String path, String branch, Timing timing, String commandId) {
+    public TriggerMacro(Action action, MacroPath path, String branch, Timing timing, String commandId) {
         super(action.toString(), path, branch);
         this.timing = timing;
         this.commandId = commandId;
     }
     
     /**
-     * Creates an object storing information on a macro.
-     * @param action the action of this macro
-     * @param path the path of a file or a package on which this macro was performed
-     * @param branch the branch name of a file or a package on which this macro was performed
-     * @param timing the timing of a trigger of the macro
-
+     * Creates an object storing information about a trigger macro.
+     * @param action the action of this trigger macro
+     * @param path the path of a file or a package on which this trigger macro was performed
+     * @param branch the branch name of a file or a package on which this trigger macro was performed
+     * @param timing the timing of a trigger of this trigger macro
      */
-    public TriggerMacro(Action action, String path, String branch, Timing timing) {
+    public TriggerMacro(Action action, MacroPath path, String branch, Timing timing) {
         this(action, path, branch, timing, "");
     }
     

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -30,14 +30,14 @@ public class CopyMacro extends Macro {
     private String copiedText;
     
     /**
-     * Creates an object storing information on a copy macro.
+     * Creates an object storing information about a copy macro.
      * @param action the action of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
      * @param start the leftmost offset of the document changed by this macro
      * @param text the contents of the document copied by the macro
      */
-    public CopyMacro(Action action, String path, String branch, int start, String text) {
+    public CopyMacro(Action action, MacroPath path, String branch, int start, String text) {
         super(action.toString(), path, branch);
         this.start = start;
         this.copiedText = text;

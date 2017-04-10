@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -37,14 +37,14 @@ public class ResourceMacro extends Macro {
     private String srcDstPath;
     
     /**
-     * Creates an object storing information on an resource change macro.
+     * Creates an object storing information about a resource change macro.
      * @param action the action of this macro
      * @param path the path of the resource on which this macro was performed
      * @param branch the branch name of the resource on which this macro was performed
      * @param target the kind of the target of the resource
      * @param sdpath the path of the source or destination of the resource
      */
-    public ResourceMacro(Action action, String path, String branch, Target target, String sdpath) {
+    public ResourceMacro(Action action, MacroPath path, String branch, Target target, String sdpath) {
         super(action.toString(), path, branch);
         this.target = target;
         this.srcDstPath = sdpath;

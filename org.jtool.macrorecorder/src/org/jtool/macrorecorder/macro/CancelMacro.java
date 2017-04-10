@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -13,7 +13,7 @@ package org.jtool.macrorecorder.macro;
 public class CancelMacro extends DocumentMacro {
     
     /**
-     * Creates an object storing information on a cancel macro.
+     * Creates an object storing information about a cancel macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
@@ -21,7 +21,7 @@ public class CancelMacro extends DocumentMacro {
      * @param itext the contents of the document inserted by the macro
      * @param dtext the contents of the document deleted by the macro
      */
-    public CancelMacro(Action action, String path, String branch, int start, String itext, String dtext) {
+    public CancelMacro(Action action, MacroPath path, String branch, int start, String itext, String dtext) {
         super(action, path, branch, start, itext, dtext);
     }
 }

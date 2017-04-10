@@ -31,7 +31,6 @@ import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.jtool.macrorecorder.Activator;
-
 import java.util.List;
 import java.util.ArrayList;
 

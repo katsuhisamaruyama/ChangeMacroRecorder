@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -27,9 +27,9 @@ public class Macro {
     protected String action;
     
     /**
-     * The path name of a resource on which this macro was performed.
+     * The path of a resource on which this macro was performed.
      */
-    protected String path;
+    protected MacroPath path;
     
     /**
      * The branch name of a resource on which this macro was performed.
@@ -42,31 +42,33 @@ public class Macro {
     protected List<Macro> rawMacros;
     
     /**
-     * Creates an object storing information on a macro.
+     * Creates an object storing information about a macro.
      * @param time the time when this macro was performed
      * @param action the action of this macro
-     * @param path the path name of a resource on which this macro was performed
-     * @param branch the branch name of a resource on which this macro was performed
+     * @param path the path of a resource on which this macro was performed
+     * @param branch the branch of a resource on which this macro was performed
      */
-    public Macro(ZonedDateTime time, String action, String path, String branch) {
+    public Macro(ZonedDateTime time, String action, MacroPath path, String branch) {
         this.time = time;
         this.action = action;
         this.path = path;
         this.branch = branch;
+        
         delay();
     }
     
     /**
-     * Creates an object storing information on a macro.
+     * Creates an object storing information about a macro.
      * @param action the action of this macro
-     * @param path the path name of a resource on which this macro was performed
-     * @param branch the branch name of a resource on which this macro was performed
+     * @param path the path of a resource on which this macro was performed
+     * @param branch the branch of a resource on which this macro was performed
      */
-    public Macro(String action, String path, String branch) {
+    public Macro(String action, MacroPath path, String branch) {
         this.time = ZonedDateTime.now();
         this.action = action;
         this.path = path;
         this.branch = branch;
+        
         delay();
     }
     
@@ -113,16 +115,40 @@ public class Macro {
     }
     
     /**
-     * Returns the path name of a resource on which this macro was performed.
+     * Returns the path of a resource on which this macro was performed.
      * @return the path
      */
-    public String getPath() {
+    public MacroPath getMacroPath() {
         return path;
     }
     
     /**
-     * Returns the branch name of a resource on which this macro was performed.
-     * @return the branch name
+     * Returns the path name of a resource on which this macro was performed.
+     * @return the path name
+     */
+    public String getPath() {
+        return path.getPath();
+    }
+    
+    /**
+     * Returns the name of a project containing a resource on which this macro was performed.
+     * @return the project name
+     */
+    public String getProjectName() {
+        return path.getProjectName();
+    }
+    
+    /**
+     * Returns the path of a source folder containing a resource on which this macro was performed.
+     * @return the path of the source holder
+     */
+    public String getSourcePath() {
+        return path.getSourcePath();
+    }
+    
+    /**
+     * Returns the branch of a resource on which this macro was performed.
+     * @return the branch
      */
     public String getBranch() {
         return branch;
@@ -196,7 +222,7 @@ public class Macro {
     }
     
     /**
-     * Returns the string for printing, which does not contain a new line character at its end.
+     * Returns the string for printing.
      * @return the string for printing
      */
     @Override
@@ -205,7 +231,7 @@ public class Macro {
         buf.append("{" + getClassName() + "} ");
         buf.append(getFormatedTime(time));
         buf.append(" " + action);
-        buf.append(" path=[" + path + "]");
+        buf.append(" path=[" + path.getPath() + "]");
         buf.append(" branch=[" + branch + "]");
         return buf.toString();
     }

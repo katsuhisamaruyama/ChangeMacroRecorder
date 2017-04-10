@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -9,6 +9,7 @@ package org.jtool.macrorecorder.internal.diff;
 import org.jtool.macrorecorder.internal.diff.diff_match_patch.Diff;
 import org.jtool.macrorecorder.internal.diff.diff_match_patch.Operation;
 import org.jtool.macrorecorder.macro.DocumentMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -86,7 +87,7 @@ public class DiffMacroGenerator {
             
             if (action != null) {
                 int start = offset + offsetGap;
-                DiffMacro macro = new DiffMacro(action, path, branch, start, itext, dtext);
+                DiffMacro macro = new DiffMacro(action, new MacroPath(path), branch, start, itext, dtext);
                 macros.add(macro);
                 
                 offsetGap = offsetGap - dtext.length();

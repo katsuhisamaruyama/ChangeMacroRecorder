@@ -32,14 +32,14 @@ public class RefactoringMacro extends Macro {
     private Map<String, String> argumentMap;
     
     /**
-     * Creates an object storing information on a refactpring macro.
+     * Creates an object storing information about a refactpring macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
      * @param name the name of a refactoring
      * @param map the map that stores arguments of a refactoring
      */
-    public RefactoringMacro(Action action, String path, String branch, String name, Map<String, String> map) {
+    public RefactoringMacro(Action action, MacroPath path, String branch, String name, Map<String, String> map) {
         super(action.toString(), path, branch);
         this.name = name;
         this.argumentMap = map;

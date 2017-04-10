@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -9,6 +9,7 @@ package org.jtool.macrorecorder.internal.recorder;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.jtool.macrorecorder.macro.CopyMacro;
 import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -246,7 +247,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
         int offset = styledText.getSelectionRange().x;
         String text = styledText.getSelectionText();
         
-        CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY, macro.getPath(), macro.getBranch(), offset, text);
+        CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY, new MacroPath(macro.getPath()), macro.getBranch(), offset, text);
         recorder.recordRawMacro(cmacro);
         
         dumpMacro(cmacro);
