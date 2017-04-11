@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -8,9 +8,6 @@ package org.jtool.macrorecorder;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -43,8 +40,7 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        
-        System.out.println(PLUGIN_ID + " activated.");
+        // System.out.println(PLUGIN_ID + " activated.");
     }
     
     /**
@@ -56,8 +52,7 @@ public class Activator extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         super.stop(context);
         plugin = null;
-        
-        System.out.println(PLUGIN_ID + " deactivated.");
+        // System.out.println(PLUGIN_ID + " deactivated.");
     }
     
     /**
@@ -66,14 +61,5 @@ public class Activator extends AbstractUIPlugin {
      */
     public static Activator getPlugin() {
         return plugin;
-    }
-    
-    /**
-     * Obtains a progress monitor dialog for the workbench window.
-     * @return the progress monitor dialog
-     */
-    public static ProgressMonitorDialog getProgressMonitorDialog() {
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        return new ProgressMonitorDialog(window.getShell());
     }
 }

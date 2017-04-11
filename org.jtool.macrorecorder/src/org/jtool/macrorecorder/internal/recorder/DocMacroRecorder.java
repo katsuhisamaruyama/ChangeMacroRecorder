@@ -13,6 +13,7 @@ import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.CancelMacro;
 import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
+import org.jtool.macrorecorder.recorder.Message;
 import org.jtool.macrorecorder.internal.diff.DiffMacro;
 import org.jtool.macrorecorder.internal.diff.DiffMacroGenerator;
 import java.util.List;
@@ -238,7 +239,7 @@ class DocMacroRecorder {
     void dumpLastDocumentMacro() {
         if (lastDocumentMacro != null) {
             
-            if (!hasMismatch(preCode, lastDocumentMacro)) {
+            if (!hasInconsistency(preCode, lastDocumentMacro)) {
                 recordMacro(lastDocumentMacro);
                 applyMacro(lastDocumentMacro);
                 
@@ -254,7 +255,7 @@ class DocMacroRecorder {
     void dumpMacro(Macro macro) {
         dumpLastDocumentMacro();
         
-        if (!hasMismatch(preCode, macro)) {
+        if (!hasInconsistency(preCode, macro)) {
             recordMacro(macro);
             applyMacro(macro);
         }
@@ -289,8 +290,8 @@ class DocMacroRecorder {
                     if (suc) {
                         applyMacro(macro);
                     } else {
-                        System.err.println("Cancellation failed: " + cmacro.toString());
-                        System.err.println(compoundMacro.toString());
+                        Message.println("Cancellation failed: " + cmacro.toString());
+                        Message.println(compoundMacro.toString());
                     }
                     
                 } else {
@@ -365,12 +366,12 @@ class DocMacroRecorder {
     }
     
     /**
-     * Tests if the deletion derives any mismatch.
+     * Tests if the deletion derives any inconsistency.
      * @param code the code before the application
      * @param macro the macro to be applied
-     * @return <code>true</code> if a mismatch exists, otherwise <code>false</code>
+     * @return <code>true</code> if a inconsistency exists, otherwise <code>false</code>
      */
-    private boolean hasMismatch(String code, Macro macro) {
+    private boolean hasInconsistency(String code, Macro macro) {
         if (!(macro instanceof DocumentMacro)) {
             return false;
         }
@@ -389,9 +390,9 @@ class DocMacroRecorder {
                 
                 for (int i = 0; i < rtext.length(); i++) {
                     if (rtext.charAt(i) == dtext.charAt(i)) {
-                        System.out.println(((int)rtext.charAt(i)) + " == " + ((int)dtext.charAt(i)));
+                        Message.println("DEBUG:" + ((int)rtext.charAt(i)) + " == " + ((int)dtext.charAt(i)));
                     } else {
-                        System.out.println(((int)rtext.charAt(i)) + " != " + ((int)dtext.charAt(i)));
+                        Message.println("DEBUG:" + ((int)rtext.charAt(i)) + " != " + ((int)dtext.charAt(i)));
                     }
                 }
                 return true;

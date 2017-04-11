@@ -123,6 +123,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.ltk.core.refactoring"/>
       <import plugin="org.eclipse.jgit"/>
+      <import plugin="org.eclipse.ui.console"/>
    </requires>
 
    <plugin

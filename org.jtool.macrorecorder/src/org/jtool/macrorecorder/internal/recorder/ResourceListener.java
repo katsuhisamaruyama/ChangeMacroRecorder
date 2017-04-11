@@ -9,6 +9,7 @@ package org.jtool.macrorecorder.internal.recorder;
 import org.jtool.macrorecorder.macro.ResourceMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.FileMacro;
+import org.jtool.macrorecorder.recorder.Message;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResource;
@@ -417,7 +418,7 @@ class ResourceListener implements IResourceChangeListener {
                     String content = read(states[0].getContents());
                     return content;
                 } else {
-                    System.err.println("NO HISTORY " + file.getFullPath().toString());
+                    Message.println("NO HISTORY " + file.getFullPath().toString());
                 }
             }
         } catch (CoreException e) {

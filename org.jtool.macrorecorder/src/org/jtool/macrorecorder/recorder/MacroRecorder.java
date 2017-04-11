@@ -53,6 +53,8 @@ public class MacroRecorder implements IMacroRecorder {
     private MacroRecorder() {
         IMacroCompressor defaultCompressor = new MacroCompressor();
         internalRecorder = new Recorder(this, defaultCompressor);
+        
+        Message.showConsole();
         displayMacro = false;
         displayRawMacro = false;
         running = false;
@@ -143,7 +145,7 @@ public class MacroRecorder implements IMacroRecorder {
      */
     public void notifyMacro(Macro macro) {
         if (displayMacro) {
-            System.out.println(macro.toString());
+            Message.println(macro.toString());
         }
         
         MacroEvent evt = new MacroEvent(MacroEvent.Type.GENERIC_MACRO, macro);
@@ -158,7 +160,7 @@ public class MacroRecorder implements IMacroRecorder {
      */
     public void notifyRawMacro(Macro macro) {
         if (displayRawMacro) {
-            System.out.println(macro.toString());
+            Message.println(macro.toString());
         }
         
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);
