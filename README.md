@@ -1,7 +1,7 @@
 # ChangeMacroRecorder
 
 ChangeMacroRecorder is an Eclipse plugin that automatically records fine-grained changes (i.e., editing operatioins, not AST change
-operations) by continuously tracking the code edits and commands performed on Eclipseâ€™s Java editor. 
+operations) by continuously tracking the code edits and commands performed on Eclipsefs Java editor. 
 
 ## Description
 
@@ -28,6 +28,12 @@ Eclipse 4.6 (Neon) or later
 
 ## Install
 
+### Using Eclipse Update Site
+Select menu items: "Help" -> "Install New Software..." ->  
+Input `http://katsuhisamaruyama.github.io/ChangeMacroRecorder/org.jtool.macrorecorder.site/site.xml` in the text field of "Work with:"  
+
+### Manually Downloading
+
 Download the latest release of the jar file in the directory
 <https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.site/plugins>
 and put it in the 'plugins' directory under the Eclipse installation. Eclipse needs to be  restarted.
@@ -36,7 +42,7 @@ and put it in the 'plugins' directory under the Eclipse installation. Eclipse ne
 
 ChangeMacroRecorder is intended to be embeded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are includes in the `package org.jtool.macrorecorder.recorder`.
 
-* IMacroRecorder - Interface of the single instance that records change macros
+#### IMacroRecorder - Interface of the single instance that records change macros
 
 The single instance can be obtained from the invocation as `MacroRecorder.getInstance()`. 
 
@@ -79,7 +85,7 @@ public interface IMacroRecorder {
 }
 ```
 
-* IMacroCompressor - Interface of an instance that compresses document change macros
+#### IMacroCompressor - Interface of an instance that compresses document change macros
 
 The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits continuous typing at the point where it detects one of these characters. in other words, typing the text of "ab(c)" are divided into four document chnange macros: "ab", "(", "c", and ")". The chracters "a" and "b" are combined since a delimiter does not exist between "a" and "b". The user program freely the delimiter characters by using method `setDelimiter(char[])`. If the user program wants to replace the default delimiter-based algorithm with a different one, the program can implement `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)`.
 
@@ -115,7 +121,7 @@ public interface IMacroCompressor {
 }
 ```
 
-* IMacroListener - Interface of an instance that receives a change macro event
+#### IMacroListener - Interface of an instance that receives a change macro event
 
 The user program must implement two abstract methods: `macroAdded(MacroEvent)`, which receives an event containing processed (after the combination or cancellation) change macros, and `rawMacroAdded(MacroEvent)`, which receives an event containing all non-processed (before the combination or cancellation) change macros.
 
