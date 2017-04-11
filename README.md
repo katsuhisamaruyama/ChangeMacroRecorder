@@ -11,10 +11,11 @@ ChangeMacroRecorder records the following changes macros:
 * CommandMacro - execution of command service  
 * CopyMacro - copy action  
 * DocumentMacro - typing, cut action, paste action, undo action, redo action  
-* FileMacro - action for a file (e.g., add, remove, open, close, save, activate, refactor move, rename, git event)  
+* FileMacro - a file action (add, remove, open, close, save, activate, refactor move, rename, git event)  
 * GitMacro - git event  
 * RefactoringMacro - refactoring action  
 * ResourceMacro - action for a resource (file, package, and project)  
+* TriggerMacro - a trigger action (refactoring, undo, redo, and cursor change)  
 * CompoundMacro - a series of macros  
 
 Recorded change macros include detailed information such as the inserted and deleted text for each edit or command. See
