@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.jtool.macrorecorder;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.jtool.macrorecorder.Activator
 Require-Bundle: org.eclipse.ui;bundle-version="3.106.0",
  org.eclipse.core.runtime;bundle-version="3.10.0",
