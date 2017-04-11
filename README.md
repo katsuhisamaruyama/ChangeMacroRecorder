@@ -1,7 +1,7 @@
 # ChangeMacroRecorder
 
 ChangeMacroRecorder is an Eclipse plugin that automatically records fine-grained changes (i.e., editing operatioins, not AST change
-operations) by continuously tracking the code edits and commands performed on EclipseÅfs Java editor. 
+operations) by continuously tracking the code edits and commands performed on Eclipse's Java editor. 
 
 ## Description
 
