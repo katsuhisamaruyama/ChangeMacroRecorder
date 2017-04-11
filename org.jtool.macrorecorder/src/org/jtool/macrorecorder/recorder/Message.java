@@ -54,6 +54,8 @@ public class Message {
      * @param msg the message to be displayed
      */
     public static void print(String msg) {
+        assert consoleStream != null;
+        
         consoleStream.print(msg);
     }
     
@@ -62,6 +64,8 @@ public class Message {
      * @param msg the message to be displayed
      */
     public static void println(String msg) {
+        assert consoleStream != null;
+        
         consoleStream.println(msg);
     }
 }

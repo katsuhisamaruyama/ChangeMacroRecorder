@@ -6,13 +6,7 @@
 
 package org.jtool.macrorecorder.macro;
 
-import java.io.File;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.jtool.macrorecorder.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaElement;
@@ -20,6 +14,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import java.io.File;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Stores a macro.
@@ -228,7 +228,8 @@ public class Macro {
      * @return the path of the source holder
      */
     private String getSourcePath(String path) {
-        String srcpath = sourcePathMap.get(projectName);
+        String key = Activator.getWorkspacePath() + "$" + projectName;
+        String srcpath = sourcePathMap.get(key);
         if (srcpath != null) {
             return srcpath;
         }
@@ -245,7 +246,7 @@ public class Macro {
                     
                     srcpath = packageRoot.getPath().toString();
                     if (path.startsWith(srcpath)) {
-                        sourcePathMap.put(projectName, srcpath);
+                        sourcePathMap.put(key, srcpath);
                         return srcpath;
                     }
                 }

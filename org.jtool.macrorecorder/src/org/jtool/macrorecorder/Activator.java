@@ -7,6 +7,9 @@
 package org.jtool.macrorecorder;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -61,5 +64,11 @@ public class Activator extends AbstractUIPlugin {
      */
     public static Activator getPlugin() {
         return plugin;
+    }
+    
+    public static String getWorkspacePath() {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceRoot root = workspace.getRoot();
+        return root.getLocation().toFile().getAbsolutePath().toString();
     }
 }
