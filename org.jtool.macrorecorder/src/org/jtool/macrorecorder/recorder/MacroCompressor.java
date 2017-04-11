@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -106,7 +106,7 @@ public class MacroCompressor implements IMacroCompressor {
         if (last.getStart() + last.getInsertedText().length() == next.getStart()) {
             String text = last.getInsertedText() + next.getInsertedText();
             return new DocumentMacro(last.getTime(), last.getAction(),
-                       last.getMacroPath(), last.getBranch(), last.getStart(), text, ""); 
+                       last.getPath(), last.getBranch(), last.getStart(), text, ""); 
         }
         
         return null;
@@ -132,7 +132,7 @@ public class MacroCompressor implements IMacroCompressor {
                 String text = next.getDeletedText() + last.getDeletedText();
                 
                 return new DocumentMacro(last.getTime(), last.getAction(),
-                           last.getMacroPath(), last.getBranch(), next.getStart(), "", text); 
+                           last.getPath(), last.getBranch(), next.getStart(), "", text); 
             }
             
         } else {
@@ -140,7 +140,7 @@ public class MacroCompressor implements IMacroCompressor {
                 String text = last.getDeletedText() + next.getDeletedText();
                 
                 return new DocumentMacro(last.getTime(), last.getAction(),
-                           last.getMacroPath(), last.getBranch(), last.getStart(), "", text); 
+                           last.getPath(), last.getBranch(), last.getStart(), "", text); 
             }
         }
         
@@ -168,7 +168,7 @@ public class MacroCompressor implements IMacroCompressor {
             String itext = next.getInsertedText();
             String dtext = last.getDeletedText();
             return new DocumentMacro(last.getTime(), last.getAction(),
-                       last.getMacroPath(), last.getBranch(), last.getStart(), itext, dtext); 
+                       last.getPath(), last.getBranch(), last.getStart(), itext, dtext); 
         }
         
         return null;

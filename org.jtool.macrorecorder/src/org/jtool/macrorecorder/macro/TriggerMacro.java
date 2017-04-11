@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -16,7 +16,7 @@ public class TriggerMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        REFACTORING, UNDO, REDO, CODE_ASSIST, DIFF, CURSOR_CHANGE;
+        REFACTORING, UNDO, REDO, CURSOR_CHANGE;
     }
     
     /**
@@ -44,7 +44,7 @@ public class TriggerMacro extends Macro {
      * @param timing the timing of a trigger of this trigger macro
      * @param commandId the string representing this contents of this trigger macro
      */
-    public TriggerMacro(Action action, MacroPath path, String branch, Timing timing, String commandId) {
+    public TriggerMacro(Action action, String path, String branch, Timing timing, String commandId) {
         super(action.toString(), path, branch);
         this.timing = timing;
         this.commandId = commandId;
@@ -57,7 +57,7 @@ public class TriggerMacro extends Macro {
      * @param branch the branch name of a file or a package on which this trigger macro was performed
      * @param timing the timing of a trigger of this trigger macro
      */
-    public TriggerMacro(Action action, MacroPath path, String branch, Timing timing) {
+    public TriggerMacro(Action action, String path, String branch, Timing timing) {
         this(action, path, branch, timing, "");
     }
     

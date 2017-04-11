@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -31,7 +31,7 @@ public class CommandMacro extends Macro {
      * @param branch the branch name of a file or a package on which this macro was performed
      * @param commandId the string representing the contents of the macro
      */
-    public CommandMacro(Action action, MacroPath path, String branch, String commandId) {
+    public CommandMacro(Action action, String path, String branch, String commandId) {
         super(action.toString(), path, branch);
         this.commandId = commandId;
     }

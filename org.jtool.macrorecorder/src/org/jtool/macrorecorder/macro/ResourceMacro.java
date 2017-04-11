@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -44,7 +44,7 @@ public class ResourceMacro extends Macro {
      * @param target the kind of the target of the resource
      * @param sdpath the path of the source or destination of the resource
      */
-    public ResourceMacro(Action action, MacroPath path, String branch, Target target, String sdpath) {
+    public ResourceMacro(Action action, String path, String branch, Target target, String sdpath) {
         super(action.toString(), path, branch);
         this.target = target;
         this.srcDstPath = sdpath;

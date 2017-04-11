@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -50,7 +50,7 @@ public class GitMacro extends Macro {
      * @param afiles files added to the index
      * @param rfiles files removed from the index
      */
-    public GitMacro(Action action, MacroPath path, String branch, Set<String> mfiles, Set<String> afiles, Set<String> rfiles) {
+    public GitMacro(Action action, String path, String branch, Set<String> mfiles, Set<String> afiles, Set<String> rfiles) {
         super(action.toString(), path, branch);
         this.branch = branch;
         this.filesModified = mfiles;

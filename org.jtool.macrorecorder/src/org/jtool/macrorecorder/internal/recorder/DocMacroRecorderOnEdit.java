@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -9,23 +9,15 @@ package org.jtool.macrorecorder.internal.recorder;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
-import org.jtool.macrorecorder.macro.MacroPath;
 import org.jtool.macrorecorder.macro.CopyMacro;
 import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.text.undo.DocumentUndoManagerRegistry;
-import org.eclipse.text.undo.IDocumentUndoManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
-import org.eclipse.jface.text.source.ContentAssistantFacade;
 
 /**
  * Records document macros performed on the editor.
@@ -83,8 +75,8 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
              */
             @Override
             public IStatus runInUIThread(IProgressMonitor monitor) {
-                register(documentListener);
-                register(completionListener);
+                documentListener.register(doc, styledText);
+                completionListener.register(editor);
                 return Status.OK_STATUS;
             }
         };
@@ -105,99 +97,14 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
              */
             @Override
             public IStatus runInUIThread(IProgressMonitor monitor) {
-                unregister(documentListener);
-                unregister(completionListener);
+                documentListener.unregister(doc);
+                completionListener.unregister(editor);
                 return Status.OK_STATUS;
             }
         };
         job.schedule();
         
         super.stop();
-    }
-    
-    /**
-     * Registers a document manager with an editor.
-     * @param doc the document to be managed
-     * @param st the styled text of the editor
-     * @param dm the document manager
-     */
-    private void register(final DocumentListener dl) {
-        assert doc != null;
-        doc.addDocumentListener(dl);
-        
-        DocumentUndoManagerRegistry.connect(doc);
-        IDocumentUndoManager undoManager = DocumentUndoManagerRegistry.getDocumentUndoManager(doc);
-        if (undoManager != null) {
-            undoManager.addDocumentUndoListener(dl);
-        }
-        
-        assert styledText != null;
-        styledText.addListener(SWT.KeyDown, dl);
-        styledText.addListener(SWT.MouseDown, dl);
-        styledText.addListener(SWT.MouseDoubleClick, dl);
-        
-        styledText.addDisposeListener(new DisposeListener() {
-             
-            /**
-             * Receives an event when the widget is disposed.
-             * @param e - the event containing information about the dispose
-             */
-            public void widgetDisposed(DisposeEvent e) {
-                styledText.removeListener(SWT.KeyDown, dl);
-                styledText.removeListener(SWT.MouseDown, dl);
-                styledText.removeListener(SWT.MouseDoubleClick, dl);
-                
-                styledText.removeDisposeListener(this);
-            }
-        });
-    }
-    
-    /**
-     * Unregisters a document manager with an editor.
-     * @param dl the document manager
-     */
-    private void unregister(DocumentListener dl) {
-        assert doc != null;
-        doc.removeDocumentListener(dl);
-        
-        DocumentUndoManagerRegistry.connect(doc);
-        IDocumentUndoManager undoManager = DocumentUndoManagerRegistry.getDocumentUndoManager(doc);
-        DocumentUndoManagerRegistry.disconnect(doc);
-        if (undoManager != null) {
-            undoManager.removeDocumentUndoListener(dl);
-        }
-    }
-    
-    /**
-     * Registers a code completion execution manager with the editor.
-     * @param cl the code completion execution manager
-     */
-    private void register(CodeCompletionListener cl) {
-        IQuickAssistAssistant assistant = EditorUtilities.getQuickAssistAssistant(editor);
-        if (assistant != null) {
-            assistant.addCompletionListener(cl);
-        }
-        
-        ContentAssistantFacade facade = EditorUtilities.getContentAssistantFacade(editor);
-        if (facade != null) {
-            facade.addCompletionListener(cl);
-        }
-    }
-    
-    /**
-     * Unregisters a code completion manager with the editor.
-     * @param cl the code completion execution manager
-     */
-    private void unregister(CodeCompletionListener cl) {
-        IQuickAssistAssistant assistant = EditorUtilities.getQuickAssistAssistant(editor);
-        if (assistant != null) {
-            assistant.removeCompletionListener(cl);
-        }
-        
-        ContentAssistantFacade facade = EditorUtilities.getContentAssistantFacade(editor);
-        if (facade != null) {
-            facade.removeCompletionListener(cl);
-        }
     }
     
     /**
@@ -244,13 +151,29 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     void recordCopyMacro(CommandMacro macro) {
         assert styledText != null;
         
-        int offset = styledText.getSelectionRange().x;
-        String text = styledText.getSelectionText();
-        
-        CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY, new MacroPath(macro.getPath()), macro.getBranch(), offset, text);
+        CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY,
+                               macro.getPath(), macro.getBranch(), getSelectionStart(), getSelectionText());
         recorder.recordRawMacro(cmacro);
         
         dumpMacro(cmacro);
+    }
+    
+    /**
+     * Returns the starting point of the text that is contained the selection.
+     * @return the starting point of the selected text
+     */
+    int getSelectionStart() {
+        assert styledText != null;
+        return styledText.getSelectionRange().x;
+    }
+    
+    /**
+     * Returns the text that is contained the selection.
+     * @return the selected text
+     */
+    String getSelectionText() {
+        assert styledText != null;
+        return styledText.getSelectionText();
     }
     
     /**

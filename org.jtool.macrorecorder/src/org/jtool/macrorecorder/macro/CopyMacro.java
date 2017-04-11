@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -37,7 +37,7 @@ public class CopyMacro extends Macro {
      * @param start the leftmost offset of the document changed by this macro
      * @param text the contents of the document copied by the macro
      */
-    public CopyMacro(Action action, MacroPath path, String branch, int start, String text) {
+    public CopyMacro(Action action, String path, String branch, int start, String text) {
         super(action.toString(), path, branch);
         this.start = start;
         this.copiedText = text;

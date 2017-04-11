@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -32,6 +32,16 @@ public class RefactoringMacro extends Macro {
     private Map<String, String> argumentMap;
     
     /**
+     * The starting point of the text that is contained the selection.
+     */
+    private int selectionStart;
+    
+    /**
+     * The text that is contained the selection.
+     */
+    private String selectionText;
+    
+    /**
      * Creates an object storing information about a refactpring macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
@@ -39,7 +49,7 @@ public class RefactoringMacro extends Macro {
      * @param name the name of a refactoring
      * @param map the map that stores arguments of a refactoring
      */
-    public RefactoringMacro(Action action, MacroPath path, String branch, String name, Map<String, String> map) {
+    public RefactoringMacro(Action action, String path, String branch, String name, Map<String, String> map) {
         super(action.toString(), path, branch);
         this.name = name;
         this.argumentMap = map;
@@ -59,6 +69,38 @@ public class RefactoringMacro extends Macro {
      */
     public String getArgument(String key) {
         return argumentMap.get(key);
+    }
+    
+    /**
+     * Sets the starting point of the text that is contained the selection.
+     * @param start the starting point of the text
+     */
+    public void setSelectionStart(int start) {
+        selectionStart = start;
+    }
+    
+    /**
+     * Returns the starting point of the text that is contained the selection.
+     * @return the starting point of the text
+     */
+    public int getSelectionStart() {
+        return selectionStart;
+    }
+    
+    /**
+     * Sets the text that is contained the selection.
+     * @param text the selected text
+     */
+    public void setSelectionText(String text) {
+        selectionText = text;
+    }
+    
+    /**
+     * Returns the text that is contained the selection.
+     * @return text the selected text
+     */
+    String getSelectionText() {
+        return selectionText;
     }
     
     /**
@@ -109,6 +151,8 @@ public class RefactoringMacro extends Macro {
         buf.append(super.toString());
         
         buf.append(" name=[" + name + "]");
+        buf.append(" offset=[" + selectionStart + "]");
+        buf.append(" code=[" + getShortText(selectionText) + "]");
         return buf.toString();
     }
 }

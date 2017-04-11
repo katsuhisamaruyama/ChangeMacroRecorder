@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -13,7 +13,6 @@ import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.CancelMacro;
 import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
-import org.jtool.macrorecorder.macro.MacroPath;
 import org.jtool.macrorecorder.internal.diff.DiffMacro;
 import org.jtool.macrorecorder.internal.diff.DiffMacroGenerator;
 import java.util.List;
@@ -218,6 +217,22 @@ class DocMacroRecorder {
     }
     
     /**
+     * Returns the starting point of the text that is contained the selection.
+     * @return always <code>-1</code>
+     */
+    int getSelectionStart() {
+        return -1;
+    }
+    
+    /**
+     * Returns the text that is contained the selection.
+     * @return always the empty string
+     */
+    String getSelectionText() {
+        return "";
+    }
+    
+    /**
      * Dumps the last macro.
      */
     void dumpLastDocumentMacro() {
@@ -254,7 +269,7 @@ class DocMacroRecorder {
             TriggerMacro tmacro = (TriggerMacro)macro;
             if (compoundMacro == null && tmacro.isBegin()) {
                 compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(),
-                                  new MacroPath(tmacro.getPath()), tmacro.getBranch(), tmacro.getCommandId());
+                                    tmacro.getPath(), tmacro.getBranch(), tmacro.getCommandId());
                 
             } else if (tmacro.isEnd()) {
                 if (compoundMacro != null) {

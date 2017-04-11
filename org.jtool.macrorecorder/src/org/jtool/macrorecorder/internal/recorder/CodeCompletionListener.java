@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -7,11 +7,12 @@
 package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
-import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionListener;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.source.ContentAssistantFacade;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.jface.text.contentassist.IContentAssistantExtension2;
 
 /**
@@ -34,6 +35,38 @@ class CodeCompletionListener implements ICompletionListener {
     }
     
     /**
+     * Registers a code completion execution manager with the editor.
+     * @param editor the editor
+     */
+    void register(IEditorPart editor) {
+        IQuickAssistAssistant assistant = EditorUtilities.getQuickAssistAssistant(editor);
+        if (assistant != null) {
+            assistant.addCompletionListener(this);
+        }
+        
+        ContentAssistantFacade facade = EditorUtilities.getContentAssistantFacade(editor);
+        if (facade != null) {
+            facade.addCompletionListener(this);
+        }
+    }
+    
+    /**
+     * Unregisters a code completion manager with the editor.
+     * @param editor the editor
+     */
+    void unregister(IEditorPart editor) {
+        IQuickAssistAssistant assistant = EditorUtilities.getQuickAssistAssistant(editor);
+        if (assistant != null) {
+            assistant.removeCompletionListener(this);
+        }
+        
+        ContentAssistantFacade facade = EditorUtilities.getContentAssistantFacade(editor);
+        if (facade != null) {
+            facade.removeCompletionListener(this);
+        }
+    }
+    
+    /**
      * Receives an event when code assist is invoked.
      * @param event the content assist event
      */
@@ -53,7 +86,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_BEGIN;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, new MacroPath(path), branch, commandId);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
         docRecorder.recordCodeCompletionMacro(cmacro);
     }
     
@@ -77,7 +110,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_END;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, new MacroPath(path), branch, commandId);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
         docRecorder.recordCodeCompletionMacro(cmacro);
     }
     

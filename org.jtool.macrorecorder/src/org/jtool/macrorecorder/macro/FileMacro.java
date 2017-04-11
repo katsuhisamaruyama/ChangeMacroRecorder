@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -45,7 +45,7 @@ public class FileMacro extends Macro {
      * @param charset the name of a charset of the file
      * @param sdpath the path of the source or destination of the rename or move
      */
-    public FileMacro(Action action, MacroPath path, String branch, String code, String charset, String sdpath) {
+    public FileMacro(Action action, String path, String branch, String code, String charset, String sdpath) {
         super(action.toString(), path, branch);
         this.code = code;
         this.charset = charset;
@@ -60,8 +60,8 @@ public class FileMacro extends Macro {
      * @param code the contents of source code of the file
      * @param charset the name of a charset of the file
      */
-    public FileMacro(Action action, MacroPath path, String branch, String code, String charset) {
-        this(action, path, branch, code, charset, path.getPath());
+    public FileMacro(Action action, String path, String branch, String code, String charset) {
+        this(action, path, branch, code, charset, path);
     }
     
     /**

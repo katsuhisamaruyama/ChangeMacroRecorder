@@ -1,14 +1,25 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
 
 package org.jtool.macrorecorder.macro;
 
+import java.io.File;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 
 /**
  * Stores a macro.
@@ -29,12 +40,27 @@ public class Macro {
     /**
      * The path of a resource on which this macro was performed.
      */
-    protected MacroPath path;
+    protected String path;
     
     /**
      * The branch name of a resource on which this macro was performed.
      */
     protected String branch;
+    
+    /**
+     * The name of a project containing a resource on which this macro was performed.
+     */
+    protected String projectName;
+    
+    /**
+     * The path of a source folder containing a file on which this macro was performed.
+     */
+    private String sourcePath;
+    
+    /**
+     * The cache of pairs of a project name and its source path.
+     */
+    private static Map<String, String> sourcePathMap = new HashMap<String, String>();
     
     /**
      * The collection of raw macros that were recorded.
@@ -48,11 +74,13 @@ public class Macro {
      * @param path the path of a resource on which this macro was performed
      * @param branch the branch of a resource on which this macro was performed
      */
-    public Macro(ZonedDateTime time, String action, MacroPath path, String branch) {
+    public Macro(ZonedDateTime time, String action, String path, String branch) {
         this.time = time;
         this.action = action;
         this.path = path;
         this.branch = branch;
+        this.projectName = getProjectName(path);
+        this.sourcePath = getSourcePath(path);
         
         delay();
     }
@@ -63,13 +91,8 @@ public class Macro {
      * @param path the path of a resource on which this macro was performed
      * @param branch the branch of a resource on which this macro was performed
      */
-    public Macro(String action, MacroPath path, String branch) {
-        this.time = ZonedDateTime.now();
-        this.action = action;
-        this.path = path;
-        this.branch = branch;
-        
-        delay();
+    public Macro(String action, String path, String branch) {
+        this(ZonedDateTime.now(), action, path, branch);
     }
     
     /**
@@ -118,32 +141,8 @@ public class Macro {
      * Returns the path of a resource on which this macro was performed.
      * @return the path
      */
-    public MacroPath getMacroPath() {
-        return path;
-    }
-    
-    /**
-     * Returns the path name of a resource on which this macro was performed.
-     * @return the path name
-     */
     public String getPath() {
-        return path.getPath();
-    }
-    
-    /**
-     * Returns the name of a project containing a resource on which this macro was performed.
-     * @return the project name
-     */
-    public String getProjectName() {
-        return path.getProjectName();
-    }
-    
-    /**
-     * Returns the path of a source folder containing a resource on which this macro was performed.
-     * @return the path of the source holder
-     */
-    public String getSourcePath() {
-        return path.getSourcePath();
+        return path;
     }
     
     /**
@@ -152,6 +151,115 @@ public class Macro {
      */
     public String getBranch() {
         return branch;
+    }
+    
+    /**
+     * Returns the name of a project containing a resource on which this macro was performed.
+     * @return the project name
+     */
+    public String getProjectName() {
+        return projectName;
+    }
+    
+    /**
+     * Extracts the name of a project from the path of a resource.
+     * @param path the path of the resource
+     * @return the project name, or an empty string if the path is invalid
+     */
+    private String getProjectName(String fullPath) {
+        if (fullPath == null) {
+            return "";
+        }
+        
+        int firstIndex = fullPath.indexOf(File.separatorChar, 1);
+        if (firstIndex == -1) {
+            return "";
+        }
+        
+        String name = fullPath.substring(1, firstIndex);
+        return name;
+    }
+    
+    /**
+     * Returns the name of a package containing a resource on which this macro was performed.
+     * @return the package name, or an empty string if the path is invalid
+     */
+    public String getPackageName() {
+        if (path == null || sourcePath == null) {
+            return "";
+        }
+        
+        int firstIndex = sourcePath.length() + 1;
+        int lastIndex = path.lastIndexOf(File.separatorChar) + 1;
+        if (firstIndex == -1 || lastIndex == -1) {
+            return "";
+        }
+        
+        if (firstIndex  == lastIndex) {
+            return "(default package)";
+        }
+        
+        String name = path.substring(firstIndex, lastIndex - 1);
+        name = name.replace(File.separatorChar, '.');
+        return name;
+    }
+    
+    /**
+     * Returns the name of a resource on which this macro was performed.
+     * @return the resource name without its location information
+     */
+    public String getFileName() {
+        if (path == null) {
+            return "";
+        }
+        
+        int lastIndex = path.lastIndexOf(File.separatorChar) + 1;
+        if (lastIndex == -1) {
+            return "";
+        }
+        
+        String name = path.substring(lastIndex);
+        return name;
+    }
+    
+    /**
+     * Extracts the path of a source folder from the path of a file.
+     * @param path the path of a file
+     * @return the path of the source holder
+     */
+    private String getSourcePath(String path) {
+        String srcpath = sourcePathMap.get(projectName);
+        if (srcpath != null) {
+            return srcpath;
+        }
+        
+        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        IJavaProject javaProject = JavaCore.create(project);
+        
+        try {
+            IPackageFragmentRoot[] packageFragmentRoot = javaProject.getAllPackageFragmentRoots();
+            for (int i = 0; i < packageFragmentRoot.length; i++) {
+                IPackageFragmentRoot packageRoot = packageFragmentRoot[i];
+                if (packageRoot.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT &&
+                    packageRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
+                    
+                    srcpath = packageRoot.getPath().toString();
+                    if (path.startsWith(srcpath)) {
+                        sourcePathMap.put(projectName, srcpath);
+                        return srcpath;
+                    }
+                }
+            }
+        } catch (JavaModelException e) { /* empty */ }
+        return "";
+    }
+    
+    /**
+     * Returns the path of a source folder containing a resource on which this macro was performed.
+     * @return the path of the source holder
+     */
+    public String getSourcePath() {
+        return sourcePath;
     }
     
     /**
@@ -231,7 +339,7 @@ public class Macro {
         buf.append("{" + getClassName() + "} ");
         buf.append(getFormatedTime(time));
         buf.append(" " + action);
-        buf.append(" path=[" + path.getPath() + "]");
+        buf.append(" path=[" + path + "]");
         buf.append(" branch=[" + branch + "]");
         return buf.toString();
     }

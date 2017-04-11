@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -33,11 +33,29 @@ public class MacroRecorder implements IMacroRecorder {
     private List<IMacroListener> macroListeners = new ArrayList<IMacroListener>();
     
     /**
+     * A flag that indicates if recorded macros are displayed.
+     */
+    private boolean displayMacro;
+    
+    /**
+     * A flag that indicates if recorded raw macros are displayed.
+     */
+    private boolean displayRawMacro;
+    
+    /**
+     * A flag that indicates if this macro recorder is running.
+     */
+    private boolean running;
+    
+    /**
      * Creates an object that records macros.
      */
     private MacroRecorder() {
         IMacroCompressor defaultCompressor = new MacroCompressor();
         internalRecorder = new Recorder(this, defaultCompressor);
+        displayMacro = false;
+        displayRawMacro = false;
+        running = false;
     }
     
     /**
@@ -69,6 +87,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Starts the recording of change macros.
      */
     public void start() {
+        running = true;
         internalRecorder.start();
     }
     
@@ -76,6 +95,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Stops the recording of change macros.
      */
     public void stop() {
+        running = false;
         internalRecorder.stop();
     }
     
@@ -98,10 +118,34 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
+     * Sets flags that indicate if macros are displayed on the console for debugging.
+     * @param displayMacro a flag that indicates if recorded macros are displayed
+     * @param displayRawMacro a flag that indicates if recorded raw macros are displayed
+     */
+    public void displayMacrosOnConsole(boolean displayMacro, boolean displayRawMacro) {
+        this.displayMacro = displayMacro;
+        this.displayRawMacro = displayRawMacro;
+        
+        if (displayMacro || displayRawMacro) {
+            if (!running) {
+                start();
+            }
+        } else {
+            if (running) {
+                stop();
+            }
+        }
+    }
+    
+    /**
      * Sends a change macro event to all the listeners.
      * @param macro the change macro sent to the listeners
      */
     public void notifyMacro(Macro macro) {
+        if (displayMacro) {
+            System.out.println(macro.toString());
+        }
+        
         MacroEvent evt = new MacroEvent(MacroEvent.Type.GENERIC_MACRO, macro);
         for (IMacroListener listener : macroListeners) {
             listener.macroAdded(evt);
@@ -113,6 +157,10 @@ public class MacroRecorder implements IMacroRecorder {
      * @param macro the raw change macro sent to the listeners
      */
     public void notifyRawMacro(Macro macro) {
+        if (displayRawMacro) {
+            System.out.println(macro.toString());
+        }
+        
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);
         for (IMacroListener listener : macroListeners) {
             listener.rawMacroAdded(evt);

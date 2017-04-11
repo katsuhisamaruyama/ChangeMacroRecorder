@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -7,7 +7,6 @@
 package org.jtool.macrorecorder.internal.diff;
 
 import org.jtool.macrorecorder.macro.DocumentMacro;
-import org.jtool.macrorecorder.macro.MacroPath;
 
 /**
  * Stores a macro that represents difference between two versions of source code.
@@ -24,7 +23,7 @@ public class DiffMacro extends DocumentMacro{
      * @param itext the contents of the text inserted by the macro
      * @param dtext the contents of the text deleted by the macro
      */
-    public DiffMacro(Action action, MacroPath path, String branch, int start, String itext, String dtext) {
+    public DiffMacro(Action action, String path, String branch, int start, String itext, String dtext) {
         super(action.toString(), path, branch, start, itext, dtext);
     }
     
@@ -51,7 +50,7 @@ public class DiffMacro extends DocumentMacro{
      */
     public static DocumentMacro getExpectedDiff(DiffMacro macro) {
         return new DocumentMacro(macro.getTime(), DocumentMacro.Action.AUTO_DIFF.toString(),
-                   macro.getMacroPath(), macro.getBranch(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
+                   macro.getPath(), macro.getBranch(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
     }
     
     /**
@@ -61,6 +60,6 @@ public class DiffMacro extends DocumentMacro{
      */
     public static DocumentMacro getUnexpectedDiff(DiffMacro macro) {
         return new DocumentMacro(macro.getTime(),DocumentMacro.Action.IRREGULAR_DIFF.toString(),
-                   macro.getMacroPath(), macro.getBranch(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
+                   macro.getPath(), macro.getBranch(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
     }
 }

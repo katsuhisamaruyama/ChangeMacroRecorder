@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -38,22 +38,6 @@ public class DocumentMacro extends Macro {
     
     /**
      * Creates an object storing information about a document macro.
-     * @param action the action of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch of a file on which this macro was performed
-     * @param start the leftmost offset of the text changed by this macro
-     * @param itext the contents of the text inserted by the macro
-     * @param dtext the contents of the text deleted by the macro
-     */
-    public DocumentMacro(Action action, MacroPath path, String branch, int start, String itext, String dtext) {
-        super(action.toString(), path, branch);
-        this.start = start;
-        this.insertedText = itext;
-        this.deletedText = dtext;
-    }
-    
-    /**
-     * Creates an object storing information about a document macro.
      * @param type the type of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
@@ -61,11 +45,24 @@ public class DocumentMacro extends Macro {
      * @param itext the contents of the text inserted by the macro
      * @param dtext the contents of the text deleted by the macro
      */
-    public DocumentMacro(String type, MacroPath path, String branch, int start, String itext, String dtext) {
+    public DocumentMacro(String type, String path, String branch, int start, String itext, String dtext) {
         super(type, path, branch);
         this.start = start;
         this.insertedText = itext;
         this.deletedText = dtext;
+    }
+    
+    /**
+     * Creates an object storing information about a document macro.
+     * @param action the action of this macro
+     * @param path the path of a file on which this macro was performed
+     * @param branch the branch of a file on which this macro was performed
+     * @param start the leftmost offset of the text changed by this macro
+     * @param itext the contents of the text inserted by the macro
+     * @param dtext the contents of the text deleted by the macro
+     */
+    public DocumentMacro(Action action, String path, String branch, int start, String itext, String dtext) {
+        this(action.toString(), path, branch, start, itext, dtext);
     }
     
     /**
@@ -77,7 +74,7 @@ public class DocumentMacro extends Macro {
      * @param itext the contents of the text inserted by the macro
      * @param dtext the contents of the text deleted by the macro
      */
-    public DocumentMacro(ZonedDateTime time, String type, MacroPath path, String branch, int start, String itext, String dtext) {
+    public DocumentMacro(ZonedDateTime time, String type, String path, String branch, int start, String itext, String dtext) {
         super(time, type, path, branch);
         this.start = start;
         this.insertedText = itext;

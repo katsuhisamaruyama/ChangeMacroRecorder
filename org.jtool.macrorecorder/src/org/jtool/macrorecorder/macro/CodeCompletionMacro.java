@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -31,7 +31,7 @@ public class CodeCompletionMacro extends Macro {
      * @param branch the branch name of a file on which this macro was performed
      * @param name the name of a code assistance class
      */
-    public CodeCompletionMacro(Action action, MacroPath path, String branch, String name) {
+    public CodeCompletionMacro(Action action, String path, String branch, String name) {
         super(action.toString(), path, branch);
         this.name = name;
     }

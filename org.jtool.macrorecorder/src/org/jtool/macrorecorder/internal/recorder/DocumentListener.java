@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -9,13 +9,17 @@ package org.jtool.macrorecorder.internal.recorder;
 import org.jtool.macrorecorder.macro.CancelMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
-import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.undo.IDocumentUndoListener;
+import org.eclipse.text.undo.IDocumentUndoManager;
 import org.eclipse.text.undo.DocumentUndoEvent;
+import org.eclipse.text.undo.DocumentUndoManagerRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -59,6 +63,59 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
     }
     
     /**
+     * Registers a document manager with an editor.
+     * @param doc the document to be managed
+     * @param styledText the styled text of the editor
+     */
+    void register(IDocument doc, StyledText styledText) {
+        assert doc != null;
+        doc.addDocumentListener(this);
+        
+        DocumentUndoManagerRegistry.connect(doc);
+        IDocumentUndoManager undoManager = DocumentUndoManagerRegistry.getDocumentUndoManager(doc);
+        if (undoManager != null) {
+            undoManager.addDocumentUndoListener(this);
+        }
+        
+        assert styledText != null;
+        styledText.addListener(SWT.KeyDown, this);
+        styledText.addListener(SWT.MouseDown, this);
+        styledText.addListener(SWT.MouseDoubleClick, this);
+        
+        final DocumentListener dl = this;
+        styledText.addDisposeListener(new DisposeListener() {
+             
+            /**
+             * Receives an event when the widget is disposed.
+             * @param e - the event containing information about the dispose
+             */
+            public void widgetDisposed(DisposeEvent e) {
+                styledText.removeListener(SWT.KeyDown, dl);
+                styledText.removeListener(SWT.MouseDown, dl);
+                styledText.removeListener(SWT.MouseDoubleClick, dl);
+                
+                styledText.removeDisposeListener(this);
+            }
+        });
+    }
+    
+    /**
+     * Unregisters a document manager with an editor.
+     * @param doc the document to be managed
+     */
+    void unregister(IDocument doc) {
+        assert doc != null;
+        doc.removeDocumentListener(this);
+        
+        DocumentUndoManagerRegistry.connect(doc);
+        IDocumentUndoManager undoManager = DocumentUndoManagerRegistry.getDocumentUndoManager(doc);
+        DocumentUndoManagerRegistry.disconnect(doc);
+        if (undoManager != null) {
+            undoManager.removeDocumentUndoListener(this);
+        }
+    }
+    
+    /**
      * Receives a document event will be performed.
      * @param event the document event describing the document change
      */
@@ -93,24 +150,24 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         if (undoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.UNDO,
-                                        new MacroPath(path), branch, event.getOffset(), insertedText, deletedText);
+                                          path, branch, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
                 
             } else {
                 DocumentMacro macro = new CancelMacro(DocumentMacro.Action.UNDO,
-                                        new MacroPath(path), branch, event.getOffset(), insertedText, deletedText);
+                                          path, branch, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
             }
             
         } else if (redoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.REDO,
-                                        new MacroPath(path), branch, event.getOffset(), insertedText, deletedText);
+                                          path, branch, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
                 
             } else {
                 DocumentMacro macro = new CancelMacro(DocumentMacro.Action.REDO,
-                                        new MacroPath(path), branch, event.getOffset(), insertedText, deletedText);
+                                          path, branch, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
             }
             
@@ -118,13 +175,13 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             DocumentMacro macro;
             if (docRecorder.getGlobalMacroRecorder().getCutInProgress()) {
                 macro = new DocumentMacro(DocumentMacro.Action.CUT,
-                          new MacroPath(path), branch, event.getOffset(), insertedText, deletedText);
+                            path, branch, event.getOffset(), insertedText, deletedText);
             } else if (docRecorder.getGlobalMacroRecorder().getPasteInProgress()) {
                 macro = new DocumentMacro(DocumentMacro.Action.PASTE,
-                          new MacroPath(path), branch, event.getOffset(), insertedText, deletedText);
+                            path, branch, event.getOffset(), insertedText, deletedText);
             } else {
                 macro = new DocumentMacro(DocumentMacro.Action.EDIT,
-                          new MacroPath(path), branch, event.getOffset(), insertedText, deletedText);
+                            path, branch, event.getOffset(), insertedText, deletedText);
             }
             docRecorder.recordDocumentMacro(macro);
         }
@@ -147,7 +204,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         if (eventType == DocumentUndoEvent.ABOUT_TO_UNDO) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO,
-                                        new MacroPath(path), branch, TriggerMacro.Timing.BEGIN);
+                                          path, branch, TriggerMacro.Timing.BEGIN);
                 docRecorder.recordMacro(tmacro);
             }
             undoInprogress = true;
@@ -155,7 +212,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         } else if (eventType == DocumentUndoEvent.ABOUT_TO_REDO) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO,
-                                        new MacroPath(path), branch, TriggerMacro.Timing.BEGIN);
+                                          path, branch, TriggerMacro.Timing.BEGIN);
                 docRecorder.recordMacro(tmacro);
             }
             redoInprogress = true;
@@ -163,7 +220,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         } else if (eventType == DocumentUndoEvent.UNDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO,
-                                        new MacroPath(path), branch, TriggerMacro.Timing.END);
+                                          path, branch, TriggerMacro.Timing.END);
                 docRecorder.recordMacro(tmacro);
             }
             undoInprogress = false;
@@ -171,7 +228,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         } else if (eventType == DocumentUndoEvent.REDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO,
-                                        new MacroPath(path), branch, TriggerMacro.Timing.END);
+                                          path, branch, TriggerMacro.Timing.END);
                 docRecorder.recordMacro(tmacro);
             }
             redoInprogress = false;
@@ -197,7 +254,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             String branch = docRecorder.getGlobalMacroRecorder().getBranch(path);
             
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CURSOR_CHANGE,
-                                    new MacroPath(path), branch, TriggerMacro.Timing.INSTANT);
+                                      path, branch, TriggerMacro.Timing.INSTANT);
             docRecorder.recordTriggerMacro(tmacro);
             
             docRecorder.getGlobalMacroRecorder().setSelectedPath(path);

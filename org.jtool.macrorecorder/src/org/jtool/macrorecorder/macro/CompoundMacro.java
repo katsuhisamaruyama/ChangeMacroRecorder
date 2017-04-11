@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -36,7 +36,7 @@ public class CompoundMacro extends Macro {
      * @param branch the branch name of a file on which this macro was performed
      * @param commandId the string representing the contents of the macro
      */
-    public CompoundMacro(ZonedDateTime time, String action, MacroPath path, String branch, String commandId) {
+    public CompoundMacro(ZonedDateTime time, String action, String path, String branch, String commandId) {
         super(time, action, path, branch);
         this.commandId = commandId;
     }

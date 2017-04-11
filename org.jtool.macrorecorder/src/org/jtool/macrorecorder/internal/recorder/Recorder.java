@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -10,7 +10,6 @@ import org.jtool.macrorecorder.recorder.MacroRecorder;
 import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.Macro;
-import org.jtool.macrorecorder.macro.MacroPath;
 import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -172,9 +171,14 @@ public class Recorder {
              */
             @Override
             public IStatus runInUIThread(IProgressMonitor monitor) {
+                List<DocMacroRecorder> recorders = new ArrayList<DocMacroRecorder>(docRecorders.size());
                 for (DocMacroRecorder docRrecorder : getDocMacroRecorders()) {
+                    recorders.add(docRrecorder);
+                }
+                for (DocMacroRecorder docRrecorder : recorders) {
                     docRrecorder.stop();
                 }
+                recorders.clear();
                 docRecorders.clear();
                 
                 globalRecorder.stop();
@@ -255,7 +259,7 @@ public class Recorder {
             TriggerMacro tmacro = (TriggerMacro)macro;
             if (compoundMacro == null && tmacro.isBegin()) {
                 compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(),
-                                    new MacroPath(tmacro.getPath()), tmacro.getBranch(), tmacro.getCommandId());
+                                    tmacro.getPath(), tmacro.getBranch(), tmacro.getCommandId());
                 
             } else if (tmacro.isEnd()) {
                 if (compoundMacro != null) {
