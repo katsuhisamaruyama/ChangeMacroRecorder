@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.jtool.macrorecorder.feature_1.0.0.201704111542.jar" id="org.jtool.macrorecorder.feature" version="1.0.0.201704111542">
+   <feature url="features/org.jtool.macrorecorder.feature_1.0.0.201704111931.jar" id="org.jtool.macrorecorder.feature" version="1.0.0.201704111931">
       <category name="org.jtool.changesupporttools"/>
    </feature>
    <category-def name="org.jtool.changesupporttools" label="Code Change Support Tools"/>
