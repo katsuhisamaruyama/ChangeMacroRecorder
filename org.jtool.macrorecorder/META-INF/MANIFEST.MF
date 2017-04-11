@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.jtool.macrorecorder;singleton:=true
-Bundle-Version: 1.0
+Bundle-Version: 1.0.0
 Bundle-Activator: org.jtool.macrorecorder.Activator
 Require-Bundle: org.eclipse.ui;bundle-version="3.106.0",
  org.eclipse.core.runtime;bundle-version="3.10.0",
@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.106.0",
  org.eclipse.jgit;bundle-version="3.4.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Bundle-Name: ChangetrackerRecorder
+Bundle-Name: ChangeMacroRecorder for Eclipse
 Export-Package: org.jtool.macrorecorder.macro,
  org.jtool.macrorecorder.recorder
