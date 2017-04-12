@@ -53,9 +53,9 @@ public class Macro {
     protected String projectName;
     
     /**
-     * The path of a source folder containing a file on which this macro was performed.
+     * The name of a package containing a resource on which this macro was performed.
      */
-    private String sourcePath;
+    protected String packageName;
     
     /**
      * The cache of pairs of a project name and its source path.
@@ -80,7 +80,7 @@ public class Macro {
         this.path = path;
         this.branch = branch;
         this.projectName = getProjectName(path);
-        this.sourcePath = getSourcePath(path);
+        this.packageName = getPackageName(path);
         
         delay();
     }
@@ -162,46 +162,57 @@ public class Macro {
     }
     
     /**
+     * Returns the name of a package containing a resource on which this macro was performed.
+     * @return the package name
+     */
+    public String getPackageName() {
+        return packageName;
+    }
+    
+    /**
      * Extracts the name of a project from the path of a resource.
-     * @param path the path of the resource
+     * @param pathname the path of the resource
      * @return the project name, or an empty string if the path is invalid
      */
-    private String getProjectName(String fullPath) {
-        if (fullPath == null) {
+    private String getProjectName(String pathname) {
+        if (pathname == null) {
             return "";
         }
         
-        int firstIndex = fullPath.indexOf(File.separatorChar, 1);
-        if (firstIndex == -1) {
+        int index = pathname.indexOf(File.separatorChar, 1);
+        if (index == -1) {
             return "";
         }
         
-        String name = fullPath.substring(1, firstIndex);
-        return name;
+        return pathname.substring(1, index);
     }
     
     /**
      * Returns the name of a package containing a resource on which this macro was performed.
+     * @param pathname the path of the resource
      * @return the package name, or an empty string if the path is invalid
      */
-    public String getPackageName() {
-        if (path == null || sourcePath == null) {
+    public String getPackageName(String pathname) {
+        if (pathname == null) {
             return "";
         }
         
-        int firstIndex = sourcePath.length() + 1;
-        int lastIndex = path.lastIndexOf(File.separatorChar) + 1;
-        if (firstIndex == -1 || lastIndex == -1) {
+        String srcpath = getSourcePath(pathname);
+        if (srcpath == null) {
             return "";
         }
         
-        if (firstIndex  == lastIndex) {
+        int index = pathname.lastIndexOf(File.separatorChar);
+        if (index == -1) {
+            return "";
+        }
+        
+        if (srcpath.length() == index) {
             return "(default package)";
         }
         
-        String name = path.substring(firstIndex, lastIndex - 1);
-        name = name.replace(File.separatorChar, '.');
-        return name;
+        String name = pathname.substring(srcpath.length() + 1, index);
+        return name.replace(File.separatorChar, '.');
     }
     
     /**
@@ -213,31 +224,29 @@ public class Macro {
             return "";
         }
         
-        int lastIndex = path.lastIndexOf(File.separatorChar) + 1;
-        if (lastIndex == -1) {
+        int index = path.lastIndexOf(File.separatorChar) + 1;
+        if (index == -1) {
             return "";
         }
         
-        String name = path.substring(lastIndex);
-        return name;
+        return path.substring(index);
     }
     
     /**
      * Extracts the path of a source folder from the path of a file.
      * @param path the path of a file
-     * @return the path of the source holder
+     * @return the path of the source holder, or <code>null</code> the path is invalid
      */
-    private String getSourcePath(String path) {
+    private String getSourcePath(String pathname) {
         String key = Activator.getWorkspacePath() + "$" + projectName;
         String srcpath = sourcePathMap.get(key);
         if (srcpath != null) {
             return srcpath;
         }
         
-        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        IJavaProject javaProject = JavaCore.create(project);
-        
         try {
+            IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+            IJavaProject javaProject = JavaCore.create(project);
             IPackageFragmentRoot[] packageFragmentRoot = javaProject.getAllPackageFragmentRoots();
             for (int i = 0; i < packageFragmentRoot.length; i++) {
                 IPackageFragmentRoot packageRoot = packageFragmentRoot[i];
@@ -245,22 +254,14 @@ public class Macro {
                     packageRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
                     
                     srcpath = packageRoot.getPath().toString();
-                    if (path.startsWith(srcpath)) {
+                    if (pathname.startsWith(srcpath)) {
                         sourcePathMap.put(key, srcpath);
                         return srcpath;
                     }
                 }
             }
         } catch (JavaModelException e) { /* empty */ }
-        return "";
-    }
-    
-    /**
-     * Returns the path of a source folder containing a resource on which this macro was performed.
-     * @return the path of the source holder
-     */
-    public String getSourcePath() {
-        return sourcePath;
+        return null;
     }
     
     /**
@@ -341,6 +342,7 @@ public class Macro {
         buf.append(getFormatedTime(time));
         buf.append(" " + action);
         buf.append(" path=[" + path + "]");
+        buf.append(" resource=[" + projectName + ":" + packageName + "$" + getFileName() + "]");
         buf.append(" branch=[" + branch + "]");
         return buf.toString();
     }
