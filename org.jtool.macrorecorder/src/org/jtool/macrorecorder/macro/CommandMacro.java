@@ -16,7 +16,7 @@ public class CommandMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        EXEC, SELECT;
+        EXECUTION;
     }
     
     /**
@@ -29,7 +29,7 @@ public class CommandMacro extends Macro {
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
-     * @param commandId the string representing the contents of the macro
+     * @param commandId the detailed information about this macro
      */
     public CommandMacro(Action action, String path, String branch, String commandId) {
         super(action.toString(), path, branch);

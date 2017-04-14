@@ -88,6 +88,14 @@ public class RefactoringMacro extends Macro {
     }
     
     /**
+     * Returns the ending point of the text that is contained the selection.
+     * @return the ending point of the text
+     */
+    public int getSelectionEnd() {
+        return selectionStart + selectionText.length() - 1;
+    }
+    
+    /**
      * Sets the text that is contained the selection.
      * @param text the selected text
      */
@@ -99,7 +107,7 @@ public class RefactoringMacro extends Macro {
      * Returns the text that is contained the selection.
      * @return text the selected text
      */
-    String getSelectionText() {
+    public String getSelectionText() {
         return selectionText;
     }
     
@@ -151,7 +159,7 @@ public class RefactoringMacro extends Macro {
         buf.append(super.toString());
         
         buf.append(" name=[" + name + "]");
-        buf.append(" offset=[" + selectionStart + "]");
+        buf.append(" range=[" + getSelectionStart() + "-" + getSelectionEnd() + "]");
         buf.append(" code=[" + getShortText(selectionText) + "]");
         return buf.toString();
     }
