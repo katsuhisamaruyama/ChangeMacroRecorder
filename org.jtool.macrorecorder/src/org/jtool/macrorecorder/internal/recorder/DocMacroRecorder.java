@@ -13,7 +13,7 @@ import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.CancelMacro;
 import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
-import org.jtool.macrorecorder.recorder.Message;
+import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.jtool.macrorecorder.internal.diff.DiffMacro;
 import org.jtool.macrorecorder.internal.diff.DiffMacroGenerator;
 import java.util.List;
@@ -290,8 +290,8 @@ class DocMacroRecorder {
                     if (suc) {
                         applyMacro(macro);
                     } else {
-                        Message.println("Cancellation failed: " + cmacro.toString());
-                        Message.println(compoundMacro.toString());
+                        MacroConsole.println("Cancellation failed: " + cmacro.toString());
+                        MacroConsole.println(compoundMacro.toString());
                     }
                     
                 } else {
@@ -390,9 +390,9 @@ class DocMacroRecorder {
                 
                 for (int i = 0; i < rtext.length(); i++) {
                     if (rtext.charAt(i) == dtext.charAt(i)) {
-                        Message.println("DEBUG:" + ((int)rtext.charAt(i)) + " == " + ((int)dtext.charAt(i)));
+                        MacroConsole.println("DEBUG:" + ((int)rtext.charAt(i)) + " == " + ((int)dtext.charAt(i)));
                     } else {
-                        Message.println("DEBUG:" + ((int)rtext.charAt(i)) + " != " + ((int)dtext.charAt(i)));
+                        MacroConsole.println("DEBUG:" + ((int)rtext.charAt(i)) + " != " + ((int)dtext.charAt(i)));
                     }
                 }
                 return true;

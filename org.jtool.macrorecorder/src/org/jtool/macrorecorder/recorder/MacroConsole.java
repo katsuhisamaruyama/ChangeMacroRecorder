@@ -16,7 +16,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
  * Displays a dialog with a message.
  * @author Katsuhisa Maruyama
  */;;
-public class Message {
+public class MacroConsole {
     
     /**
      * The name of the dedicated console.
@@ -31,7 +31,7 @@ public class Message {
     /**
      * Shows the dedicated console.
      */
-    static void showConsole() {
+    private static void showConsole() {
         IConsoleManager consoleManager = ConsolePlugin.getDefault().getConsoleManager();
         IConsole[] consoles = consoleManager.getConsoles();
         MessageConsole console = null;
@@ -54,7 +54,9 @@ public class Message {
      * @param msg the message to be displayed
      */
     public static void print(String msg) {
-        assert consoleStream != null;
+        if (consoleStream == null) {
+            showConsole();
+        }
         
         consoleStream.print(msg);
     }
@@ -64,7 +66,9 @@ public class Message {
      * @param msg the message to be displayed
      */
     public static void println(String msg) {
-        assert consoleStream != null;
+        if (consoleStream == null) {
+            showConsole();
+        }
         
         consoleStream.println(msg);
     }

@@ -11,7 +11,7 @@ import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.recorder.IMacroCompressor;
-import org.jtool.macrorecorder.recorder.Message;
+import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -312,7 +312,7 @@ public class Recorder {
         if (macro != null && lastMacro != null) {
             if (getPathString(macro.getPath()).equals(getPathString(lastMacro.getPath())) &&
                 !macro.getTime().isAfter(lastMacro.getTime())) {
-                Message.println("The order of macros is abnormal: " + macro.toString() + " " + lastMacro.toString());
+                MacroConsole.println("The order of macros is abnormal: " + macro.toString() + " " + lastMacro.toString());
                 return;
             }
         }
