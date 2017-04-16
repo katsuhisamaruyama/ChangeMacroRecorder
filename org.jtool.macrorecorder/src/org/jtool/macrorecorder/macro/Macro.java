@@ -29,6 +29,8 @@ public class Macro {
     
     /**
      * The time when this macro was executed.
+     * There is no change operations with the same time within the same file
+     * (with the same path and the same branch).
      */
     protected ZonedDateTime time;
     
