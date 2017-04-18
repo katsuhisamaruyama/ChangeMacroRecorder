@@ -197,8 +197,9 @@ class DocMacroRecorder {
      * @param macro the code completion macro to be recorded
      */
     void recordCodeCompletionMacro(CodeCompletionMacro macro) {
-        recorder.recordRawMacro(macro);
         dumpLastDocumentMacro();
+        recorder.recordRawMacro(macro);
+        recorder.recordMacro(macro);
     }
     
     /**

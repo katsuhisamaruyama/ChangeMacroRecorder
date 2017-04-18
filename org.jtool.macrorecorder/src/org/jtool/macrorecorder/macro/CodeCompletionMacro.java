@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import org.eclipse.jface.text.contentassist.ContentAssistEvent;
+
 /**
  * Stores a code completion macro.
  * @author Katsuhisa Maruyama
@@ -25,15 +27,22 @@ public class CodeCompletionMacro extends Macro {
     private String name;
     
     /**
+     * A content assist event related to this macro.
+     */
+    private ContentAssistEvent event;
+    
+    /**
      * Creates an object storing information about a code completion macro.
      * @param action the action of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
      * @param name the name of a code assistance class
+     * @param event content assist event related to this macro
      */
-    public CodeCompletionMacro(Action action, String path, String branch, String name) {
+    public CodeCompletionMacro(Action action, String path, String branch, String name, ContentAssistEvent event) {
         super(action.toString(), path, branch);
         this.name = name;
+        this.event = event;
     }
     
     /**
@@ -42,6 +51,14 @@ public class CodeCompletionMacro extends Macro {
      */
     public String getName() {
         return name;
+    }
+    
+    /**
+     * Returns the content assist event related to this macro.
+     * @return the content assist event
+     */
+    public ContentAssistEvent getContentAssistEvent() {
+        return event;
     }
     
     /**
@@ -65,7 +82,7 @@ public class CodeCompletionMacro extends Macro {
      * @return <code>true</code> if this macro represents the beginning of content assist, otherwise <code>false</code>
      */
     public boolean isContentAssistBegin() {
-        return action.equals(Action.QUICK_ASSIST_BEGIN.toString());
+        return action.equals(Action.CONTENT_ASSIST_BEGIN.toString());
     }
     
     /**
@@ -73,7 +90,7 @@ public class CodeCompletionMacro extends Macro {
      * @return <code>true</code> if this macro represents the ending of content assist, otherwise <code>false</code>
      */
     public boolean isContentAssistEnd() {
-        return action.equals(Action.QUICK_ASSIST_BEGIN.toString());
+        return action.equals(Action.CONTENT_ASSIST_END.toString());
     }
     
     /**

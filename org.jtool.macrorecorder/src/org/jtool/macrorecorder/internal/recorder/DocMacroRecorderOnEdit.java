@@ -6,7 +6,6 @@
 
 package org.jtool.macrorecorder.internal.recorder;
 
-import org.jtool.macrorecorder.macro.CodeCompletionMacro;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.CopyMacro;
@@ -132,15 +131,6 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
         } else {
             dumpMacro(macro);
         }
-    }
-    
-    /**
-     * Records a code completion macro.
-     * @param macro the code completion macro to be recorded
-     */
-    @Override
-    void recordCodeCompletionMacro(CodeCompletionMacro macro) {
-        super.recordCodeCompletionMacro(macro);
     }
     
     /**

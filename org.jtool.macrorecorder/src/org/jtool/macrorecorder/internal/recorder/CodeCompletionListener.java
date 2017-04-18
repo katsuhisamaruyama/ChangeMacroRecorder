@@ -86,7 +86,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_BEGIN;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId, event);
         docRecorder.recordCodeCompletionMacro(cmacro);
     }
     
@@ -110,7 +110,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_END;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId, event);
         docRecorder.recordCodeCompletionMacro(cmacro);
     }
     
