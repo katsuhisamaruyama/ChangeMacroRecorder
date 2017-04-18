@@ -76,7 +76,7 @@ class CommandListener implements IExecutionListener {
         }
         String branch = globalRecorder.getBranch(path);
         
-        CommandMacro macro = new CommandMacro(CommandMacro.Action.EXECUTION, path, branch, commandId);
+        CommandMacro macro = new CommandMacro(CommandMacro.Action.EXECUTION, path, branch, commandId, event);
         globalRecorder.recordMacro(macro);
         
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);

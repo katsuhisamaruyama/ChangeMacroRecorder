@@ -37,7 +37,7 @@ public class CodeCompletionMacro extends Macro {
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
      * @param name the name of a code assistance class
-     * @param event content assist event related to this macro
+     * @param event a content assist event related to this macro
      */
     public CodeCompletionMacro(Action action, String path, String branch, String name, ContentAssistEvent event) {
         super(action.toString(), path, branch);

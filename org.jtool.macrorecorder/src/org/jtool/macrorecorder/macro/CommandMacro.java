@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import org.eclipse.core.commands.ExecutionEvent;
+
 /**
  * Stores an execution macro.
  * @author Katsuhisa Maruyama
@@ -25,15 +27,22 @@ public class CommandMacro extends Macro {
     private String commandId;
     
     /**
+     * An execution event related to this macro.
+     */
+    private ExecutionEvent event;
+    
+    /**
      * Creates an object storing information about an execution macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
      * @param commandId the detailed information about this macro
+     * @param event an execution event related to this macro
      */
-    public CommandMacro(Action action, String path, String branch, String commandId) {
+    public CommandMacro(Action action, String path, String branch, String commandId, ExecutionEvent event) {
         super(action.toString(), path, branch);
         this.commandId = commandId;
+        this.event = event;
     }
     
     /**
@@ -42,6 +51,14 @@ public class CommandMacro extends Macro {
      */
     public String getCommandId() {
         return commandId;
+    }
+    
+    /**
+     * Returns the execution event related to this macro.
+     * @return the execution event
+     */
+    public ExecutionEvent getExecutionEvent() {
+        return event;
     }
     
     /**
