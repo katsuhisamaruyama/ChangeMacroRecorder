@@ -30,7 +30,7 @@ Eclipse 4.6 (Neon) or later
 
 ### Using Eclipse Update Site
 Select menu items: "Help" -> "Install New Software..." ->  
-Input `http://katsuhisamaruyama.github.io/ChangeSupportTools/org.jtool.change-support-site/site.xml` in the text field of "Work with:"  
+Input `http://katsuhisamaruyama.github.io/ChangeMacroRecorder/org.jtool.macrorecorder.site/site.xml` in the text field of "Work with:"  
 
 ### Manually Downloading
 
