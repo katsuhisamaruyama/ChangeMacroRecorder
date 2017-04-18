@@ -58,10 +58,25 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
      */
     @Override
     public void createFieldEditors() {
-        addField(new BooleanFieldEditor(DISPLAY_MACROS,
-                "Displays recorded macros on the console", getFieldEditorParent()));
+        BooleanFieldEditor editor1 = new BooleanFieldEditor(DISPLAY_MACROS,
+                "Displays recorded macros on the console", getFieldEditorParent());
+        addField(editor1);
+        editor1.setPropertyChangeListener(new IPropertyChangeListener() {
+            
+            /**
+             * Receives a property changed event.
+             * @param event the property change event describing which property was changed
+             */
+            @Override
+            public void propertyChange(PropertyChangeEvent event) {
+                System.out.println(DISPLAY_MACROS);
+            }
+        });
+        
         addField(new BooleanFieldEditor(DISPLAY_RAW_MACROS,
                 "Displays recorded raw macros on the console", getFieldEditorParent()));
+        
+        setDescription("A preference page of MacroRecorder");
     }
     
     /**

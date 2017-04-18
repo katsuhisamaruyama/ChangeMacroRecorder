@@ -5,7 +5,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             class="org.jtool.macrorecorder.PreferencePage"
-            id="org.jtool.macrorecorder.page"
+            id="org.jtool.macrorecorder.PreferencePage"
             name="ChangeMacroRecorder">
       </page>
    </extension>

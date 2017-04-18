@@ -53,10 +53,6 @@ public class MacroRecorder implements IMacroRecorder {
     private MacroRecorder() {
         IMacroCompressor defaultCompressor = new MacroCompressor();
         internalRecorder = new Recorder(this, defaultCompressor);
-        
-        displayMacro = false;
-        displayRawMacro = false;
-        running = false;
     }
     
     /**
@@ -127,13 +123,9 @@ public class MacroRecorder implements IMacroRecorder {
         this.displayMacro = displayMacro;
         this.displayRawMacro = displayRawMacro;
         
-        if (displayMacro || displayRawMacro) {
-            if (!running) {
+        if (!running) {
+            if (displayMacro || displayRawMacro) {
                 start();
-            }
-        } else {
-            if (running) {
-                stop();
             }
         }
     }
