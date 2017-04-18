@@ -311,7 +311,8 @@ public class Recorder {
     private void notifyMacro(Macro macro) {
         if (macro != null && lastMacro != null) {
             if (getPathString(macro.getPath()).equals(getPathString(lastMacro.getPath())) &&
-                !macro.getTime().isAfter(lastMacro.getTime())) {
+                    getPathString(macro.getBranch()).equals(getPathString(lastMacro.getBranch())) &&
+                    !macro.getTime().isAfter(lastMacro.getTime())) {
                 MacroConsole.println("The order of macros is abnormal: " + macro.toString() + " " + lastMacro.toString());
                 return;
             }
