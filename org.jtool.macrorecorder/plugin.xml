@@ -15,4 +15,10 @@
             class="org.jtool.macrorecorder.PreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.jtool.macrorecorder.Activator">
+      </startup>
+   </extension>
 </plugin>
