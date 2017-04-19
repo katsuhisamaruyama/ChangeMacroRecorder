@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder;
 
+import org.jtool.macrorecorder.recorder.MacroRecorder;
+import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -16,7 +18,7 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle.
  * @author Katsuhisa Maruyama
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator extends AbstractUIPlugin implements IStartup {
     
     /**
      * The plug-in ID.
@@ -35,6 +37,15 @@ public class Activator extends AbstractUIPlugin {
     }
     
     /**
+     * Performs actions in a separate thread after the workbench initializes.
+     */
+    @Override
+    public void earlyStartup() {
+        MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
+        macroRecorder.displayMacrosOnConsole(PreferencePage.displayMacros(), PreferencePage.displayRawMacros());
+    }
+    
+    /**
      * Performs actions when the plug-in is activated.
      * @param context the bundle context for this plug-in
      * @throws Exception if this plug-in did not start up properly
@@ -43,7 +54,6 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        // System.out.println(PLUGIN_ID + " activated.");
     }
     
     /**
@@ -55,7 +65,6 @@ public class Activator extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         super.stop(context);
         plugin = null;
-        // System.out.println(PLUGIN_ID + " deactivated.");
     }
     
     /**

@@ -45,12 +45,14 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * A flag that indicates if this macro recorder is running.
      */
-    private boolean running;
+    private boolean running = false;
     
     /**
      * Creates an object that records macros.
      */
     private MacroRecorder() {
+        
+        
         IMacroCompressor defaultCompressor = new MacroCompressor();
         internalRecorder = new Recorder(this, defaultCompressor);
     }
@@ -151,7 +153,7 @@ public class MacroRecorder implements IMacroRecorder {
      */
     public void notifyRawMacro(Macro macro) {
         if (displayRawMacro) {
-            MacroConsole.println(macro.toString());
+            MacroConsole.println("*" + macro.toString());
         }
         
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);

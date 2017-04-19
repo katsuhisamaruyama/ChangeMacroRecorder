@@ -75,7 +75,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
      * Tests if recorded macros will be displayed.
      * @return <code>true</code> if the displaying is required, otherwise <code>false</code>
      */
-    private boolean displayMacros() {
+    static boolean displayMacros() {
         IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
         return store.getBoolean(DISPLAY_MACROS);
     }
@@ -84,7 +84,7 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
      * Tests if recorded raw macros will be displayed.
      * @return <code>true</code> if the displaying is required, otherwise <code>false</code>
      */
-    private boolean displayRawMacros() {
+    static boolean displayRawMacros() {
         IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
         return store.getBoolean(DISPLAY_RAW_MACROS);
     }

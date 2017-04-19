@@ -21,7 +21,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     @Override
     public void initializeDefaultPreferences() {
         IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
-        store.setValue(PreferencePage.DISPLAY_MACROS, false);
-        store.setValue(PreferencePage.DISPLAY_RAW_MACROS, false);
+        store.setDefault(PreferencePage.DISPLAY_MACROS, false);
+        store.setDefault(PreferencePage.DISPLAY_RAW_MACROS, false);
     }
 }
