@@ -16,7 +16,7 @@ public class TriggerMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        REFACTORING, UNDO, REDO, CURSOR_CHANGE;
+        REFACTORING, COMMAND, UNDO, REDO, CURSOR_CHANGE;
     }
     
     /**
@@ -32,23 +32,9 @@ public class TriggerMacro extends Macro {
     private Timing timing = null;
     
     /**
-     * The string representing the contents of this macro.
+     * The command macro that causes this trigger macro.
      */
-    private String commandId;
-    
-    /**
-     * Creates an object storing information about a trigger macro.
-     * @param action the action of this macro
-     * @param path the path of a file or a package on which this trigger macro was performed
-     * @param branch the branch name of a file or a package on which this trigger macro was performed
-     * @param timing the timing of a trigger of this trigger macro
-     * @param commandId the string representing this contents of this trigger macro
-     */
-    public TriggerMacro(Action action, String path, String branch, Timing timing, String commandId) {
-        super(action.toString(), path, branch);
-        this.timing = timing;
-        this.commandId = commandId;
-    }
+    private CommandMacro commandMacro = null;
     
     /**
      * Creates an object storing information about a trigger macro.
@@ -58,7 +44,21 @@ public class TriggerMacro extends Macro {
      * @param timing the timing of a trigger of this trigger macro
      */
     public TriggerMacro(Action action, String path, String branch, Timing timing) {
-        this(action, path, branch, timing, "");
+        super(action.toString(), path, branch);
+        this.timing = timing;
+    }
+    
+    /**
+     * Creates an object storing information about a trigger macro.
+     * @param action the action of this macro
+     * @param path the path of a file or a package on which this trigger macro was performed
+     * @param branch the branch name of a file or a package on which this trigger macro was performed
+     * @param timing the timing of a trigger of this trigger macro
+     * @param macro a command macro that causes this trigger macro
+     */
+    public TriggerMacro(Action action, String path, String branch, Timing timing, CommandMacro macro) {
+        this(action, path, branch, timing);
+        this.commandMacro = macro;
     }
     
     /**
@@ -70,11 +70,22 @@ public class TriggerMacro extends Macro {
     }
     
     /**
-     * Returns the string representing the contents of this macro.
-     * @return the information on this macro
+     * Returns the command macro that causes this trigger macro.
+     * @return the command macro for the trigger macro
+     */
+    public CommandMacro getCommandMacro() {
+        return commandMacro;
+    }
+    
+    /**
+     * Returns information about the command macro that causes this trigger macro.
+     * @return the string representing the contents of the command macro
      */
     public String getCommandId() {
-        return commandId;
+        if (commandMacro != null) {
+            return commandMacro.getCommandId();
+        }
+        return "";
     }
     
     /**

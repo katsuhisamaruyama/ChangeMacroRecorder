@@ -203,33 +203,33 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         
         if (eventType == DocumentUndoEvent.ABOUT_TO_UNDO) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO,
-                                          path, branch, TriggerMacro.Timing.BEGIN);
-                docRecorder.recordMacro(tmacro);
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, path, branch,
+                                          TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
+                docRecorder.recordTriggerMacro(tmacro);
             }
             undoInprogress = true;
             
         } else if (eventType == DocumentUndoEvent.ABOUT_TO_REDO) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO,
-                                          path, branch, TriggerMacro.Timing.BEGIN);
-                docRecorder.recordMacro(tmacro);
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, path, branch,
+                                          TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
+                docRecorder.recordTriggerMacro(tmacro);
             }
             redoInprogress = true;
             
         } else if (eventType == DocumentUndoEvent.UNDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO,
-                                          path, branch, TriggerMacro.Timing.END);
-                docRecorder.recordMacro(tmacro);
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, path, branch,
+                                          TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
+                docRecorder.recordTriggerMacro(tmacro);
             }
             undoInprogress = false;
             
         } else if (eventType == DocumentUndoEvent.REDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO,
-                                          path, branch, TriggerMacro.Timing.END);
-                docRecorder.recordMacro(tmacro);
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, path, branch,
+                                          TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
+                docRecorder.recordTriggerMacro(tmacro);
             }
             redoInprogress = false;
         }

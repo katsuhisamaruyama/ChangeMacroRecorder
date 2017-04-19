@@ -24,9 +24,9 @@ public class CompoundMacro extends Macro {
     private List<Macro> macros = new ArrayList<Macro>();
     
     /**
-     * The string representing the contents of this macro.
+     * The command macro that causes this trigger macro.
      */
-    private String commandId;
+    private CommandMacro commandMacro = null;
     
     /**
      * Creates an object storing information about a compound macro.
@@ -36,17 +36,28 @@ public class CompoundMacro extends Macro {
      * @param branch the branch name of a file on which this macro was performed
      * @param commandId the string representing the contents of the macro
      */
-    public CompoundMacro(ZonedDateTime time, String action, String path, String branch, String commandId) {
+    public CompoundMacro(ZonedDateTime time, String action, String path, String branch, CommandMacro macro) {
         super(time, action, path, branch);
-        this.commandId = commandId;
+        this.commandMacro = macro;
     }
     
     /**
-     * Returns the string representing the contents of this macro.
-     * @return the information on this macro
+     * Returns the command macro that causes this compound macro.
+     * @return the command macro for the compound macro
+     */
+    public CommandMacro getCommandMacro() {
+        return commandMacro;
+    }
+    
+    /**
+     * Returns information about the command macro that causes this trigger macro.
+     * @return the string representing the contents of the command macro
      */
     public String getCommandId() {
-        return commandId;
+        if (commandMacro != null) {
+            return commandMacro.getCommandId();
+        }
+        return "";
     }
     
     /**
@@ -144,7 +155,7 @@ public class CompoundMacro extends Macro {
         buf.append("{" + getClassName() + "} ");
         buf.append(getFormatedTime(time));
         buf.append(" " + action);
-        buf.append(" commandId=[" + commandId + "]");
+        buf.append(" commandId=[" + getCommandId() + "]");
         buf.append(" num=[" + macros.size() + "]");
         for (Macro macros: macros) {
             buf.append("\n " + macros.toString());

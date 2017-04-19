@@ -207,15 +207,23 @@ class DocMacroRecorder {
      * @param macro the trigger macro to be recorded
      */
     void recordTriggerMacro(TriggerMacro macro) {
-        recorder.recordRawMacro(macro);
         dumpMacro(macro);
+        recorder.recordRawMacro(macro);
     }
     
     /**
      * Records a copy macro.
-     * @param macro the copy macro to be recorded
+     * @param macro a command macro that replaced with a copy macro to be recorded
      */
     void recordCopyMacro(CommandMacro macro) {
+    }
+    
+    /**
+     * Returns the command macro that was lastly performed.
+     * @return the last command macro
+     */
+    CommandMacro getLastCommandMacro() {
+        return getGlobalMacroRecorder().getLastCommandMacro();
     }
     
     /**
@@ -271,7 +279,7 @@ class DocMacroRecorder {
             TriggerMacro tmacro = (TriggerMacro)macro;
             if (compoundMacro == null && tmacro.isBegin()) {
                 compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(),
-                                    tmacro.getPath(), tmacro.getBranch(), tmacro.getCommandId());
+                                    tmacro.getPath(), tmacro.getBranch(), tmacro.getCommandMacro());
                 
             } else if (tmacro.isEnd()) {
                 if (compoundMacro != null) {

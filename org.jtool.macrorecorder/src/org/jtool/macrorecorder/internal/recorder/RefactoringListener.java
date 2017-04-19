@@ -94,9 +94,8 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
             }
             
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                                      path, branch, TriggerMacro.Timing.BEGIN, refactoringId);
-            globalRecorder.recordMacro(tmacro);
-            
+                                      path, branch, TriggerMacro.Timing.BEGIN);
+            globalRecorder.recordTriggerMacro(tmacro);
             globalRecorder.setRefactoringInProgress(true);
             
         } else if (eventType == RefactoringExecutionEvent.PERFORMED ||
@@ -104,14 +103,13 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
                    eventType == RefactoringExecutionEvent.REDONE) {
             
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                                      path, branch, TriggerMacro.Timing.END, refactoringId);
-            globalRecorder.recordMacro(tmacro);
+                                      path, branch, TriggerMacro.Timing.END);
+            globalRecorder.recordTriggerMacro(tmacro);
             globalRecorder.setPathToBeRefactored(null);
             
             RefactoringMacro macro = new RefactoringMacro(getRefactoringAction(eventType),
                                          path, branch, refactoringId, argumentMap);
             globalRecorder.recordMacro(macro);
-            
             globalRecorder.setRefactoringInProgress(false);
             
             DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);

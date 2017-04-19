@@ -46,8 +46,8 @@ public class CommandMacro extends Macro {
     }
     
     /**
-     * Returns the string representing the contents of this macro.
-     * @return the information on this macro
+     * Returns information about this macro.
+     * @return the string representing the contents of this macro
      */
     public String getCommandId() {
         return commandId;

@@ -68,6 +68,11 @@ class GlobalMacroRecorder {
     private String selectedPath;
     
     /**
+     * The command macro that was lastly performed.
+     */
+    private CommandMacro lastCommandMacro = null;
+    
+    /**
      * A flag that indicates the save action is currently progressed.
      */
     private boolean saveInProgress;
@@ -289,7 +294,7 @@ class GlobalMacroRecorder {
      * Records a resource macro.
      * @param macro the resource macro to be recorded
      */
-    void recordMacro(CommandMacro macro) {
+    void recordCommandMacro(CommandMacro macro) {
         String path = macro.getPath();
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
@@ -298,6 +303,7 @@ class GlobalMacroRecorder {
         
         recorder.recordRawMacro(macro);
         recorder.recordMacro(macro);
+        lastCommandMacro = macro;
         
         if (macro.getCommandId().equals(IWorkbenchCommandConstants.EDIT_COPY) ||
             macro.getCommandId().equals("org.eclipse.jdt.ui.edit.text.java.copy.qualified.name")) {
@@ -305,13 +311,23 @@ class GlobalMacroRecorder {
                 docRecorder.recordCopyMacro(macro);
             }
         }
+        
+        
+    }
+    
+    /**
+     * Returns the command macro that was lastly performed.
+     * @return the last command macro
+     */
+    CommandMacro getLastCommandMacro() {
+        return lastCommandMacro;
     }
     
     /**
      * Records a trigger macro.
      * @param macro the trigger macro to be recorded
      */
-    void recordMacro(TriggerMacro macro) {
+    void recordTriggerMacro(TriggerMacro macro) {
         String path = macro.getPath();
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {

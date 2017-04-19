@@ -34,12 +34,12 @@ public class RefactoringMacro extends Macro {
     /**
      * The starting point of the text that is contained the selection.
      */
-    private int selectionStart;
+    private int selectionStart = -1;
     
     /**
      * The text that is contained the selection.
      */
-    private String selectionText;
+    private String selectionText = "";
     
     /**
      * Creates an object storing information about a refactpring macro.
@@ -159,8 +159,10 @@ public class RefactoringMacro extends Macro {
         buf.append(super.toString());
         
         buf.append(" name=[" + name + "]");
-        buf.append(" range=[" + getSelectionStart() + "-" + getSelectionEnd() + "]");
-        buf.append(" code=[" + getShortText(selectionText) + "]");
+        if (selectionText.length() > 0) {
+            buf.append(" range=[" + getSelectionStart() + "-" + getSelectionEnd() + "]");
+            buf.append(" code=[" + getShortText(selectionText) + "]");
+        }
         return buf.toString();
     }
 }

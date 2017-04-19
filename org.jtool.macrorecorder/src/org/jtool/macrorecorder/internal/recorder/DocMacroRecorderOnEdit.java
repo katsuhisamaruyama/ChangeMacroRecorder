@@ -14,6 +14,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.jface.text.IDocument;
@@ -43,6 +45,17 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      * The styled text of an editor.
      */
     private StyledText styledText;
+    
+    /**
+     * The starting point of the text that is contained the selection.
+     */
+    private int selectionStart;
+    
+    
+    /**
+     * The text that is contained the selection.
+     */
+    private String selectionText;
     
     /**
      * Creates an object that records document macros performed on an editor.
@@ -90,6 +103,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     @Override
     void stop() {
         UIJob job = new UIJob("Stop") {
+            
             /**
              * Run the job in the UI thread.
              * @param monitor the progress monitor to use to display progress
@@ -135,12 +149,10 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     
     /**
      * Records a command macro.
-     * @param macro the command macro to be recorded
+     * @param macro a command macro that replaced with a copy macro to be recorded
      */
     @Override
     void recordCopyMacro(CommandMacro macro) {
-        assert styledText != null;
-        
         CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY,
                                macro.getPath(), macro.getBranch(), getSelectionStart(), getSelectionText());
         recorder.recordRawMacro(cmacro);
@@ -154,7 +166,15 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      */
     int getSelectionStart() {
         assert styledText != null;
-        return styledText.getSelectionRange().x;
+        
+        Display display = PlatformUI.getWorkbench().getDisplay();
+        display.syncExec(new Runnable() {
+            public void run() {
+                selectionStart = styledText.getSelectionRange().x;
+            }
+        });
+        
+        return selectionStart;
     }
     
     /**
@@ -163,7 +183,14 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      */
     String getSelectionText() {
         assert styledText != null;
-        return styledText.getSelectionText();
+        Display display = PlatformUI.getWorkbench().getDisplay();
+        display.syncExec(new Runnable() {
+            public void run() {
+                selectionText = styledText.getSelectionText();
+            }
+        });
+        
+        return selectionText;
     }
     
     /**
