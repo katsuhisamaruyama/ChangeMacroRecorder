@@ -70,6 +70,16 @@ public class Macro {
     protected List<Macro> rawMacros;
     
     /**
+     * The string value that represents the extension of a Java file.
+     */
+    public static final String JAVA_FILE_EXT = ".java";
+    
+    /**
+     * The string value that represents a Java default package.
+     */
+    public static final String JAVA_DEFAULT_PACKAGE = "(default package)";
+    
+    /**
      * Creates an object storing information about a macro.
      * @param time the time when this macro was performed
      * @param action the action of this macro
@@ -81,8 +91,8 @@ public class Macro {
         this.action = action;
         this.path = path;
         this.branch = branch;
-        this.projectName = getProjectName(path);
-        this.packageName = getPackageName(path);
+        projectName = getProjectName(path);
+        packageName = getPackageName(projectName, path);
         
         delay();
     }
@@ -183,7 +193,7 @@ public class Macro {
         
         int index = pathname.indexOf(File.separatorChar, 1);
         if (index == -1) {
-            return "";
+            return pathname.substring(1);
         }
         
         return pathname.substring(1, index);
@@ -194,27 +204,31 @@ public class Macro {
      * @param pathname the path of the resource
      * @return the package name, or an empty string if the path is invalid
      */
-    public String getPackageName(String pathname) {
-        if (pathname == null) {
-            return "";
-        }
-        
-        String srcpath = getSourcePath(pathname);
-        if (srcpath == null) {
+    public String getPackageName(String projectName, String pathname) {
+        if (pathname == null || projectName.length() == 0) {
             return "";
         }
         
         int index = pathname.lastIndexOf(File.separatorChar);
-        if (index == -1) {
+        if (index == -1 || index == 0) {
             return "";
         }
         
-        if (srcpath.length() == index) {
-            return "(default package)";
+        if (pathname.endsWith(JAVA_FILE_EXT)) {
+            pathname = pathname.substring(0, index);
+        }
+        String srcpath = getSourcePath(pathname);
+        if (srcpath == null) {
+            return "";
+        }
+        pathname = pathname.substring(srcpath.length());
+        if (pathname.length() == 0) {
+            return JAVA_DEFAULT_PACKAGE;
         }
         
-        String name = pathname.substring(srcpath.length() + 1, index);
-        return name.replace(File.separatorChar, '.');
+        index = pathname.lastIndexOf(File.separatorChar);
+        pathname = pathname.substring(1);
+        return pathname.replace(File.separatorChar, '.');
     }
     
     /**
@@ -222,16 +236,16 @@ public class Macro {
      * @return the resource name without its location information
      */
     public String getFileName() {
-        if (path == null) {
+        if (path == null || !path.endsWith(JAVA_FILE_EXT)) {
             return "";
         }
         
-        int index = path.lastIndexOf(File.separatorChar) + 1;
+        int index = path.lastIndexOf(File.separatorChar);
         if (index == -1) {
             return "";
         }
         
-        return path.substring(index);
+        return path.substring(index + 1);
     }
     
     /**
@@ -240,6 +254,10 @@ public class Macro {
      * @return the path of the source holder, or <code>null</code> the path is invalid
      */
     private String getSourcePath(String pathname) {
+        if (projectName.length() == 0) {
+            return null;
+        }
+        
         String key = Activator.getWorkspacePath() + "$" + projectName;
         String srcpath = sourcePathMap.get(key);
         if (srcpath != null) {
@@ -344,7 +362,7 @@ public class Macro {
         buf.append(getFormatedTime(time));
         buf.append(" " + action);
         buf.append(" path=[" + path + "]");
-        buf.append(" resource=[" + projectName + ":" + packageName + "$" + getFileName() + "]");
+        buf.append(" resource=[" + projectName + "/" + packageName + "/" + getFileName() + "]");
         buf.append(" branch=[" + branch + "]");
         return buf.toString();
     }
