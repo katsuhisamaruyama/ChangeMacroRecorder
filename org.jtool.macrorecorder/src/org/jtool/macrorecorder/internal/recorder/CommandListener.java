@@ -137,8 +137,10 @@ class CommandListener implements IExecutionListener {
                     globalRecorder.setSelectedPath(null);
                 }
                 
+                macro.setAction(CommandMacro.Action.REFACTORING.toString());
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, 
                                           path, macro.getBranch(), TriggerMacro.Timing.BEGIN, macro);
+                
                 globalRecorder.recordTriggerMacro(tmacro);
             }
         } catch (NotDefinedException e) { /* empty */ }

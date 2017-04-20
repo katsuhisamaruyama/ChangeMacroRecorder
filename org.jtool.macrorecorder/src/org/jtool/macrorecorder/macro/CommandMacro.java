@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.macro;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.jtool.macrorecorder.macro.CodeCompletionMacro.Action;
 
 /**
  * Stores an execution macro.
@@ -18,7 +19,7 @@ public class CommandMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        EXECUTION;
+        EXECUTION, REFACTORING;
     }
     
     /**
@@ -59,6 +60,14 @@ public class CommandMacro extends Macro {
      */
     public ExecutionEvent getExecutionEvent() {
         return event;
+    }
+    
+    /**
+     * Tests if this macro represents refacttoring.
+     * @return <code>true</code> if this macro represents refacttoring, otherwise <code>false</code>
+     */
+    public boolean isRefactoring() {
+        return action.equals(Action.REFACTORING.toString());
     }
     
     /**

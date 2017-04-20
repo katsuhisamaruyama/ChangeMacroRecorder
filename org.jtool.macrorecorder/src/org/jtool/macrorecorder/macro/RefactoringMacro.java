@@ -64,6 +64,14 @@ public class RefactoringMacro extends Macro {
     }
     
     /**
+     * Returns map that stores arguments of a refactoring.
+     * @return the refactoring arguments
+     */
+    public Map<String, String> getArguments() {
+        return argumentMap;
+    }
+    
+    /**
      * Returns the value corresponding to a given key in the refactoring arguments.
      * @return the value string
      */
