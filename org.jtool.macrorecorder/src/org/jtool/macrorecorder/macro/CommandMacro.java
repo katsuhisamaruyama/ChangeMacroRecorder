@@ -7,7 +7,6 @@
 package org.jtool.macrorecorder.macro;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.jtool.macrorecorder.macro.CodeCompletionMacro.Action;
 
 /**
  * Stores an execution macro.
