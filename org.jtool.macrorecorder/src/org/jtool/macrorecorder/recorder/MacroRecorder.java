@@ -86,16 +86,21 @@ public class MacroRecorder implements IMacroRecorder {
      * Starts the recording of change macros.
      */
     public void start() {
+        if (!running) {
+            internalRecorder.start();
+        }
         running = true;
-        internalRecorder.start();
+       
     }
     
     /**
      * Stops the recording of change macros.
      */
     public void stop() {
+        if (running) {
+            internalRecorder.stop();
+        }
         running = false;
-        internalRecorder.stop();
     }
     
     /**
