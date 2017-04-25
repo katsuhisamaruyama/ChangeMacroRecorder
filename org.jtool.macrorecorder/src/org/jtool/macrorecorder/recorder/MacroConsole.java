@@ -21,7 +21,7 @@ public class MacroConsole {
     /**
      * The name of the dedicated console.
      */
-    private static final String CONSOLE_NAME = "Output of Macros";
+    private static final String CONSOLE_NAME = "MacroRecorder Console";
     
     /**
      * The stream of the dedicated console.
