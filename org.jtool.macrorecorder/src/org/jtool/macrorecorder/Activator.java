@@ -23,7 +23,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     /**
      * The plug-in ID.
      */
-    public static final String PLUGIN_ID = "MacroRecorder";
+    public static final String PLUGIN_ID = "org.jtool.macrorecorder";
     
     /**
      * The plug-in instance.
