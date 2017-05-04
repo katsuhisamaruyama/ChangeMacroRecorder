@@ -123,17 +123,23 @@ public class MacroRecorder implements IMacroRecorder {
     
     /**
      * Sets flags that indicate if macros are displayed on the console for debugging.
-     * @param displayMacro a flag that indicates if recorded macros are displayed
-     * @param displayRawMacro a flag that indicates if recorded raw macros are displayed
+     * @param display <code>true</code> if recorded macros are displayed, otherwise <code>false</code>
      */
-    public void displayMacrosOnConsole(boolean displayMacro, boolean displayRawMacro) {
-        this.displayMacro = displayMacro;
-        this.displayRawMacro = displayRawMacro;
-        
-        if (!running) {
-            if (displayMacro || displayRawMacro) {
-                start();
-            }
+    public void displayMacrosOnConsole(boolean display) {
+        displayMacro = display;
+        if (!running && displayMacro) {
+            start();
+        }
+    }
+    
+    /**
+     * Sets flags that indicate if raw macros are displayed on the console for debugging.
+     * @param display <code>true</code> if recorded raw macros are displayed, otherwise <code>false</code>
+     */
+    public void displayRawMacrosOnConsole(boolean display) {
+        displayRawMacro = display;
+        if (!running && displayRawMacro) {
+            start();
         }
     }
     
