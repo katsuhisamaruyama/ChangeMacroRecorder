@@ -8,6 +8,7 @@ package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.FileMacro;
 import org.jtool.macrorecorder.macro.GitMacro;
+import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.events.IndexChangedListener;
@@ -54,19 +55,16 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
         this.globalRecorder = recorder;
         
         for (IProject project : projects) {
-            String projectPath = project.getLocation().makeAbsolute().toOSString();
+            String ppath = project.getLocation().makeAbsolute().toOSString();
+            Git git;
             try {
-                Git git = Git.open(new File(projectPath));
-                String gitPath = git.getRepository().getDirectory().getAbsolutePath();
-                String repoPath = removeLastPathElement(gitPath);
-                
-                if (repoPath != null) {
-                    GitMacro macro = createGitMacro(GitMacro.Action.OPEN, git);
+                git = Git.open(new File(ppath));
+                GitMacro macro = createGitMacro(GitMacro.Action.OPEN, git);
+                if (macro != null) {
                     globalRecorder.recordMacro(macro);
-                    globalRecorder.putGitProject(repoPath, git.getRepository().getBranch());
+                    globalRecorder.putGitProject(ppath, git.getRepository().getBranch());
                 }
-            } catch (IOException e) {
-            }
+            } catch (IOException e) { /* empty */ }
         }
     }
     
@@ -77,9 +75,11 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
     @Override
     public void onRefsChanged(RefsChangedEvent event) {
         Repository repository = event.getRepository();
-        
-        GitMacro macro = createGitMacro(GitMacro.Action.REFS_CHANGED, Git.wrap(repository));
-        globalRecorder.recordMacro(macro);
+        Git git = Git.wrap(repository);
+        GitMacro macro = createGitMacro(GitMacro.Action.REFS_CHANGED, git);
+        if (macro != null) {
+            globalRecorder.recordMacro(macro);
+        }
     }
     
     /**
@@ -88,30 +88,61 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
      */
     @Override
     public void onIndexChanged(IndexChangedEvent event) {
-        Repository repository = event.getRepository();
-        
-        GitMacro macro = createGitMacro(GitMacro.Action.INDEX_CHANGED, Git.wrap(repository));
-        globalRecorder.recordMacro(macro);
-        
-        String branch = macro.getBranch();
-        for (String path : macro.getAddedFiles()) {
-            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_ADDED, path, branch, "", "UTF-8");
-            globalRecorder.recordMacro(fmacro);
-        }
-        for (String path : macro.getRemovedFiles()) {
-            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_REMOVED, path, branch, "", "UTF-8");
-            globalRecorder.recordMacro(fmacro);
-        }
-        for (String path : macro.getAddedFiles()) {
-            FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_MODIFIED, path, branch, "", "UTF-8");
-            globalRecorder.recordMacro(fmacro);
-        }
+        try {
+            Repository repository = event.getRepository();
+            Git git = Git.wrap(repository);
+            GitMacro macro = createGitMacro(GitMacro.Action.INDEX_CHANGED, git);
+            if (macro != null) {
+                globalRecorder.recordMacro(macro);
+                
+                TriggerMacro bmacro = new TriggerMacro(TriggerMacro.Action.GIT,
+                        macro.getPath(), macro.getBranch(), TriggerMacro.Timing.BEGIN);
+                globalRecorder.recordTriggerMacro(bmacro);
+                Status status = git.status().call();
+                String branch = macro.getBranch();
+                for (String path : status.getAdded()) {
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.ADDED_GIT_INDEX_CHANGED, path, branch, "", "UTF-8");
+                    globalRecorder.recordMacro(fmacro);
+                }
+                for (String path : status.getRemoved()) {
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.REMOVED_GIT_INDEX_CHANGED, path, branch, "", "UTF-8");
+                    globalRecorder.recordMacro(fmacro);
+                }
+                for (String path : status.getModified()) {
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.MODIFIED_GIT_INDEX_CHANGED, path, branch, "", "UTF-8");
+                    globalRecorder.recordMacro(fmacro);
+                }
+                TriggerMacro emacro = new TriggerMacro(TriggerMacro.Action.GIT,
+                        macro.getPath(), macro.getBranch(), TriggerMacro.Timing.END);
+                globalRecorder.recordTriggerMacro(emacro);
+            }
+        } catch (NoWorkTreeException e) { /* empty */
+        } catch (GitAPIException e) { /* empty */ }
+    }
+    
+    /**
+     * Creates a macro corresponding to a git event.
+     * @param action the action of the created git macro
+     * @param git a git repository
+     * @return the created git macro, or <code>null</code> if the macro creation failed
+     */
+    private GitMacro createGitMacro(GitMacro.Action action, Git git) {
+        try {
+            String branch = git.getRepository().getBranch();
+            String gitPath = git.getRepository().getDirectory().getAbsolutePath();
+            String path = removeLastPathElement(gitPath);
+            if (path == null) {
+                return null;
+            }
+            return new GitMacro(action, path, branch);
+        } catch (IOException e) { /* empty */ }
+        return null;
     }
     
     /**
      * Removes a path element on the last and returns it.
      * @param path the original path
-     * @return the path after the removal
+     * @return the path after the removal, or <code>null</code> if the original path is invalid
      */
     private String removeLastPathElement(String path) {
         if (path == null) {
@@ -121,28 +152,6 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
         int lastIndexOf = path.lastIndexOf(File.separator);
         if (lastIndexOf != -1) {
             path.substring(0, lastIndexOf);
-        }
-        return null;
-    }
-    
-    /**
-     * Creates a macro corresponding to a git event.
-     * @param action the action of the created git macro
-     * @param git a git repository
-     * @return the created git macro
-     */
-    private GitMacro createGitMacro(GitMacro.Action action, Git git) {
-        try {
-            String branch = git.getRepository().getBranch();
-            Status status = git.status().call();
-            String gitPath = git.getRepository().getDirectory().getAbsolutePath();
-            String repoPath = removeLastPathElement(gitPath);
-            
-            return new GitMacro(action, repoPath, branch,
-                       status.getModified(), status.getAdded(), status.getRemoved());
-        } catch (IOException e) {
-        } catch (NoWorkTreeException e) {
-        } catch (GitAPIException e) {
         }
         return null;
     }
