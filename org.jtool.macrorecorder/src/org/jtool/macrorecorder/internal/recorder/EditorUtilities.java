@@ -30,7 +30,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
-import org.jtool.macrorecorder.Activator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -286,7 +285,7 @@ class EditorUtilities {
      * @return the active editor, or <code>null</code> if none
      */
     static IEditorPart getActiveEditor() {
-        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchWindow window = getActiveWorkbenchWindow();
         if (window != null) {
             IEditorPart part = window.getActivePage().getActiveEditor();
             return part;
@@ -295,11 +294,11 @@ class EditorUtilities {
     }
     
     /**
-     * Obtains the path of a active file .
-     * @return @return the path of the file, or <code>null</code> if none
+     * Obtains the path of a active file.
+     * @return the path of the file, or <code>null</code> if none
      */
     static String getActiveInputFilePath() {
-        IWorkbenchWindow window = Activator.getPlugin().getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchWindow window = getActiveWorkbenchWindow();
         if (window != null) {
             ISelection selection = window.getSelectionService().getSelection();
             if (selection instanceof ITextSelection) {
@@ -310,5 +309,13 @@ class EditorUtilities {
             }
         }
         return null;
+    }
+    
+    /**
+     * Obtains a workbench window that is currently active..
+     * @return the active workbench window, or <code>null</code> if none
+     */
+    static IWorkbenchWindow getActiveWorkbenchWindow() {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     }
 }

@@ -256,8 +256,6 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CURSOR_CHANGE,
                                       path, branch, TriggerMacro.Timing.INSTANT);
             docRecorder.recordTriggerMacro(tmacro);
-            
-            docRecorder.getGlobalMacroRecorder().setSelectedPath(path);
         }
     }
     

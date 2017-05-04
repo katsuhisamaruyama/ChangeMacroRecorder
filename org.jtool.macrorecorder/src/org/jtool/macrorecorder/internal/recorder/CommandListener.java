@@ -8,14 +8,19 @@ package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
-import org.eclipse.ui.IWorkbenchCommandConstants;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.ui.IWorkbenchCommandConstants;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jdt.core.ICompilationUnit;
 
 /**
  * Listens command events (menu etc.).
@@ -59,16 +64,11 @@ class CommandListener implements IExecutionListener {
     /**
      * Receives a command that is about to execute.
      * @param commandId the identifier of the command that is about to execute
-     * @param event the event that will be passed to the <code>execute</code> method
+     * @param event the received event
      */
     @Override
     public void preExecute(String commandId, ExecutionEvent event) {
-        String path = EditorUtilities.getActiveInputFilePath();
-        if (path != null) {
-            globalRecorder.setSelectedPath(path);
-        } else {
-            path = globalRecorder.getSelectedPath();
-        }
+        String path = getPath();
         String branch = globalRecorder.getBranch(path);
         
         CommandMacro macro = new CommandMacro(CommandMacro.Action.EXECUTION, path, branch, commandId, event);
@@ -81,6 +81,30 @@ class CommandListener implements IExecutionListener {
         
         checkRefactoringBegin(event, macro);
         setInProgressAction(commandId, true);
+    }
+    
+    /**
+     * Obtains the path of a file on which a macro was performed.
+     * @return the path of the macro, or <code>null</code> if target resource is not a file or unknown
+     */
+    private String getPath() {
+        String path = EditorUtilities.getActiveInputFilePath();
+        if (path != null) {
+            return path;
+        }
+        
+        IWorkbenchWindow window = EditorUtilities.getActiveWorkbenchWindow();
+        if (window != null) {
+            ISelection sel = window.getSelectionService().getSelection();
+            if (sel instanceof IStructuredSelection) {
+                Object elem = ((ITreeSelection)sel).getFirstElement();
+                if (elem instanceof ICompilationUnit) {
+                    ICompilationUnit cu = (ICompilationUnit)elem;
+                    return cu.getPath().toString();
+                }
+            }
+        }
+        return null;
     }
     
     /**
@@ -134,7 +158,6 @@ class CommandListener implements IExecutionListener {
                 String path = macro.getPath();
                 if (path != null) {
                     globalRecorder.setPathToBeRefactored(path);
-                    globalRecorder.setSelectedPath(null);
                 }
                 
                 macro.setAction(CommandMacro.Action.REFACTORING.toString());

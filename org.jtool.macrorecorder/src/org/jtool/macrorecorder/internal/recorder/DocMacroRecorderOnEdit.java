@@ -153,8 +153,13 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      */
     @Override
     void recordCopyMacro(CommandMacro macro) {
+        int start = getSelectionStart();
+        if (start < 0) {
+            return;
+        }
+        
         CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY,
-                               macro.getPath(), macro.getBranch(), getSelectionStart(), getSelectionText());
+                               macro.getPath(), macro.getBranch(), start, getSelectionText());
         recorder.recordRawMacro(cmacro);
         
         dumpMacro(cmacro);
@@ -162,10 +167,17 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     
     /**
      * Returns the starting point of the text that is contained the selection.
-     * @return the starting point of the selected text
+     * @return the starting point of the selected text, <code>-1</code> if the selection is invalid
      */
     int getSelectionStart() {
-        assert styledText != null;
+        if (styledText == null) {
+            return -1;
+        }
+        
+        String path = EditorUtilities.getActiveInputFilePath();
+        if (path == null) {
+            return -1;
+        }
         
         Display display = PlatformUI.getWorkbench().getDisplay();
         display.syncExec(new Runnable() {
@@ -173,23 +185,28 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
                 selectionStart = styledText.getSelectionRange().x;
             }
         });
-        
         return selectionStart;
     }
     
     /**
      * Returns the text that is contained the selection.
-     * @return the selected text
+     * @return the selected text, the empty string if the selection is invalid
      */
     String getSelectionText() {
-        assert styledText != null;
+        if (styledText == null) {
+            return "";
+        }
+        String path = EditorUtilities.getActiveInputFilePath();
+        if (path == null) {
+            return "";
+        }
+        
         Display display = PlatformUI.getWorkbench().getDisplay();
         display.syncExec(new Runnable() {
             public void run() {
                 selectionText = styledText.getSelectionText();
             }
         });
-        
         return selectionText;
     }
     

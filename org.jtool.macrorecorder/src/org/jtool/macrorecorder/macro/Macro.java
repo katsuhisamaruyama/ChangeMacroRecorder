@@ -60,6 +60,11 @@ public class Macro {
     protected String packageName;
     
     /**
+     * The name of a file containing a resource on which this macro was performed.
+     */
+    protected String fileName;
+    
+    /**
      * The cache of pairs of a project name and its source path.
      */
     private static Map<String, String> sourcePathMap = new HashMap<String, String>();
@@ -93,6 +98,7 @@ public class Macro {
         this.branch = branch;
         projectName = getProjectName(path);
         packageName = getPackageName(projectName, path);
+        fileName = getFileName(path);
         
         delay();
     }
@@ -182,12 +188,20 @@ public class Macro {
     }
     
     /**
+     * Returns the name of a file containing a resource on which this macro was performed.
+     * @return the file name
+     */
+    public String getFileName() {
+        return packageName;
+    }
+    
+    /**
      * Extracts the name of a project from the path of a resource.
      * @param pathname the path of the resource
      * @return the project name, or an empty string if the path is invalid
      */
     private String getProjectName(String pathname) {
-        if (pathname == null) {
+        if (pathname == null || pathname.length() == 0) {
             return "";
         }
         
@@ -205,7 +219,7 @@ public class Macro {
      * @return the package name, or an empty string if the path is invalid
      */
     public String getPackageName(String projectName, String pathname) {
-        if (pathname == null || projectName.length() == 0) {
+        if (pathname == null || pathname.length() == 0 || projectName.length() == 0) {
             return "";
         }
         
@@ -233,10 +247,11 @@ public class Macro {
     
     /**
      * Returns the name of a resource on which this macro was performed.
+     * @param pathname the path of the resource
      * @return the resource name without its location information
      */
-    public String getFileName() {
-        if (path == null || !path.endsWith(JAVA_FILE_EXT)) {
+    public String getFileName(String pathname) {
+        if (path == null || pathname.length()== 0 ||  !path.endsWith(JAVA_FILE_EXT)) {
             return "";
         }
         

@@ -65,10 +65,6 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
     @Override
     public void executionNotification(RefactoringExecutionEvent event) {
         String path = globalRecorder.getPathToBeRefactored();
-        if (path == null) {
-            path = globalRecorder.getSelectedPath();
-            globalRecorder.setSelectedPath(null);
-        }
         String branch = globalRecorder.getBranch(path);
         
         RefactoringDescriptorProxy refactoringDescriptorProxy = event.getDescriptor();

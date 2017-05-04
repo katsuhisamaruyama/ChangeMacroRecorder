@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016
+ *  Copyright 2016-2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -13,6 +13,8 @@ import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.core.resources.ResourcesPlugin;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,11 +50,6 @@ class GlobalMacroRecorder {
     private ResourceListener resourceListener;
     
     /**
-     * A listener that manages events related to the package explorer.
-     */
-    private PackageExplorerListener packageListener;
-    
-    /**
      * A listener that manages resource changes in the Java model.
      */
     private GitRepositoryListener gitRepositoryListener;
@@ -61,11 +58,6 @@ class GlobalMacroRecorder {
      * The path name of a resource to be refactored.
      */
     private String pathToBeRefactored;
-    
-    /**
-     * The path name of the selected resource.
-     */
-    private String selectedPath;
     
     /**
      * The command macro that was lastly performed.
@@ -108,7 +100,6 @@ class GlobalMacroRecorder {
         refactoringListener = new RefactoringListener(this);
         fileListener = new FileListener(this);
         resourceListener = new ResourceListener(this);
-        packageListener = new PackageExplorerListener(this);
         gitRepositoryListener = new GitRepositoryListener(this, ResourcesPlugin.getWorkspace().getRoot().getProjects());
     }
     
@@ -137,11 +128,9 @@ class GlobalMacroRecorder {
         refactoringListener.register();
         fileListener.register();
         resourceListener.register();
-        packageListener.register();
         gitRepositoryListener.register();
         
         pathToBeRefactored = null;
-        selectedPath = null;
         saveInProgress = false;
         refactoringInProgress = false;
     }
@@ -154,7 +143,6 @@ class GlobalMacroRecorder {
         refactoringListener.unregister();
         fileListener.unregister();
         resourceListener.unregister();
-        packageListener.unregister();
         gitRepositoryListener.unregister();
     }
     
@@ -172,22 +160,6 @@ class GlobalMacroRecorder {
      */
     String getPathToBeRefactored() {
         return pathToBeRefactored;
-    }
-    
-    /**
-     * Sets the selected resource.
-     * @param path the path name of the selected resource
-     */
-    void setSelectedPath(String path) {
-        selectedPath = path;
-    }
-    
-    /**
-     * Returns the selected resource.
-     * @return path the path name of the selected resource
-     */
-    String getSelectedPath() {
-        return selectedPath;
     }
     
     /**
@@ -259,22 +231,42 @@ class GlobalMacroRecorder {
      * @param path the path name of the project
      * @param branch the branch name of the project
      */
-    void putGitProject(String path, String branch) {
-        gitProjects.put(path, branch);
+    void putGitProject(String ppath, String branch) {
+        gitProjects.put(ppath, branch);
     }
     
     /**
-     * Returns the name of a branch corresponding to a project
-     * @param path the path name of the project
-     * @return the branch name of the project
+     * Returns the name of a branch corresponding to a resource
+     * @param path the path name of the resource
+     * @return the branch name of the resource
      */
     String getBranch(String path) {
-        String branch = gitProjects.get(path);
+        String ppath = getProjectName(path);
+        String branch = gitProjects.get(ppath);
         if (branch != null) {
             return branch;
         }
         return "";
     }
+    
+    /**
+     * Extracts the name of a project from the path of a resource.
+     * @param pathname the path of the resource
+     * @return the project name, or an empty string if the path is invalid
+     */
+    private String getProjectName(String pathname) {
+        if (pathname == null || pathname.length() == 0) {
+            return "";
+        }
+        
+        int index = pathname.indexOf(File.separatorChar, 1);
+        if (index == -1) {
+            return pathname.substring(1);
+        }
+        
+        return pathname.substring(1, index);
+    }
+    
     /**
      * Records a macro.
      * @param macro the macro to be recorded
@@ -311,8 +303,6 @@ class GlobalMacroRecorder {
                 docRecorder.recordCopyMacro(macro);
             }
         }
-        
-        
     }
     
     /**
