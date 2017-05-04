@@ -8,18 +8,16 @@ package org.jtool.macrorecorder;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.jtool.macrorecorder.recorder.MacroRecorder;
 import org.eclipse.ui.IWorkbench;
+import org.jtool.macrorecorder.recorder.MacroRecorder;
 
 /**
  * Manages the preference page.
  * @author Katsuhisa Maruyama
  */
-public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class MacroRecorderPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
     
     /**
      * Displays recorded macros on the console for debugging.
@@ -34,23 +32,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
     /**
      * Creates an object for a preference page.
      */
-    public PreferencePage() {
+    public MacroRecorderPreferencePage() {
         super(GRID);
-        
         IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
         setPreferenceStore(store);
-        store.addPropertyChangeListener(new IPropertyChangeListener() {
-            
-            /**
-             * Receives a property changed event.
-             * @param event the property change event describing which property was changed
-             */
-            @Override
-            public void propertyChange(PropertyChangeEvent event) {
-                MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
-                macroRecorder.displayMacrosOnConsole(displayMacros(), displayRawMacros());
-            }
-        });
     }
     
     /**
@@ -59,9 +44,30 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
     @Override
     public void createFieldEditors() {
         addField(new BooleanFieldEditor(DISPLAY_MACROS,
-                "Displays recorded macros on the console", getFieldEditorParent()));
+                "Displays recorded macros on the console", getFieldEditorParent()) {
+            
+            /**
+             * Stores the preference value from this field editor into the preference store.
+             */
+            @Override
+            protected void doStore() {
+                MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
+                macroRecorder.displayMacrosOnConsole(getBooleanValue());
+            }
+        });
+        
         addField(new BooleanFieldEditor(DISPLAY_RAW_MACROS,
-                "Displays recorded raw macros on the console", getFieldEditorParent()));
+                "Displays recorded raw macros on the console", getFieldEditorParent()) {
+            
+            /**
+             * Stores the preference value from this field editor into the preference store.
+             */
+            @Override
+            protected void doStore() {
+                MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
+                macroRecorder.displayRawMacrosOnConsole(getBooleanValue());
+            }
+        });
     }
     
     /**

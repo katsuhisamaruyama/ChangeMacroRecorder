@@ -13,7 +13,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * Initializes the preference values.
  * @author Katsuhisa Maruyama
  */
-public class PreferenceInitializer extends AbstractPreferenceInitializer {
+public class MacroRecorderPreferenceInitializer extends AbstractPreferenceInitializer {
     
     /**
      * Stores initial preference values.
@@ -21,7 +21,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     @Override
     public void initializeDefaultPreferences() {
         IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
-        store.setDefault(PreferencePage.DISPLAY_MACROS, false);
-        store.setDefault(PreferencePage.DISPLAY_RAW_MACROS, false);
+        store.setDefault(MacroRecorderPreferencePage.DISPLAY_MACROS, false);
+        store.setDefault(MacroRecorderPreferencePage.DISPLAY_RAW_MACROS, false);
     }
 }
