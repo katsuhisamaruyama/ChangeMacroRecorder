@@ -16,7 +16,7 @@ public class TriggerMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        REFACTORING, COMMAND, UNDO, REDO, CURSOR_CHANGE;
+        REFACTORING, COMMAND, UNDO, REDO, GIT, CURSOR_CHANGE;
     }
     
     /**
