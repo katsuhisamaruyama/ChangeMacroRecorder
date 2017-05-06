@@ -19,7 +19,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jdt.core.ICompilationUnit;
 
 /**
@@ -71,15 +70,18 @@ class CommandListener implements IExecutionListener {
         String path = getPath();
         String branch = globalRecorder.getBranch(path);
         
-        CommandMacro macro = new CommandMacro(CommandMacro.Action.EXECUTION, path, branch, commandId, event);
-        globalRecorder.recordCommandMacro(macro);
-        
-        DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
-        if (docRecorder != null) {
-            docRecorder.applyDiff(false);
+        if (path != null && isCommandToBeRecorded(event)) {
+            CommandMacro macro = new CommandMacro(CommandMacro.Action.EXECUTION, path, branch, commandId, event);
+            globalRecorder.recordCommandMacro(macro);
+            
+            DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
+            if (docRecorder != null) {
+                docRecorder.applyDiff(false);
+            }
+            
+            checkRefactoringBegin(event, macro);
         }
         
-        checkRefactoringBegin(event, macro);
         setInProgressAction(commandId, true);
     }
     
@@ -97,7 +99,7 @@ class CommandListener implements IExecutionListener {
         if (window != null) {
             ISelection sel = window.getSelectionService().getSelection();
             if (sel instanceof IStructuredSelection) {
-                Object elem = ((ITreeSelection)sel).getFirstElement();
+                Object elem = ((IStructuredSelection)sel).getFirstElement();
                 if (elem instanceof ICompilationUnit) {
                     ICompilationUnit cu = (ICompilationUnit)elem;
                     return cu.getPath().toString();
@@ -105,6 +107,58 @@ class CommandListener implements IExecutionListener {
             }
         }
         return null;
+    }
+    
+    /**
+     * Tests if this command will be recorded. 
+     * @param event event the execution event
+     * @return <code>true</code> if this command will be recorded, otherwise <code>false</code>
+     */
+    private boolean isCommandToBeRecorded(ExecutionEvent event) {
+        try {
+            String commandCategory = event.getCommand().getCategory().getId();
+            if (commandCategory.endsWith("category.file") ||
+                commandCategory.endsWith("category.edit") ||
+                commandCategory.endsWith("category.refactoring")) {
+                return true;
+            }
+        } catch (NotDefinedException e) { /* empty */ }
+        return false;
+    }
+    
+    /**
+     * Tests if this command is related to refactoring. 
+     * @param event event the execution event
+     * @return <code>true</code> if this command is related to refactoring, otherwise <code>false</code>
+     */
+    private boolean isRefactoringCommand(ExecutionEvent event) {
+        try {
+            String commandCategory = event.getCommand().getCategory().getId();
+            if (commandCategory.endsWith("category.refactoring")) {
+                return true;
+            }
+        } catch (NotDefinedException e) { /* empty */ }
+        return false;
+    }
+    
+    /**
+     * Records a trigger macro that represents the beginning of a refactoring so as to detect document macros to be canceled.
+     * @param event event the execution event
+     * @param macro the macro for the command that is about to execute
+     */
+    private void checkRefactoringBegin(ExecutionEvent event, CommandMacro macro) {
+        if (isRefactoringCommand(event)) {
+            String path = macro.getPath();
+            if (path != null) {
+                globalRecorder.setPathToBeRefactored(path);
+            }
+            
+            macro.setAction(CommandMacro.Action.REFACTORING.toString());
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, 
+                                      path, macro.getBranch(), TriggerMacro.Timing.BEGIN, macro);
+            
+            globalRecorder.recordTriggerMacro(tmacro);
+        }
     }
     
     /**
@@ -143,30 +197,6 @@ class CommandListener implements IExecutionListener {
                    commandId.equalsIgnoreCase(IWorkbenchCommandConstants.FILE_SAVE_ALL)) {
             globalRecorder.setSaveInProgress(bool);
         }
-    }
-    
-    /**
-     * Records a trigger macro that represents the beginning of a refactoring
-     * so as to detect document macros to be canceled.
-     * @param event the event that will be passed to the <code>execute</code> method
-     * @param macro the macro for the command that is about to execute
-     */
-    private void checkRefactoringBegin(ExecutionEvent event, CommandMacro macro) {
-        try {
-            String commandCategory = event.getCommand().getCategory().getId();
-            if (commandCategory.endsWith("category.refactoring")) {
-                String path = macro.getPath();
-                if (path != null) {
-                    globalRecorder.setPathToBeRefactored(path);
-                }
-                
-                macro.setAction(CommandMacro.Action.REFACTORING.toString());
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, 
-                                          path, macro.getBranch(), TriggerMacro.Timing.BEGIN, macro);
-                
-                globalRecorder.recordTriggerMacro(tmacro);
-            }
-        } catch (NotDefinedException e) { /* empty */ }
     }
     
     /**
