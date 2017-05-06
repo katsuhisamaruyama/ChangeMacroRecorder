@@ -53,6 +53,8 @@ public class MacroRecorderPreferencePage extends FieldEditorPreferencePage imple
             protected void doStore() {
                 MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
                 macroRecorder.displayMacrosOnConsole(getBooleanValue());
+                IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
+                store.setValue(DISPLAY_MACROS, getBooleanValue());
             }
         });
         
@@ -66,6 +68,8 @@ public class MacroRecorderPreferencePage extends FieldEditorPreferencePage imple
             protected void doStore() {
                 MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
                 macroRecorder.displayRawMacrosOnConsole(getBooleanValue());
+                IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
+                store.setValue(DISPLAY_RAW_MACROS, getBooleanValue());
             }
         });
     }
