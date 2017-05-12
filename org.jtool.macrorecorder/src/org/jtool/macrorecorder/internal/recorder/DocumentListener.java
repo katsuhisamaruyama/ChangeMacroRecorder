@@ -78,10 +78,11 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         }
         
         assert styledText != null;
-        styledText.addListener(SWT.KeyDown, this);
-        styledText.addListener(SWT.MouseDown, this);
-        styledText.addListener(SWT.MouseDoubleClick, this);
-        
+        if (!styledText.isDisposed()) {
+            styledText.addListener(SWT.KeyDown, this);
+            styledText.addListener(SWT.MouseDown, this);
+            styledText.addListener(SWT.MouseDoubleClick, this);
+        }
         final DocumentListener dl = this;
         styledText.addDisposeListener(new DisposeListener() {
              
@@ -90,11 +91,12 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
              * @param e - the event containing information about the dispose
              */
             public void widgetDisposed(DisposeEvent e) {
-                styledText.removeListener(SWT.KeyDown, dl);
-                styledText.removeListener(SWT.MouseDown, dl);
-                styledText.removeListener(SWT.MouseDoubleClick, dl);
-                
-                styledText.removeDisposeListener(this);
+                if (!styledText.isDisposed()) {
+                    styledText.removeListener(SWT.KeyDown, dl);
+                    styledText.removeListener(SWT.MouseDown, dl);
+                    styledText.removeListener(SWT.MouseDoubleClick, dl);
+                    styledText.removeDisposeListener(this);
+                }
             }
         });
     }

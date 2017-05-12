@@ -232,7 +232,9 @@ class EditorUtilities {
     static String getCharset(IEditorPart editor) {
         IFile file = EditorUtilities.getInputFile(editor);
         try {
-            return file.getCharset();
+            if (file != null) {
+                return file.getCharset();
+            }
         } catch (CoreException e) {
         }
         return null;

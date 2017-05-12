@@ -251,7 +251,7 @@ public class Macro {
      * @return the resource name without its location information
      */
     public String getFileName(String pathname) {
-        if (path == null || pathname.length()== 0 ||  !path.endsWith(JAVA_FILE_EXT)) {
+        if (path == null || pathname.length()== 0 || !path.endsWith(JAVA_FILE_EXT)) {
             return "";
         }
         
