@@ -23,8 +23,8 @@ Recorded change macros include detailed information such as the inserted and del
 
 ## Requirement
 
-JDK 1.7 or later
-Eclipse 4.6 (Neon) or later
+JDK 1.7 or later  
+Eclipse 4.6 (Neon) or later  
 
 ## Install
 
