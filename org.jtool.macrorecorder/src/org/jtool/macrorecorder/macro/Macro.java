@@ -192,7 +192,7 @@ public class Macro {
      * @return the file name
      */
     public String getFileName() {
-        return packageName;
+        return fileName;
     }
     
     /**
