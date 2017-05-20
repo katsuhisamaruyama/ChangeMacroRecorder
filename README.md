@@ -40,7 +40,7 @@ and put it in the 'plugins' directory under the Eclipse installation. Eclipse ne
 
 ## Usage
 
-ChangeMacroRecorder is intended to be embeded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are includes in the `package org.jtool.macrorecorder.recorder`.
+ChangeMacroRecorder is intended to be embeded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are included in the `package org.jtool.macrorecorder.recorder`.
 
 #### IMacroRecorder - Interface of the single instance that records change macros
 
@@ -142,7 +142,7 @@ public interface IMacroListener {
 }
 ```
 
-For example, if you will create a class `PrintChangeMacro` that displays all of the fine-grained code changes, it contains the following code:
+For example, if you will create a class `PrintChangeMacro` that displays all of the fine-grained code changes, the class contains the following code:
 
 ```
 import org.jtool.macrorecorder.recorder.MacroRecorder;
