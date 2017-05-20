@@ -142,7 +142,7 @@ public interface IMacroListener {
 }
 ```
 
-For example, if you will create a class `PrintChangeMacro` that displays all of the fine-grained code changes, the class contains the following code:
+For example, if you will create a class `PrintChangeMacro` that displays all of the fine-grained code changes on the console, the class contains the following code:
 
 ```
 import org.jtool.macrorecorder.recorder.MacroRecorder;
@@ -170,7 +170,7 @@ public class PrintChangeMacro implements IMacroListener {
     @Override
     public void macroAdded(MacroEvent evt) {
         Macro macro = evt.getMacro();
-        System.out.println(macro.toString());
+        MacroConsole.println(macro.toString());
     }
     
     @Override
