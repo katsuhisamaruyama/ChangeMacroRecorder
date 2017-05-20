@@ -150,6 +150,7 @@ import org.jtool.macrorecorder.recorder.IMacroRecorder;
 import org.jtool.macrorecorder.recorder.IMacroListener;
 import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.jtool.macrorecorder.recorder.MacroEvent;
+import org.jtool.macrorecorder.recorder.MacroConsole;
 
 public class PrintChangeMacro implements IMacroListener {
 
