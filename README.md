@@ -26,6 +26,10 @@ Recorded change macros include detailed information such as the inserted and del
 JDK 1.7 or later  
 Eclipse 4.6 (Neon) or later  
 
+## License
+
+[Eclipse Public License 1.0 (EPL-1.0)](<https://opensource.org/licenses/eclipse-1.0.php>)
+
 ## Install
 
 ### Using Eclipse Update Site
