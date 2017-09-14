@@ -16,7 +16,7 @@ public class GitMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        OPEN, REFS_CHANGED, INDEX_CHANGED;
+        OPEN, REFS_CHANGE, INDEX_CHANGE;
     }
     
     /**
@@ -42,7 +42,7 @@ public class GitMacro extends Macro {
      * @return <code>true</code> if this macro represents a refs change action, otherwise <code>false</code>
      */
     public boolean isRefsChange() {
-        return action.equals(Action.REFS_CHANGED.toString());
+        return action.equals(Action.REFS_CHANGE.toString());
     }
     
     /**
@@ -50,7 +50,7 @@ public class GitMacro extends Macro {
      * @return <code>true</code> if this macro represents an index change action, otherwise <code>false</code>
      */
     public boolean isIndexChange() {
-        return action.equals(Action.INDEX_CHANGED.toString());
+        return action.equals(Action.INDEX_CHANGE.toString());
     }
     
     /**

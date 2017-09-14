@@ -76,7 +76,7 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
     public void onRefsChanged(RefsChangedEvent event) {
         Repository repository = event.getRepository();
         Git git = Git.wrap(repository);
-        GitMacro macro = createGitMacro(GitMacro.Action.REFS_CHANGED, git);
+        GitMacro macro = createGitMacro(GitMacro.Action.REFS_CHANGE, git);
         if (macro != null) {
             globalRecorder.recordMacro(macro);
         }
@@ -91,7 +91,7 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
         try {
             Repository repository = event.getRepository();
             Git git = Git.wrap(repository);
-            GitMacro macro = createGitMacro(GitMacro.Action.INDEX_CHANGED, git);
+            GitMacro macro = createGitMacro(GitMacro.Action.INDEX_CHANGE, git);
             if (macro != null) {
                 globalRecorder.recordMacro(macro);
                 
