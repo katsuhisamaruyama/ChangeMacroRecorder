@@ -164,7 +164,7 @@ public class ResourceMacro extends Macro {
         buf.append(super.toString());
         
         buf.append(" target=[" + target + "]");
-        if (!path.equals(srcDstPath)) {
+        if (!getPath().equals(srcDstPath)) {
             if (isRemove() || isMoveTo() || isRenameTo()) {
                 buf.append(" to [" + srcDstPath + "]");
             } else {

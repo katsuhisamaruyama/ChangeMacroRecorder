@@ -152,7 +152,7 @@ public class CompoundMacro extends Macro {
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
-        buf.append("{" + getClassName() + "} ");
+        buf.append("{" + getThisClassName() + "} ");
         buf.append(getFormatedTime(time));
         buf.append(" " + action);
         buf.append(" commandId=[" + getCommandId() + "]");

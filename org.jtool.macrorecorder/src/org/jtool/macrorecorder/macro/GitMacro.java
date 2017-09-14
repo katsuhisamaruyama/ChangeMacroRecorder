@@ -30,14 +30,6 @@ public class GitMacro extends Macro {
     }
     
     /**
-     * Returns the name of the current branch that HEAD points to.
-     * @return the branch name
-     */
-    public String getBranch() {
-        return branch;
-    }
-    
-    /**
      * Tests if this macro represents an open action.
      * @return <code>true</code> if this macro represents an open action, otherwise <code>false</code>
      */
