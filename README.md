@@ -18,7 +18,7 @@ ChangeMacroRecorder records the following changes macros:
 * TriggerMacro - a trigger action (refactoring, undo, redo, and cursor change)  
 * CompoundMacro - a series of macros  
 
-Recorded change macros include detailed information such as the inserted and deleted text for each edit or command. See [macro](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/src/org/jtool/macrorecorder/macro>).
+Recorded change macros include detailed information such as the inserted and deleted text for each edit or command. See the source code of the the [macros](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/src/org/jtool/macrorecorder/macro>).
 
 ## Requirement
 
@@ -37,7 +37,7 @@ Input `http://katsuhisamaruyama.github.io/ChangeMacroRecorder/org.jtool.macrorec
 
 ### Manually Downloading
 
-Download the latest release of the jar file in [the plug-in directory](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.site/plugins>)
+Download the latest release of the jar file in the [plug-in directory](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.site/plugins>)
 and put it in the 'plug-ins' directory under the Eclipse installation. Eclipse needs to be  restarted.
 
 ## Usage
