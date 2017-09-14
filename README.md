@@ -18,13 +18,12 @@ ChangeMacroRecorder records the following changes macros:
 * TriggerMacro - a trigger action (refactoring, undo, redo, and cursor change)  
 * CompoundMacro - a series of macros  
 
-Recorded change macros include detailed information such as the inserted and deleted text for each edit or command. See
-<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/src/org/jtool/macrorecorder/macro>.
+Recorded change macros include detailed information such as the inserted and deleted text for each edit or command. See [macro](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/src/org/jtool/macrorecorder/macro>).
 
 ## Requirement
 
 JDK 1.7 or later  
-Eclipse 4.6 (Neon) or later  
+[Eclipse](https://www.eclipse.org/) 4.6 (Neon) or later 
 
 ## License
 
@@ -38,13 +37,12 @@ Input `http://katsuhisamaruyama.github.io/ChangeMacroRecorder/org.jtool.macrorec
 
 ### Manually Downloading
 
-Download the latest release of the jar file in the directory
-<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.site/plugins>
-and put it in the 'plugins' directory under the Eclipse installation. Eclipse needs to be  restarted.
+Download the latest release of the jar file in [the plug-in directory](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.site/plugins>)
+and put it in the 'plug-ins' directory under the Eclipse installation. Eclipse needs to be  restarted.
 
 ## Usage
 
-ChangeMacroRecorder is intended to be embeded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are included in the `package org.jtool.macrorecorder.recorder`.
+ChangeMacroRecorder is intended to be embedded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are included in the `package org.jtool.macrorecorder.recorder`.
 
 #### IMacroRecorder - Interface of the single instance that records change macros
 
@@ -91,14 +89,13 @@ public interface IMacroRecorder {
 
 #### IMacroCompressor - Interface of an instance that compresses document change macros
 
-The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits continuous typing at the point where it detects one of these characters. in other words, typing the text of "ab(c)" are divided into four document chnange macros: "ab", "(", "c", and ")". The chracters "a" and "b" are combined since a delimiter does not exist between "a" and "b". The user program freely the delimiter characters by using method `setDelimiter(char[])`. If the user program wants to replace the default delimiter-based algorithm with a different one, the program can implement `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)`.
+The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits continuous typing at the point where it detects one of these characters. in other words, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". The user program freely the delimiter characters by using method `setDelimiter(char[])`. If the user program wants to replace the default delimiter-based algorithm with a different one, the program can implement `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)`.
 
 ```
 import org.jtool.macrorecorder.macro.DocumentMacro;
 
 /**
  * An interface for compressor of change macros.
- * @author Katsuhisa Maruyama
  */
 public interface IMacroCompressor {
     
