@@ -10,7 +10,7 @@ import org.jtool.macrorecorder.recorder.MacroRecorder;
 import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.Macro;
-import org.jtool.macrorecorder.recorder.IMacroCompressor;
+import org.jtool.macrorecorder.recorder.MacroCompressor;
 import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -48,7 +48,7 @@ public class Recorder {
     /**
      * A compressor that compresses macros.
      */
-    private IMacroCompressor macroCompressor;
+    private MacroCompressor macroCompressor;
     
     /**
      * A compound macro that contains macros.
@@ -75,7 +75,7 @@ public class Recorder {
      * @param recorder the facade of a macro recorder
      * @param compressor the compressor
      */
-    public Recorder(MacroRecorder recorder, IMacroCompressor compressor) {
+    public Recorder(MacroRecorder recorder, MacroCompressor compressor) {
         this.macroRecorder = recorder;
         this.macroCompressor = compressor;
         globalRecorder = new GlobalMacroRecorder(this);
@@ -93,7 +93,7 @@ public class Recorder {
      * Sets a compressor that compresses macros.
      * @param compressor the compressor
      */
-    public void setMacroCompressor(IMacroCompressor compressor) {
+    public void setMacroCompressor(MacroCompressor compressor) {
         if (compressor != null) {
             this.macroCompressor = compressor;
         }
@@ -103,7 +103,7 @@ public class Recorder {
      * Returns the compressor that compresses macros.
      * @return the macro compressor
      */
-    public IMacroCompressor getMacroCompressor() {
+    public MacroCompressor getMacroCompressor() {
         return macroCompressor;
     }
     

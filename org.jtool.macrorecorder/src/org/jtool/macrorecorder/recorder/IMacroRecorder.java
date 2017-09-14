@@ -22,7 +22,7 @@ public interface IMacroRecorder {
      * Sets a compressor that compresses change macros.
      * @param compressor the compressor
      */
-    public void setMacroCompressor(IMacroCompressor compressor);
+    public void setMacroCompressor(MacroCompressor compressor);
     
     /**
      * Starts the recording of change macros.

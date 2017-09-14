@@ -51,9 +51,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Creates an object that records macros.
      */
     private MacroRecorder() {
-        
-        
-        IMacroCompressor defaultCompressor = new MacroCompressor();
+        MacroCompressor defaultCompressor = new MacroCompressor();
         internalRecorder = new Recorder(this, defaultCompressor);
     }
     
@@ -77,7 +75,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Sets a compressor that compresses change macros.
      * @param compressor the compressor
      */
-    public void setMacroCompressor(IMacroCompressor compressor) {
+    public void setMacroCompressor(MacroCompressor compressor) {
         assert compressor != null;
         internalRecorder.setMacroCompressor(compressor);
     }
