@@ -76,7 +76,7 @@ public class MacroJSON {
     /**
      * Creates a JSON array builder of macros.
      * @param macros the collection of the macros
-     * @return the created JSON array builder
+     * @return the created JSON array builder, or <code>null</code> if the array builder is not required
      */
     protected static JsonArrayBuilder getJSONArrayBuilder(List<Macro> macros) {
         if (macros == null || macros.size() == 0) {
@@ -92,7 +92,7 @@ public class MacroJSON {
     /**
      * Creates a JSON array builder of a map.
      * @param map the map
-     * @return the created JSON array builder
+     * @return the created JSON array builder, or <code>null</code> if the array builder is not required
      */
     protected static JsonArrayBuilder getJSONArrayBuilder(Map<String, String> map) {
         if (map == null || map.size() == 0) {

@@ -88,17 +88,25 @@ public class MacroRecorder implements IMacroRecorder {
             internalRecorder.start();
         }
         running = true;
-       
     }
     
     /**
      * Stops the recording of change macros.
      */
     public void stop() {
-        if (running) {
+        if (running && macroListeners.size() == 0) {
             internalRecorder.stop();
         }
         running = false;
+    }
+    
+    /**
+     * Tests if this macro recorder is running.
+     * @return <code>true</code> if this macro recorder is running, otherwise <code>false</code>
+     */
+    @Override
+    public boolean isRunning() {
+        return running;
     }
     
     /**

@@ -35,6 +35,12 @@ public interface IMacroRecorder {
     public void stop();
     
     /**
+     * Tests if this macro recorder is running.
+     * @return <code>true</code> if this macro recorder is running, otherwise <code>false</code>
+     */
+    public boolean isRunning();
+    
+    /**
      * Adds a listener that receives a change macro event.
      * @param listener the event listener to be added
      */
