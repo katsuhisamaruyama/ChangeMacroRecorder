@@ -70,7 +70,7 @@ public class GitMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        return super.getJSONObjectBuikderOfMacro().build();
+        return MacroJSON.getJSONObjectBuikder(this).build();
     }
     
     /**

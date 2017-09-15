@@ -229,7 +229,7 @@ public class FileMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        JsonObject json = super.getJSONObjectBuikderOfMacro()
+        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_CODE, code)
           .add(MacroJSON.JSON_ATTR_CHARSET, charset)
           .add(MacroJSON.JSON_ATTR_SRD_DST_PATH, srcDstPath)

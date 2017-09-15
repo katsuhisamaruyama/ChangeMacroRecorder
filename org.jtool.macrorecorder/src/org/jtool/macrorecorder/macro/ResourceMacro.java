@@ -182,7 +182,7 @@ public class ResourceMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        JsonObject json = super.getJSONObjectBuikderOfMacro()
+        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_RESOURCE_TARGET, target.toString())
           .add(MacroJSON.JSON_ATTR_SRD_DST_PATH, srcDstPath)
           .build();

@@ -181,12 +181,12 @@ public class RefactoringMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        JsonObject json = super.getJSONObjectBuikderOfMacro()
+        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_REFACTORING_NAME, name)
           .add(MacroJSON.JSON_ATTR_REFACTORING_START, getSelectionStart())
           .add(MacroJSON.JSON_ATTR_REFACTORING_END, getSelectionEnd())
           .add(MacroJSON.JSON_ATTR_CODE, selectionText)
-          .add(MacroJSON.JSON_ATTR_COPYED_TEXT, super.getJSONArrayBuilderOfMap(argumentMap))
+          .add(MacroJSON.JSON_ATTR_COPYED_TEXT, MacroJSON.getJSONArrayBuilder(argumentMap))
           .build();
         return json;
     }

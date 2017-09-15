@@ -81,7 +81,7 @@ public class CopyMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        JsonObject json = super.getJSONObjectBuikderOfMacro()
+        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_OFFSET, start)
           .add(MacroJSON.JSON_ATTR_COPYED_TEXT, copiedText)
           .build();

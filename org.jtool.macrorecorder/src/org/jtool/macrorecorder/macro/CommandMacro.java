@@ -89,7 +89,7 @@ public class CommandMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        JsonObject json = super.getJSONObjectBuikderOfMacro()
+        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_COMMAND, commandId)
           .build();
         return json;

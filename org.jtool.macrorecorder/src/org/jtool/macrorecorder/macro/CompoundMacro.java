@@ -8,14 +8,11 @@ package org.jtool.macrorecorder.macro;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import javax.json.Json;
+import javax.json.JsonObject;
 
 /**
  * Stores a compound macro that contains macros.
@@ -177,19 +174,21 @@ public class CompoundMacro extends Macro {
     }
     
     /**
-     * Creates a JSON object builder of this macro.
-     * @return the created JSON object builder
+     * Returns the JSON object of this macro.
+     * @return the JSON object
      */
-    protected JsonObjectBuilder getJSONObjectBuikderOfMacro() {
-        JsonObjectBuilder builder = Json.createObjectBuilder()
+    @Override
+    public JsonObject getJSON() {
+        JsonObject json = Json.createObjectBuilder()
           .add(MacroJSON.JSON_MACRO_CLASS, getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
           .add(MacroJSON.JSON_MACRO_ACTION, action)
           .add(MacroJSON.JSON_MACRO_PATH, getPath())
           .add(MacroJSON.JSON_ATTR_COMMAND, getCommandId())
           .add(MacroJSON.JSON_ATTR_NUMBER, getMacroNumber())
-          .add(MacroJSON.JSON_MACRO_PATH, getJSONArrayBuilderOfMacros(macros));
-        return builder;
+          .add(MacroJSON.JSON_MACRO_PATH, MacroJSON.getJSONArrayBuilder(macros))
+          .build();
+        return json;
     }
     
     /**
