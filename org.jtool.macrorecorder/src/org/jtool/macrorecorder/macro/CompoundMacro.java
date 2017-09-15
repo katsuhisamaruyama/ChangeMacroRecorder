@@ -174,11 +174,11 @@ public class CompoundMacro extends Macro {
     }
     
     /**
-     * Returns the JSON object of this macro.
-     * @return the JSON object
+     * Returns a string that represents a JSON object for a macro.
+     * @return the JSON string representation
      */
     @Override
-    public JsonObject getJSON() {
+    public String getJSON() {
         JsonObject json = Json.createObjectBuilder()
           .add(MacroJSON.JSON_MACRO_CLASS, getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
@@ -188,7 +188,7 @@ public class CompoundMacro extends Macro {
           .add(MacroJSON.JSON_ATTR_NUMBER, getMacroNumber())
           .add(MacroJSON.JSON_MACRO_PATH, MacroJSON.getJSONArrayBuilder(macros))
           .build();
-        return json;
+        return MacroJSON.stringify(json);
     }
     
     /**

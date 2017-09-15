@@ -108,15 +108,15 @@ public class CodeCompletionMacro extends Macro {
     }
     
     /**
-     * Returns the JSON object of this macro.
-     * @return the JSON object
+     * Returns a string that represents a JSON object for a macro.
+     * @return the JSON string representation
      */
     @Override
-    public JsonObject getJSON() {
+    public String getJSON() {
         JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_COMMAND, commandId)
           .build();
-        return json;
+        return MacroJSON.stringify(json);
     }
     
     /**

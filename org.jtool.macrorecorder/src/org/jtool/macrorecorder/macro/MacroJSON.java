@@ -8,10 +8,16 @@ package org.jtool.macrorecorder.macro;
 
 import java.util.List;
 import java.util.Map;
-
+import java.io.StringReader;
+import java.io.StringWriter;
 import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonArray;
+import javax.json.JsonStructure;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.json.JsonWriter;
 
 /**
  * The constants of JSON attributes for representing information about macros.
@@ -88,5 +94,40 @@ public class MacroJSON {
             builder.add(Json.createObjectBuilder().add(key, maps.get(key)).build());
         }
         return builder;
+    }
+    
+    /**
+     * Creates a string that represents a JSON object or array.
+     * @param json the JSON object or array
+     * @return the created string
+     */
+    protected static String stringify(JsonStructure json) {
+        StringWriter stringWriter = new StringWriter();
+        JsonWriter jsonWriter = Json.createWriter(stringWriter);
+        jsonWriter.write(json);
+        jsonWriter.close();
+        return stringWriter.toString();
+    }
+    
+    /**
+     * Restores a JSON object from its string representation.
+     * @param jsonString the string representation
+     * @return the restored JSON object
+     */
+    protected static JsonObject parseObject(String jsonString) {
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonObject = jsonReader.readObject();
+        return jsonObject;
+    }
+    
+    /**
+     * Restores a JSON array from its string representation.
+     * @param jsonString the string representation
+     * @return the restored JSON array
+     */
+    protected static JsonArray parseArray(String jsonString) {
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonArray jsonArray = jsonReader.readArray();
+        return jsonArray;
     }
 }

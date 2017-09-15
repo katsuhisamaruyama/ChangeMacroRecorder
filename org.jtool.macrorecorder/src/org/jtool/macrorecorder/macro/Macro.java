@@ -9,6 +9,7 @@ package org.jtool.macrorecorder.macro;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 import javax.json.JsonObject;
 
 /**
@@ -237,11 +238,12 @@ public class Macro {
     }
     
     /**
-     * Returns the JSON object of this macro.
-     * @return the JSON object
+     * Returns a string that represents a JSON object for a macro.
+     * @return the JSON string representation
      */
-    public JsonObject getJSON() {
-        return MacroJSON.getJSONObjectBuikder(this).build();
+    public String getJSON() {
+        JsonObject json = MacroJSON.getJSONObjectBuikder(this).build();
+        return MacroJSON.stringify(json);
     }
     
     /**
