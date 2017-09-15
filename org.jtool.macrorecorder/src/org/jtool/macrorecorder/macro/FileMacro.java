@@ -268,9 +268,6 @@ public class FileMacro extends Macro {
      */
     @Override
     public String getJSON() {
-        
-        System.out.println("FILE");
-        
         JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_CODE, code)
           .add(MacroJSON.JSON_ATTR_CHARSET, charset)
