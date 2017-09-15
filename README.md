@@ -143,7 +143,7 @@ public interface IMacroListener {
 }
 ```
 
-For example, if you will create a class `PrintChangeMacro` that displays all of the fine-grained code changes on the console, the class contains the following code:
+For example, if you will create a class `SampleMacroPrint` that displays all of the fine-grained code changes on the console, the class contains the following code:
 
 ```
 import org.jtool.macrorecorder.recorder.MacroRecorder;
@@ -152,10 +152,14 @@ import org.jtool.macrorecorder.recorder.IMacroListener;
 import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.jtool.macrorecorder.recorder.MacroEvent;
 import org.jtool.macrorecorder.recorder.MacroConsole;
+import org.jtool.macrorecorder.macro.Macro;
 
-public class PrintChangeMacro implements IMacroListener {
-
-    public void startListeners() {
+public class SampleMacroPrint implements IMacroListener {
+    
+    public SampleMacroPrint() {
+    }
+    
+    public void start() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
         IMacroCompressor compressor = recorder.getMacroCompressor();
         compressor.setDelimiter(new char[] { '\n' });
@@ -163,7 +167,7 @@ public class PrintChangeMacro implements IMacroListener {
         recorder.start();
     }
     
-    public void stopListeners() {
+    public void stop() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
         recorder.removeMacroListener(this);
         recorder.stop();
@@ -172,13 +176,16 @@ public class PrintChangeMacro implements IMacroListener {
     @Override
     public void macroAdded(MacroEvent evt) {
         Macro macro = evt.getMacro();
-        MacroConsole.println(macro.toString());
+        MacroConsole.println(macro.getDescription());
     }
     
     @Override
     public void rawMacroAdded(MacroEvent evt) {
     }
+}
 ```
+
+Please see [sample](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample>)
 
 ## Author
 
