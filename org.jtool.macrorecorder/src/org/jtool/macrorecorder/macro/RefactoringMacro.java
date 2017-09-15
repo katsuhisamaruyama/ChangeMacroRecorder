@@ -7,7 +7,10 @@
 package org.jtool.macrorecorder.macro;
 
 import java.util.Map;
+import java.util.HashMap;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  * Stores a refactoring macro.
@@ -30,7 +33,7 @@ public class RefactoringMacro extends Macro {
     /**
      * The map that stores arguments of a refactoring.
      */
-    private Map<String, String> argumentMap;
+    private Map<String, String> argumentMap = new HashMap<String, String>();
     
     /**
      * The starting point of the text that is contained the selection.
@@ -181,13 +184,16 @@ public class RefactoringMacro extends Macro {
      */
     @Override
     public String getJSON() {
-        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
+        JsonObjectBuilder builder = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_REFACTORING_NAME, name)
           .add(MacroJSON.JSON_ATTR_REFACTORING_START, getSelectionStart())
           .add(MacroJSON.JSON_ATTR_REFACTORING_END, getSelectionEnd())
-          .add(MacroJSON.JSON_ATTR_CODE, selectionText)
-          .add(MacroJSON.JSON_ATTR_COPYED_TEXT, MacroJSON.getJSONArrayBuilder(argumentMap))
-          .build();
+          .add(MacroJSON.JSON_ATTR_CODE, selectionText);
+        JsonArrayBuilder array = MacroJSON.getJSONArrayBuilder(argumentMap);
+        if (array != null) {
+            builder.add(MacroJSON.JSON_RAW_MACROS, array);
+        }
+        JsonObject json = builder.build();
         return MacroJSON.stringify(json);
     }
     

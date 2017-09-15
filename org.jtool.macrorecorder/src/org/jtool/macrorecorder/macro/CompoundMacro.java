@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  * Stores a compound macro that contains macros.
@@ -179,15 +181,18 @@ public class CompoundMacro extends Macro {
      */
     @Override
     public String getJSON() {
-        JsonObject json = Json.createObjectBuilder()
+        JsonObjectBuilder builder = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_MACRO_CLASS, getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
           .add(MacroJSON.JSON_MACRO_ACTION, action)
           .add(MacroJSON.JSON_MACRO_PATH, getPath())
           .add(MacroJSON.JSON_ATTR_COMMAND, getCommandId())
-          .add(MacroJSON.JSON_ATTR_NUMBER, getMacroNumber())
-          .add(MacroJSON.JSON_MACRO_PATH, MacroJSON.getJSONArrayBuilder(macros))
-          .build();
+          .add(MacroJSON.JSON_ATTR_NUMBER, getMacroNumber());
+        JsonArrayBuilder array = MacroJSON.getJSONArrayBuilder(macros);
+        if (array != null) {
+            builder.add(MacroJSON.JSON_MACRO_PATH, array);
+        }
+        JsonObject json = builder.build();
         return MacroJSON.stringify(json);
     }
     

@@ -20,3 +20,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-Name: ChangeMacroRecorder for Eclipse
 Export-Package: org.jtool.macrorecorder.macro,
  org.jtool.macrorecorder.recorder
+Bundle-ClassPath: .,
+ javax.json-1.1.jar

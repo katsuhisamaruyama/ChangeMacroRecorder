@@ -65,8 +65,11 @@ public class MacroJSON {
           .add(MacroJSON.JSON_MACRO_PATH, macro.getPath())
           .add(MacroJSON.JSON_MACRO_PROJECT_NAME, macro.getProjectName())
           .add(MacroJSON.JSON_MACRO_PACKAGE_NAME, macro.getPackageName())
-          .add(MacroJSON.JSON_MACRO_FILE_NAME, macro.getFileName())
-          .add(MacroJSON.JSON_MACRO_PATH, getJSONArrayBuilder(macro.getRawMacros()));
+          .add(MacroJSON.JSON_MACRO_FILE_NAME, macro.getFileName());
+        JsonArrayBuilder getJSONArray = getJSONArrayBuilder(macro.getRawMacros());
+        if (getJSONArray != null) {
+            builder.add(MacroJSON.JSON_RAW_MACROS, getJSONArray);
+        }
         return builder;
     }
     
@@ -76,6 +79,9 @@ public class MacroJSON {
      * @return the created JSON array builder
      */
     protected static JsonArrayBuilder getJSONArrayBuilder(List<Macro> macros) {
+        if (macros == null || macros.size() == 0) {
+            return null;
+        }
         JsonArrayBuilder builder = Json.createArrayBuilder();
         for (Macro macro : macros) {
             builder.add(macro.getJSON());
@@ -85,13 +91,16 @@ public class MacroJSON {
     
     /**
      * Creates a JSON array builder of a map.
-     * @param macros the collection of the map
+     * @param map the map
      * @return the created JSON array builder
      */
-    protected static JsonArrayBuilder getJSONArrayBuilder(Map<String, String> maps) {
+    protected static JsonArrayBuilder getJSONArrayBuilder(Map<String, String> map) {
+        if (map == null || map.size() == 0) {
+            return null;
+        }
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (String key : maps.keySet()) {
-            builder.add(Json.createObjectBuilder().add(key, maps.get(key)).build());
+        for (String key : map.keySet()) {
+            builder.add(Json.createObjectBuilder().add(key, map.get(key)).build());
         }
         return builder;
     }
