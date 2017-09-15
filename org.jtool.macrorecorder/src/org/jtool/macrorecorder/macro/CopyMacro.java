@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import java.time.ZonedDateTime;
+
 import javax.json.JsonObject;
 
 /**
@@ -39,10 +41,44 @@ public class CopyMacro extends Macro {
      * @param start the leftmost offset of the document changed by this macro
      * @param text the contents of the document copied by the macro
      */
-    public CopyMacro(Action action, String path, String branch, int start, String text) {
-        super(action.toString(), path, branch);
+    public CopyMacro(String action, String path, String branch, int start, String text) {
+        super(action, path, branch);
         this.start = start;
         this.copiedText = text;
+    }
+    
+    /**
+     * Creates an object storing information about a copy macro.
+     * @param action the action of this macro
+     * @param path the path of a file on which this macro was performed
+     * @param branch the branch name of a file on which this macro was performed
+     * @param start the leftmost offset of the document changed by this macro
+     * @param text the contents of the document copied by the macro
+     */
+    public CopyMacro(Action action, String path, String branch, int start, String text) {
+        this(action.toString(), path, branch, start, text);
+    }
+    
+    /**
+     * Creates an object storing information about a copy macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     * @param start the leftmost offset of the document changed by this macro
+     * @param text the contents of the document copied by the macro
+     */
+    protected CopyMacro(ZonedDateTime time, String action, MacroPath mpath, int start, String text) {
+        super(time, action.toString(), mpath);
+        this.start = start;
+        this.copiedText = text;
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public CopyMacro clone() {
+        return new CopyMacro(time, action, macroPath, start, copiedText);
     }
     
     /**

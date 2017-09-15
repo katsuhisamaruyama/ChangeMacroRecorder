@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.macro;
 
 import java.util.Map;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -53,10 +54,44 @@ public class RefactoringMacro extends Macro {
      * @param name the name of a refactoring
      * @param map the map that stores arguments of a refactoring
      */
-    public RefactoringMacro(Action action, String path, String branch, String name, Map<String, String> map) {
-        super(action.toString(), path, branch);
+    public RefactoringMacro(String action, String path, String branch, String name, Map<String, String> map) {
+        super(action, path, branch);
         this.name = name;
         this.argumentMap = map;
+    }
+    
+    /**
+     * Creates an object storing information about a refactpring macro.
+     * @param action the action of this macro
+     * @param path the path of a file or a package on which this macro was performed
+     * @param branch the branch name of a file or a package on which this macro was performed
+     * @param name the name of a refactoring
+     * @param map the map that stores arguments of a refactoring
+     */
+    public RefactoringMacro(Action action, String path, String branch, String name, Map<String, String> map) {
+        this(action.toString(), path, branch, name, map);
+    }
+    
+    /**
+     * Creates an object storing information about a refactpring macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     * @param name the name of a refactoring
+     * @param map the map that stores arguments of a refactoring
+     */
+    protected RefactoringMacro(ZonedDateTime time, String action, MacroPath mpath, String name, Map<String, String> map) {
+        super(time, action, mpath);
+        this.name = name;
+        this.argumentMap = map;
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public RefactoringMacro clone() {
+        return new RefactoringMacro(time, action, macroPath, name, argumentMap);
     }
     
     /**

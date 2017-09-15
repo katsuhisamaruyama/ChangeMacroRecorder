@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import java.time.ZonedDateTime;
+
 import javax.json.JsonObject;
 
 /**
@@ -47,8 +49,8 @@ public class FileMacro extends Macro {
      * @param charset the name of a charset of the file
      * @param sdpath the path of the source or destination of the rename or move
      */
-    public FileMacro(Action action, String path, String branch, String code, String charset, String sdpath) {
-        super(action.toString(), path, branch);
+    public FileMacro(String action, String path, String branch, String code, String charset, String sdpath) {
+        super(action, path, branch);
         this.code = code;
         this.charset = charset;
         this.srcDstPath = sdpath;
@@ -61,9 +63,46 @@ public class FileMacro extends Macro {
      * @param branch the branch name of a file on which this macro was performed
      * @param code the contents of source code of the file
      * @param charset the name of a charset of the file
+     * @param sdpath the path of the source or destination of the rename or move
+     */
+    public FileMacro(Action action, String path, String branch, String code, String charset, String sdpath) {
+        this(action.toString(), path, branch, code, charset, sdpath);
+    }
+    
+    /**
+     * Creates an object storing information about a file macro.
+     * @param action the type of this macro
+     * @param path the path of a file on which this macro was performed
+     * @param branch the branch name of a file on which this macro was performed
+     * @param code the contents of source code of the file
+     * @param charset the name of a charset of the file
      */
     public FileMacro(Action action, String path, String branch, String code, String charset) {
-        this(action, path, branch, code, charset, path);
+        this(action.toString(), path, branch, code, charset, path);
+    }
+    
+    /**
+     * Creates an object storing information about a file macro.
+     * @param time the time when this macro was performed
+     * @param action the type of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     * @param code the contents of source code of the file
+     * @param charset the name of a charset of the file
+     * @param sdpath the path of the source or destination of the rename or move
+     */
+    protected FileMacro(ZonedDateTime time, String action, MacroPath mpath, String code, String charset, String sdpath) {
+        super(time, action, mpath);
+        this.code = code;
+        this.charset = charset;
+        this.srcDstPath = sdpath;
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public FileMacro clone() {
+        return new FileMacro(time, action, macroPath, code, charset, srcDstPath);
     }
     
     /**
@@ -229,6 +268,9 @@ public class FileMacro extends Macro {
      */
     @Override
     public String getJSON() {
+        
+        System.out.println("FILE");
+        
         JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_CODE, code)
           .add(MacroJSON.JSON_ATTR_CHARSET, charset)

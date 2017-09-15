@@ -9,7 +9,7 @@ package org.jtool.macrorecorder.macro;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
+import java.util.ArrayList;
 import javax.json.JsonObject;
 
 /**
@@ -44,14 +44,25 @@ public class Macro {
      * Creates an object storing information about a macro.
      * @param time the time when this macro was performed
      * @param action the action of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     */
+    protected Macro(ZonedDateTime time, String action, MacroPath mpath) {
+        this.time = time;
+        this.action = action;
+        this.macroPath = mpath;
+        
+        delay();
+    }
+    
+    /**
+     * Creates an object storing information about a macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this macro
      * @param path the path of a resource on which this macro was performed
      * @param branch the branch of a resource on which this macro was performed
      */
-    public Macro(ZonedDateTime time, String action, String path, String branch) {
-        this.time = time;
-        this.action = action;
-        this.macroPath = new MacroPath(path, branch);
-        delay();
+    protected Macro(ZonedDateTime time, String action, String path, String branch) {
+        this(time, action, new MacroPath(path, branch));
     }
     
     /**
@@ -60,8 +71,16 @@ public class Macro {
      * @param path the path of a resource on which this macro was performed
      * @param branch the branch of a resource on which this macro was performed
      */
-    public Macro(String action, String path, String branch) {
+    protected Macro(String action, String path, String branch) {
         this(ZonedDateTime.now(), action, path, branch);
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public Macro clone() {
+        return new Macro(time, action, macroPath);
     }
     
     /**
@@ -123,6 +142,14 @@ public class Macro {
     }
     
     /**
+     * Returns the information about the path a resource on which this macro was performed.
+     * @return the path information
+     */
+    public MacroPath getMacroPath() {
+        return macroPath;
+    }
+    
+    /**
      * Returns the name of a project containing a resource on which this macro was performed.
      * @return the project name
      */
@@ -159,7 +186,14 @@ public class Macro {
      * @param macros the raw macros to be stored
      */
     public void setRawMacros(List<Macro> macros) {
-        rawMacros = macros;
+        rawMacros = new ArrayList<Macro>();
+        for (Macro macro :  macros) {
+            if (macro == this) {
+                rawMacros.add(macro.clone());
+            } else {
+                rawMacros.add(macro);
+            }
+        }
     }
     
     /**

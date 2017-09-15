@@ -50,7 +50,7 @@ public class DiffMacro extends DocumentMacro{
      */
     public static DocumentMacro getExpectedDiff(DiffMacro macro) {
         return new DocumentMacro(macro.getTime(), DocumentMacro.Action.AUTO_DIFF.toString(),
-                   macro.getPath(), macro.getBranch(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
+                   macro.getMacroPath(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
     }
     
     /**
@@ -60,6 +60,6 @@ public class DiffMacro extends DocumentMacro{
      */
     public static DocumentMacro getUnexpectedDiff(DiffMacro macro) {
         return new DocumentMacro(macro.getTime(),DocumentMacro.Action.IRREGULAR_DIFF.toString(),
-                   macro.getPath(), macro.getBranch(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
+                   macro.getMacroPath(), macro.getStart(), macro.getInsertedText(), macro.getDeletedText());
     }
 }

@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import java.time.ZonedDateTime;
+
 import javax.json.JsonObject;
 
 /**
@@ -46,10 +48,44 @@ public class ResourceMacro extends Macro {
      * @param target the kind of the target of the resource
      * @param sdpath the path of the source or destination of the resource
      */
-    public ResourceMacro(Action action, String path, String branch, Target target, String sdpath) {
-        super(action.toString(), path, branch);
+    public ResourceMacro(String action, String path, String branch, Target target, String sdpath) {
+        super(action, path, branch);
         this.target = target;
         this.srcDstPath = sdpath;
+    }
+    
+    /**
+     * Creates an object storing information about a resource change macro.
+     * @param action the action of this macro
+     * @param path the path of the resource on which this macro was performed
+     * @param branch the branch name of the resource on which this macro was performed
+     * @param target the kind of the target of the resource
+     * @param sdpath the path of the source or destination of the resource
+     */
+    public ResourceMacro(Action action, String path, String branch, Target target, String sdpath) {
+        this(action.toString(), path, branch, target, sdpath);
+    }
+    
+    /**
+     * Creates an object storing information about a resource change macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     * @param target the kind of the target of the resource
+     * @param sdpath the path of the source or destination of the resource
+     */
+    protected ResourceMacro(ZonedDateTime time, String action, MacroPath mpath, Target target, String sdpath) {
+        super(time, action, mpath);
+        this.target = target;
+        this.srcDstPath = sdpath;
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public ResourceMacro clone() {
+        return new ResourceMacro(time, action, macroPath, target, srcDstPath);
     }
     
     /**

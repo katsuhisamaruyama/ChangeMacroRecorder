@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import java.time.ZonedDateTime;
+
 import javax.json.JsonObject;
 
 /**
@@ -22,13 +24,41 @@ public class GitMacro extends Macro {
     }
     
     /**
-     * Creates an object storing information about an resource change macro.
+     * Creates an object storing information about a git command macro.
+     * @param action the action of this macro
+     * @param path the path of a file or a package on which this macro was performed
+     * @param branch the branch name of a file or a package on which this macro was performed
+     */
+    public GitMacro(String action, String path, String branch) {
+        super(action, path, branch);
+    }
+    
+    /**
+     * Creates an object storing information about a git command macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
      */
     public GitMacro(Action action, String path, String branch) {
-        super(action.toString(), path, branch);
+        this(action.toString(), path, branch);
+    }
+    
+    /**
+     * Creates an object storing information about a git command macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     */
+    protected GitMacro(ZonedDateTime time, String action, MacroPath mpath) {
+        super(time, action, mpath);
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public GitMacro clone() {
+        return new GitMacro(time, action, macroPath);
     }
     
     /**

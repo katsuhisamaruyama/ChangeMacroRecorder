@@ -7,6 +7,9 @@
 package org.jtool.macrorecorder.macro;
 
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
+
+import java.time.ZonedDateTime;
+
 import javax.json.JsonObject;
 
 /**
@@ -35,15 +38,49 @@ public class CodeCompletionMacro extends Macro {
     /**
      * Creates an object storing information about a code completion macro.
      * @param action the action of this macro
+     * @param path the path of a file or a package this macro was performed
+     * @param branch the branch name of a file on which this macro was performed
+     * @param commandId the command information about this macro
+     * @param event a content assist event related to this macro
+     */
+    protected CodeCompletionMacro(String action, String path, String branch, String commandId, ContentAssistEvent event) {
+        super(action, path, branch);
+        this.commandId = commandId;
+        this.event = event;
+    }
+    
+    /**
+     * Creates an object storing information about a code completion macro.
+     * @param action the action of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
      * @param commandId the command information about this macro
      * @param event a content assist event related to this macro
      */
     public CodeCompletionMacro(Action action, String path, String branch, String commandId, ContentAssistEvent event) {
-        super(action.toString(), path, branch);
+        this(action.toString(), path, branch, commandId, event);
+    }
+    
+    /**
+     * Creates an object storing information about a code completion macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     * @param commandId the command information about this macro
+     * @param event a content assist event related to this macro
+     */
+    protected CodeCompletionMacro(ZonedDateTime time, String action, MacroPath mpath, String commandId, ContentAssistEvent event) {
+        super(time, action, mpath);
         this.commandId = commandId;
         this.event = event;
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public CodeCompletionMacro clone() {
+        return new CodeCompletionMacro(time, action, macroPath, commandId, event);
     }
     
     /**

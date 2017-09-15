@@ -7,6 +7,9 @@
 package org.jtool.macrorecorder.macro;
 
 import org.eclipse.core.commands.ExecutionEvent;
+
+import java.time.ZonedDateTime;
+
 import javax.json.JsonObject;
 
 /**
@@ -33,7 +36,21 @@ public class CommandMacro extends Macro {
     private ExecutionEvent event;
     
     /**
-     * Creates an object storing information about an execution macro.
+     * Creates an object storing information about a command execution macro.
+     * @param action the action of this macro
+     * @param path the path of a file or a package on which this macro was performed
+     * @param branch the branch name of a file or a package on which this macro was performed
+     * @param commandId the command information about this macro
+     * @param event an execution event related to this macro
+     */
+    public CommandMacro(String action, String path, String branch, String commandId, ExecutionEvent event) {
+        super(action, path, branch);
+        this.commandId = commandId;
+        this.event = event;
+    }
+    
+    /**
+     * Creates an object storing information about a command execution macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
@@ -41,9 +58,29 @@ public class CommandMacro extends Macro {
      * @param event an execution event related to this macro
      */
     public CommandMacro(Action action, String path, String branch, String commandId, ExecutionEvent event) {
-        super(action.toString(), path, branch);
+        this(action.toString(), path, branch, commandId, event);
+    }
+    
+    /**
+     * Creates an object storing information about a command execution macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     * @param commandId the command information about this macro
+     * @param event an execution event related to this macro
+     */
+    protected CommandMacro(ZonedDateTime time, String action, MacroPath mpath, String commandId, ExecutionEvent event) {
+        super(time, action, mpath);
         this.commandId = commandId;
         this.event = event;
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public CommandMacro clone() {
+        return new CommandMacro(time, action, macroPath, commandId, event);
     }
     
     /**

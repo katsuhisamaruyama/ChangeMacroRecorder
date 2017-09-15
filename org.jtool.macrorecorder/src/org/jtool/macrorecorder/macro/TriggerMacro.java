@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import java.time.ZonedDateTime;
+
 import javax.json.JsonObject;
 
 /**
@@ -44,10 +46,24 @@ public class TriggerMacro extends Macro {
      * @param path the path of a file or a package on which this trigger macro was performed
      * @param branch the branch name of a file or a package on which this trigger macro was performed
      * @param timing the timing of a trigger of this trigger macro
+     * @param macro a command macro that causes this trigger macro
      */
-    public TriggerMacro(Action action, String path, String branch, Timing timing) {
-        super(action.toString(), path, branch);
+    public TriggerMacro(String action, String path, String branch, Timing timing, CommandMacro macro) {
+        super(action, path, branch);
         this.timing = timing;
+        this.commandMacro = macro;
+    }
+    
+    /**
+     * Creates an object storing information about a trigger macro.
+     * @param action the action of this trigger macro
+     * @param path the path of a file or a package on which this trigger macro was performed
+     * @param branch the branch name of a file or a package on which this trigger macro was performed
+     * @param timing the timing of a trigger
+     * @param macro a command macro that causes this macro
+     */
+    public TriggerMacro(Action action, String path, String branch, Timing timing, CommandMacro macro) {
+        this(action.toString(), path, branch, timing, macro);
     }
     
     /**
@@ -55,12 +71,32 @@ public class TriggerMacro extends Macro {
      * @param action the action of this macro
      * @param path the path of a file or a package on which this trigger macro was performed
      * @param branch the branch name of a file or a package on which this trigger macro was performed
-     * @param timing the timing of a trigger of this trigger macro
-     * @param macro a command macro that causes this trigger macro
+     * @param timing the timing of a trigger
      */
-    public TriggerMacro(Action action, String path, String branch, Timing timing, CommandMacro macro) {
-        this(action, path, branch, timing);
+    public TriggerMacro(Action action, String path, String branch, Timing timing) {
+        this(action.toString(), path, branch, timing, null);
+    }
+    
+    /**
+     * Creates an object storing information about a trigger macro.
+     * @param time the time when this macro was performed
+     * @param action the action of this trigger macro
+     * @param mpath the information about the path a resource on which this macro was performed
+     * @param timing the timing of a trigger
+     * @param macro a command macro that causes this macro
+     */
+    protected TriggerMacro(ZonedDateTime time, String action, MacroPath mpath, Timing timing, CommandMacro macro) {
+        super(time, action, mpath);
+        this.timing = timing;
         this.commandMacro = macro;
+    }
+    
+    /**
+     * Creates a clone of this macro.
+     */
+    @Override
+    public TriggerMacro clone() {
+        return new TriggerMacro(time, action, macroPath, timing, commandMacro);
     }
     
     /**
