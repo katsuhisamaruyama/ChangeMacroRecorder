@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import javax.json.JsonObject;
+
 /**
  * Stores a macro occurring copy.
  * @author Katsuhisa Maruyama
@@ -60,16 +62,38 @@ public class CopyMacro extends Macro {
     }
     
     /**
-     * Returns the string for printing, which does not contain a new line character at its end.
-     * @return the string for printing
+     * Returns the textual description of this macro.
+     * @return the textual description
      */
     @Override
-    public String toString() {
+    public String getDescription() {
         StringBuilder buf = new StringBuilder();
-        buf.append(super.toString());
+        buf.append(super.getDescription());
         
         buf.append(" offset=" + start);
         buf.append(" copy=[" + getShortText(copiedText) + "]");
         return buf.toString();
+    }
+    
+    /**
+     * Returns the JSON object of this macro.
+     * @return the JSON object
+     */
+    @Override
+    public JsonObject getJSON() {
+        JsonObject json = super.getJSONObjectBuikderOfMacro()
+          .add(MacroJSON.JSON_ATTR_OFFSET, start)
+          .add(MacroJSON.JSON_ATTR_COPYED_TEXT, copiedText)
+          .build();
+        return json;
+    }
+    
+    /**
+     * Returns the string for printing.
+     * @return the string for printing
+     */
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }

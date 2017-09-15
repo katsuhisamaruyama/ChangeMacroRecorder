@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.macro;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import javax.json.JsonObject;
 
 /**
  * Stores an execution macro.
@@ -22,7 +23,7 @@ public class CommandMacro extends Macro {
     }
     
     /**
-     * The string representing the contents of this macro.
+     * The string representing the command identification of this macro.
      */
     private String commandId;
     
@@ -36,7 +37,7 @@ public class CommandMacro extends Macro {
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
-     * @param commandId the detailed information about this macro
+     * @param commandId the command information about this macro
      * @param event an execution event related to this macro
      */
     public CommandMacro(Action action, String path, String branch, String commandId, ExecutionEvent event) {
@@ -46,8 +47,8 @@ public class CommandMacro extends Macro {
     }
     
     /**
-     * Returns information about this macro.
-     * @return the string representing the contents of this macro
+     * Returns command information about this macro.
+     * @return the string representing the command identification of this macro
      */
     public String getCommandId() {
         return commandId;
@@ -70,15 +71,36 @@ public class CommandMacro extends Macro {
     }
     
     /**
-     * Returns the string for printing, which does not contain a new line character at its end.
+     * Returns the textual description of this macro.
+     * @return the textual description
+     */
+    @Override
+    public String getDescription() {
+        StringBuilder buf = new StringBuilder();
+        buf.append(super.getDescription());
+        
+        buf.append(" command=[" + commandId + "]");
+        return buf.toString();
+    }
+    
+    /**
+     * Returns the JSON object of this macro.
+     * @return the JSON object
+     */
+    @Override
+    public JsonObject getJSON() {
+        JsonObject json = super.getJSONObjectBuikderOfMacro()
+          .add(MacroJSON.JSON_ATTR_COMMAND, commandId)
+          .build();
+        return json;
+    }
+    
+    /**
+     * Returns the string for printing.
      * @return the string for printing
      */
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append(super.toString());
-        
-        buf.append(" command=[" + commandId + "]");
-        return buf.toString();
+        return getDescription();
     }
 }

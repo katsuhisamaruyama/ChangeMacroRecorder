@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import javax.json.JsonObject;
+
 /**
  * Stores a macro related to a git event.
  * @author Katsuhisa Maruyama
@@ -54,13 +56,29 @@ public class GitMacro extends Macro {
     }
     
     /**
-     * Returns the string for printing, which does not contain a new line character at its end.
+     * Returns the textual description of this macro.
+     * @return the textual description
+     */
+    @Override
+    public String getDescription() {
+        return super.getDescription();
+    }
+    
+    /**
+     * Returns the JSON object of this macro.
+     * @return the JSON object
+     */
+    @Override
+    public JsonObject getJSON() {
+        return super.getJSONObjectBuikderOfMacro().build();
+    }
+    
+    /**
+     * Returns the string for printing.
      * @return the string for printing
      */
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append(super.toString());
-        return buf.toString();
+        return getDescription();
     }
 }

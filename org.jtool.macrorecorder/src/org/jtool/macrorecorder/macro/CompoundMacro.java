@@ -8,6 +8,11 @@ package org.jtool.macrorecorder.macro;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,6 +79,14 @@ public class CompoundMacro extends Macro {
      */
     public void removeMacro(int index) {
         macros.remove(index);
+    }
+    
+    /**
+     * Returns the number of macros contained in this macro.
+     * @return the the number of the contained macros
+     */
+    public int getMacroNumber() {
+        return macros.size();
     }
     
     /**
@@ -146,20 +159,45 @@ public class CompoundMacro extends Macro {
     }
     
     /**
-     * Returns the string for printing, which does not contain a new line character at its end.
-     * @return the string for printing
+     * Returns the textual description of this macro.
+     * @return the textual description
      */
     @Override
-    public String toString() {
+    public String getDescription() {
         StringBuilder buf = new StringBuilder();
         buf.append("{" + getThisClassName() + "} ");
         buf.append(getFormatedTime(time));
         buf.append(" " + action);
         buf.append(" commandId=[" + getCommandId() + "]");
-        buf.append(" num=[" + macros.size() + "]");
+        buf.append(" num=[" + getMacroNumber() + "]");
         for (Macro macros: macros) {
             buf.append("\n " + macros.toString());
         }
         return buf.toString();
+    }
+    
+    /**
+     * Creates a JSON object builder of this macro.
+     * @return the created JSON object builder
+     */
+    protected JsonObjectBuilder getJSONObjectBuikderOfMacro() {
+        JsonObjectBuilder builder = Json.createObjectBuilder()
+          .add(MacroJSON.JSON_MACRO_CLASS, getThisClassName())
+          .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
+          .add(MacroJSON.JSON_MACRO_ACTION, action)
+          .add(MacroJSON.JSON_MACRO_PATH, getPath())
+          .add(MacroJSON.JSON_ATTR_COMMAND, getCommandId())
+          .add(MacroJSON.JSON_ATTR_NUMBER, getMacroNumber())
+          .add(MacroJSON.JSON_MACRO_PATH, getJSONArrayBuilderOfMacros(macros));
+        return builder;
+    }
+    
+    /**
+     * Returns the string for printing.
+     * @return the string for printing
+     */
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }

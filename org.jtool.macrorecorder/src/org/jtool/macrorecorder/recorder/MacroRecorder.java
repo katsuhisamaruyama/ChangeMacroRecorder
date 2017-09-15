@@ -162,7 +162,7 @@ public class MacroRecorder implements IMacroRecorder {
      */
     public void notifyRawMacro(Macro macro) {
         if (displayRawMacro) {
-            MacroConsole.println("*" + macro.toString());
+            MacroConsole.println("-" + macro.toString());
         }
         
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);

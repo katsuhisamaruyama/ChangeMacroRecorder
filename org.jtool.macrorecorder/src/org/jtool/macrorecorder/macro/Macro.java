@@ -9,6 +9,11 @@ package org.jtool.macrorecorder.macro;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
 
 /**
  * Stores a macro.
@@ -179,6 +184,15 @@ public class Macro {
     }
     
     /**
+     * Returns the string corresponding time.
+     * @param time the time information
+     * @return the string corresponding the time
+     */
+    protected String getTimeAsISOString(ZonedDateTime t) {
+        return time.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+    }
+    
+    /**
      * Converts a text into its pretty one.
      * @param text the original text
      * @return the text consists of the first four characters not including the new line
@@ -212,11 +226,10 @@ public class Macro {
     }
     
     /**
-     * Returns the string for printing.
-     * @return the string for printing
+     * Returns the textual description of this macro.
+     * @return the textual description
      */
-    @Override
-    public String toString() {
+    public String getDescription() {
         StringBuilder buf = new StringBuilder();
         buf.append("{" + getThisClassName() + "} ");
         buf.append(getFormatedTime(time));
@@ -225,5 +238,65 @@ public class Macro {
         buf.append(" resource=[" + getProjectName() + "/" + getPackageName() + "/" + getFileName() + "]");
         buf.append(" branch=[" + getBranch() + "]");
         return buf.toString();
+    }
+    
+    /**
+     * Returns the JSON object of this macro.
+     * @return the JSON object
+     */
+    public JsonObject getJSON() {
+        return getJSONObjectBuikderOfMacro().build();
+    }
+    
+    /**
+     * Creates a JSON object builder of this macro.
+     * @return the created JSON object builder
+     */
+    protected JsonObjectBuilder getJSONObjectBuikderOfMacro() {
+        JsonObjectBuilder builder = Json.createObjectBuilder()
+          .add(MacroJSON.JSON_MACRO_CLASS, getThisClassName())
+          .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
+          .add(MacroJSON.JSON_MACRO_ACTION, action)
+          .add(MacroJSON.JSON_MACRO_PATH, getPath())
+          .add(MacroJSON.JSON_MACRO_PROJECT_NAME, getProjectName())
+          .add(MacroJSON.JSON_MACRO_PACKAGE_NAME, getPackageName())
+          .add(MacroJSON.JSON_MACRO_FILE_NAME, getFileName())
+          .add(MacroJSON.JSON_MACRO_PATH, getJSONArrayBuilderOfMacros(rawMacros));
+        return builder;
+    }
+    
+    /**
+     * Creates a JSON array builder of macros.
+     * @param macros the collection of the macros
+     * @return the created JSON array builder
+     */
+    protected JsonArrayBuilder getJSONArrayBuilderOfMacros(List<Macro> macros) {
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Macro macro : macros) {
+            builder.add(macro.getJSON());
+        }
+        return builder;
+    }
+    
+    /**
+     * Creates a JSON array builder of a map.
+     * @param macros the collection of the map
+     * @return the created JSON array builder
+     */
+    protected JsonArrayBuilder getJSONArrayBuilderOfMap(Map<String, String> maps) {
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (String key : maps.keySet()) {
+            builder.add(Json.createObjectBuilder().add(key, maps.get(key)).build());
+        }
+        return builder;
+    }
+    
+    /**
+     * Returns the string for printing.
+     * @return the string for printing
+     */
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }

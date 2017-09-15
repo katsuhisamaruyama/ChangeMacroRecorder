@@ -6,6 +6,8 @@
 
 package org.jtool.macrorecorder.macro;
 
+import javax.json.JsonObject;
+
 /**
  * Stores a macro related to a resource change.
  * @author Katsuhisa Maruyama
@@ -155,15 +157,15 @@ public class ResourceMacro extends Macro {
     }
     
     /**
-     * Returns the string for printing, which does not contain a new line character at its end.
-     * @return the string for printing
+     * Returns the textual description of this macro.
+     * @return the textual description
      */
     @Override
-    public String toString() {
+    public String getDescription() {
         StringBuilder buf = new StringBuilder();
-        buf.append(super.toString());
+        buf.append(super.getDescription());
         
-        buf.append(" target=[" + target + "]");
+        buf.append(" target=[" + target.toString() + "]");
         if (!getPath().equals(srcDstPath)) {
             if (isRemove() || isMoveTo() || isRenameTo()) {
                 buf.append(" to [" + srcDstPath + "]");
@@ -172,5 +174,27 @@ public class ResourceMacro extends Macro {
             }
         }
         return buf.toString();
+    }
+    
+    /**
+     * Returns the JSON object of this macro.
+     * @return the JSON object
+     */
+    @Override
+    public JsonObject getJSON() {
+        JsonObject json = super.getJSONObjectBuikderOfMacro()
+          .add(MacroJSON.JSON_ATTR_RESOURCE_TARGET, target.toString())
+          .add(MacroJSON.JSON_ATTR_SRD_DST_PATH, srcDstPath)
+          .build();
+        return json;
+    }
+    
+    /**
+     * Returns the string for printing.
+     * @return the string for printing
+     */
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }

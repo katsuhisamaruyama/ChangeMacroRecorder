@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.macro;
 
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
+import javax.json.JsonObject;
 
 /**
  * Stores a code completion macro.
@@ -22,9 +23,9 @@ public class CodeCompletionMacro extends Macro {
     }
     
     /**
-     * The name of a code assistance class.
+     * The string representing the command identification of this macro.
      */
-    private String name;
+    private String commandId;
     
     /**
      * A content assist event related to this macro.
@@ -36,21 +37,21 @@ public class CodeCompletionMacro extends Macro {
      * @param action the action of this macro
      * @param path the path of a file on which this macro was performed
      * @param branch the branch name of a file on which this macro was performed
-     * @param name the name of a code assistance class
+     * @param commandId the command information about this macro
      * @param event a content assist event related to this macro
      */
-    public CodeCompletionMacro(Action action, String path, String branch, String name, ContentAssistEvent event) {
+    public CodeCompletionMacro(Action action, String path, String branch, String commandId, ContentAssistEvent event) {
         super(action.toString(), path, branch);
-        this.name = name;
+        this.commandId = commandId;
         this.event = event;
     }
     
     /**
-     * Returns the name of a code assistance class.
-     * @return the code assistance class name
+     * Returns command information about this macro.
+     * @return the string representing the command identification of this macro
      */
-    public String getName() {
-        return name;
+    public String getCommandId() {
+        return commandId;
     }
     
     /**
@@ -94,15 +95,36 @@ public class CodeCompletionMacro extends Macro {
     }
     
     /**
-     * Returns the string for printing, which does not contain a new line character at its end.
+     * Returns the textual description of this macro.
+     * @return the textual description
+     */
+    @Override
+    public String getDescription() {
+        StringBuilder buf = new StringBuilder();
+        buf.append(super.getDescription());
+        
+        buf.append(" command=[" + commandId + "]");
+        return buf.toString();
+    }
+    
+    /**
+     * Returns the JSON object of this macro.
+     * @return the JSON object
+     */
+    @Override
+    public JsonObject getJSON() {
+        JsonObject json = super.getJSONObjectBuikderOfMacro()
+          .add(MacroJSON.JSON_ATTR_COMMAND, commandId)
+          .build();
+        return json;
+    }
+    
+    /**
+     * Returns the string for printing.
      * @return the string for printing
      */
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append(super.toString());
-        
-        buf.append(" name=[" + name + "]");
-        return buf.toString();
+        return getDescription();
     }
 }
