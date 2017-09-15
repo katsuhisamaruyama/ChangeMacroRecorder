@@ -36,11 +36,11 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         super.start(context);
         plugin = this;
         
-        sampleMacroPrint = new SampleMacroPrint();
-        sampleMacroPrint.start();
+        // sampleMacroPrint = new SampleMacroPrint();
+        // sampleMacroPrint.start();
         
-        sampleMacroPost = new SampleMacroPost();
-        sampleMacroPost.start();
+        // sampleMacroPost = new SampleMacroPost();
+        // sampleMacroPost.start();
     }
     
     @Override
