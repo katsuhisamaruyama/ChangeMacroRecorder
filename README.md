@@ -185,7 +185,7 @@ public class SampleMacroPrint implements IMacroListener {
 }
 ```
 
-Please see [sample](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample>)
+Please see [samples](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample>)
 
 ## Author
 
