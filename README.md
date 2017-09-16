@@ -127,7 +127,7 @@ The user program must implement the four abstract methods.
 * `macroAdded(MacroEvent)` receiving events that contain amended (after the combination or cancellation) change macros, and
 * `rawMacroAdded(MacroEvent)`, receiving events that contain all non-amended (before the combination or cancellation) change macros.  
 
-AAAA
+These four methods are shown below.  
 
     public interface IMacroListener {
         
@@ -153,6 +153,8 @@ AAAA
          */
        public void rawMacroAdded(MacroEvent evt);
     }
+
+#### Usage Sample 
 
 For example, if you will create a handler class `SampleMacroPrintHandler` that displays all of the amended code changes on the console, the class contains the following code:  
 
