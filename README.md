@@ -126,7 +126,7 @@ The user program must implement the four abstract methods.
 * `terminate()` doing the termination, which will invoked immediately after starting the macro recording,
 * `macroAdded(MacroEvent)` receiving events that contain amended (after the combination or cancellation) change macros, and
 * `rawMacroAdded(MacroEvent)`, receiving events that contain all non-amended (before the combination or cancellation) change macros.  
-
+    
     public interface IMacroListener {
         
         /**
