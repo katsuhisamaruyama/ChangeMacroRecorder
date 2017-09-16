@@ -5,17 +5,17 @@ operations) by continuously tracking the code edits and commands performed on Ec
 
 ## Description
 
-ChangeMacroRecorder records the following changes macros: 
+ChangeMacroRecorder records the following changes macros:  
 * CancelMacro - cancellation of a previous macro  
-* CodeCompletionMacro - code completion by quick assist and content assist
-* CommandMacro - execution of command service
-* CopyMacro - copy action
-* DocumentMacro - typing, cut action, paste action, undo action, redo action
-* FileMacro - file action (add, remove, open, close, save, activate, refactor move, rename, git event)
-* GitMacro - git event
-* RefactoringMacro - refactoring action
-* ResourceMacro - action for a resource (file, package, and project)
-* TriggerMacro - trigger action (refactoring, undo, redo, and cursor change)
+* CodeCompletionMacro - code completion by quick assist and content assist  
+* CommandMacro - execution of command service  
+* CopyMacro - copy action  
+* DocumentMacro - typing, cut action, paste action, undo action, redo action  
+* FileMacro - file action (add, remove, open, close, save, activate, refactor move, rename, git event)  
+* GitMacro - git event  
+* RefactoringMacro - refactoring action  
+* ResourceMacro - action for a resource (file, package, and project)  
+* TriggerMacro - trigger action (refactoring, undo, redo, and cursor change)  
 * CompoundMacro - series of macros  
 
 Recorded change macros include more detailed information such as the inserted and deleted text for each edit or command. See the source code of the the [macros](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/src/org/jtool/macrorecorder/macro>).
@@ -87,7 +87,7 @@ The single instance can be obtained from the invocation as `MacroRecorder.getIns
 
 #### IMacroCompressor - Interface of an instance that compresses document change macros
 
-The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits continuous typing at the point where it detects one of these characters. in other words, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". The user program freely the delimiter characters by using method `setDelimiter(char[])`. If the user program wants to replace the default delimiter-based algorithm with a different one, the program can implement `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)`.
+The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits continuous typing at the point where it detects one of these characters. in other words, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". The user program freely the delimiter characters by using method `setDelimiter(char[])`. If the user program wants to replace the default delimiter-based algorithm with a different one, the program can implement `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)`.  
 
     import org.jtool.macrorecorder.macro.DocumentMacro;
     
@@ -125,8 +125,7 @@ The user program must implement the four abstract methods.
 * `initialize()` doing the initialization, which will be invoked immediately before starting the macro recording,
 * `terminate()` doing the termination, which will invoked immediately after starting the macro recording,
 * `macroAdded(MacroEvent)` receiving events that contain amended (after the combination or cancellation) change macros, and
-* `rawMacroAdded(MacroEvent)`, receiving events that contain all non-amended (before the combination or cancellation) change macros.
-
+* `rawMacroAdded(MacroEvent)`, receiving events that contain all non-amended (before the combination or cancellation) change macros.  
 
     public interface IMacroListener {
         
@@ -153,7 +152,7 @@ The user program must implement the four abstract methods.
        public void rawMacroAdded(MacroEvent evt);
     }
 
-For example, if you will create a handler class `SampleMacroPrintHandler` that displays all of the amended code changes on the console, the class contains the following code:
+For example, if you will create a handler class `SampleMacroPrintHandler` that displays all of the amended code changes on the console, the class contains the following code:  
 
     import org.jtool.macrorecorder.macro.Macro;
     import org.jtool.macrorecorder.recorder.MacroRecorder;
@@ -191,7 +190,7 @@ For example, if you will create a handler class `SampleMacroPrintHandler` that d
     }
 
 Note that Eclipse does not run your plug-in until it is needed.If your plug-in records change macros form the beginning of the Eclipse activation, you should register the handler class in the extension point in the
-`plugin.xml` as shown below. 
+`plugin.xml` as shown below.  
 
     <extension
              point="org.jtool.macrorecorder.handlers">
@@ -201,7 +200,7 @@ Note that Eclipse does not run your plug-in until it is needed.If your plug-in r
           </handler>
     </extension>
 
-Your code can directly start and stop recording of change macros by directly invoking `start()` and `stop()` of the instance of `IMacroRecorder`. In this case, it is responsible for registering and unregistering a handler that receives change macros.
+Your code can directly start and stop recording of change macros by directly invoking `start()` and `stop()` of the instance of `IMacroRecorder`. In this case, it is responsible for registering and unregistering a handler that receives change macros.  
 
     private void start() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
