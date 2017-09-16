@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.jtool.macrorecorder" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.jtool.macrorecorder" id="org.jtool.macrorecorder.handlers" name="macrorecorderHandlers"/>
+      </appinfo>
+      <documentation>
+         The extension point of macro handlers that receive change macros.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="0" maxOccurs="unbounded">
+            <element ref="handler"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="handler">
+      <complexType>
+         <attribute name="commandId" type="string" use="default" value="org.eclipse.macrorecorder.handler">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.jtool.macrorecorder.recorder.IMacroListener"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension
+         point=&quot;org.jtool.macrorecorder.handlers&quot;&gt;
+      &lt;handler
+            class=&quot;org.jtool.macrorecorder.sample.SampleMacroPrintHandler&quot;
+            commandId=&quot;org.eclipse.macrorecorder.handler.SampleMacroPrintHandler&quot;&gt;
+      &lt;/handler&gt;
+      &lt;handler
+            class=&quot;org.jtool.macrorecorder.sample.SampleMacroPostHandler&quot;
+            commandId=&quot;org.eclipse.macrorecorder.handler.SampleMacroPostHandler&quot;&gt;
+      &lt;/handler&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
+
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         &lt;p&gt;
+A handler must implements the four methods defined in &lt;code&gt;org.jtool.macrorecorder.recorder.IMacroListener&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;pre&gt;
+public interface IMacroListener {
+    
+    /**
+     * Invoked to initialize this handler immediately before starting the macro recording.
+     */
+    public void initialize() {
+    }
+    
+    /**
+     * Invoked to terminate this handler immediately after stopping the macro recording.
+     */
+    public void terminate() {
+    }
+    
+    /**
+     * Receives an event when a new change macro is added.
+     * @param evt the macro event
+     */
+    public void macroAdded(MacroEvent evt);
+    
+    /**
+     * Receives an event when a new raw change macro is added.
+     * @param evt the raw macro event
+     */
+    public void rawMacroAdded(MacroEvent evt);
+}
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         &lt;p&gt;
+See samples in the &lt;code&gt;org.jtool.macrorecorder.sample&lt;/code&gt;/.
+&lt;/p&gt;
+
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="copyright"/>
+      </appinfo>
+      <documentation>
+         Copyright 2017
+Software Science and Technology Lab.
+Department of Computer Science, Ritsumeikan University
+      </documentation>
+   </annotation>
+
+</schema>

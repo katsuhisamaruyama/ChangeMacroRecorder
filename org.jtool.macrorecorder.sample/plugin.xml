@@ -2,10 +2,45 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="org.jtool.macrorecorder.sample.Activator">
-      </startup>
+         point="org.jtool.macrorecorder.handlers">
+      <handler
+            class="org.jtool.macrorecorder.sample.SampleMacroPrintHandler"
+            commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
+      </handler>
+      <!-- <handler
+            class="org.jtool.macrorecorder.sample.SampleMacroPostHandler"
+            commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
+      </handler> -->
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.jtool.macrorecorder.sample.toolbar">
+            <command
+                  commandId="org.jtool.macrorecorder.sample.printComand"
+                  id="org.jtool.macrorecorder.sample.printComand"
+                  label="MacroRecording"
+                  style="toggle">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.jtool.macrorecorder.sample.printComand"
+            name="Recording">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.jtool.macrorecorder.sample.SampleMacroPrintCommand"
+            commandId="org.jtool.macrorecorder.sample.printComand">
+      </handler>
    </extension>
 
 </plugin>

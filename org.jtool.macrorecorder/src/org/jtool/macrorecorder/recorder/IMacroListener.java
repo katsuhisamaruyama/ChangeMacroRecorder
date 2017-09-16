@@ -13,6 +13,16 @@ package org.jtool.macrorecorder.recorder;
 public interface IMacroListener {
     
     /**
+     * Invoked to initialize this handler immediately before starting the macro recording.
+     */
+    public void initialize();
+    
+    /**
+     * Invoked to terminate this handler immediately after stopping the macro recording.
+     */
+    public void terminate();
+    
+    /**
      * Receives an event when a new change macro is added.
      * @param evt the macro event
      */

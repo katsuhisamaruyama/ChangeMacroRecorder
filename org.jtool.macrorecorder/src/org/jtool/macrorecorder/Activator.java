@@ -6,6 +6,7 @@
 
 package org.jtool.macrorecorder;
 
+import org.jtool.macrorecorder.recorder.IMacroRecorder;
 import org.jtool.macrorecorder.recorder.MacroRecorder;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -55,6 +56,9 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
+        
+        IMacroRecorder recorder = MacroRecorder.getInstance();
+        recorder.start();
     }
     
     /**
@@ -64,6 +68,9 @@ public class Activator extends AbstractUIPlugin implements IStartup {
      */
     @Override
     public void stop(BundleContext context) throws Exception {
+        IMacroRecorder recorder = MacroRecorder.getInstance();
+        recorder.stop();
+        
         super.stop(context);
         plugin = null;
     }

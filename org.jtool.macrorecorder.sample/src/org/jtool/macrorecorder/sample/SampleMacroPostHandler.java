@@ -1,47 +1,49 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
 
 package org.jtool.macrorecorder.sample;
 
-import org.jtool.macrorecorder.recorder.MacroRecorder;
-import org.jtool.macrorecorder.recorder.IMacroRecorder;
+import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.recorder.IMacroListener;
-import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.jtool.macrorecorder.recorder.MacroEvent;
 import org.jtool.macrorecorder.recorder.MacroConsole;
-import org.jtool.macrorecorder.macro.Macro;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 
-
 /**
- * Records macros that were performed on Eclipse.
- * @author Katsuhisa Maruyama
+ * SampleMacroPrintCommand sample handler that post change macros to an HTTP server.
+ * <p>
+ * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
+ * <pre>(@code
+ * <extension
+ *        point="org.jtool.macrorecorder.handlers">
+ *     <handler
+ *           class="org.jtool.macrorecorder.sample.SampleMacroPostHandler"
+ *           commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
+ *     </handler> -->
+ *  </extension>
+ * )</pre>
+ * </p>
  */
-public class SampleMacroPost implements IMacroListener {
+public class SampleMacroPostHandler implements IMacroListener {
     
-    public SampleMacroPost() {
+    private static final String URL_FOR_POST = "http://localhost:1337/post";
+    
+    public SampleMacroPostHandler() {
     }
     
-    public void start() {
-        IMacroRecorder recorder = MacroRecorder.getInstance();
-        recorder.addMacroListener(this);
-        recorder.start();
+    @Override
+    public void initialize() {
     }
     
-    public void stop() {
-        IMacroRecorder recorder = MacroRecorder.getInstance();
-        recorder.removeMacroListener(this);
-        recorder.stop();
+    @Override
+    public void terminate() {
     }
     
     @Override
@@ -56,7 +58,7 @@ public class SampleMacroPost implements IMacroListener {
     
     private void executePost(String jsonString) {
         try {
-            URL url = new URL("http://localhost:1337/post");
+            URL url = new URL(URL_FOR_POST);
             HttpURLConnection connection = null;
             
             try {
@@ -64,8 +66,7 @@ public class SampleMacroPost implements IMacroListener {
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
                 
-                BufferedWriter writer = new BufferedWriter(
-                  new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8));
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
                 writer.write(jsonString);
                 writer.flush();
                 
