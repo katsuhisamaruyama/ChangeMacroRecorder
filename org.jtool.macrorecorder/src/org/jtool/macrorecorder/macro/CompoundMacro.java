@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
