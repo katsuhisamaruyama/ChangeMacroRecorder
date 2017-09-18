@@ -87,7 +87,7 @@ The single instance can be obtained from the invocation as `MacroRecorder.getIns
 
 #### IMacroCompressor - Interface of an instance that compresses document change macros
 
-The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits continuous typing at the point where it detects one of these characters. in other words, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". The user program freely the delimiter characters by using method `setDelimiter(char[])`. If the user program wants to replace the default delimiter-based algorithm with a different one, the program can implement `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)`.  
+The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits continuous typing at the point where it detects one of these characters. For example, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". The user program freely the delimiter characters by using method `setDelimiter(char[])`. If the user program wants to replace the default delimiter-based algorithm with a different one, the program can implement `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)`.  
 
     import org.jtool.macrorecorder.macro.DocumentMacro;
     
