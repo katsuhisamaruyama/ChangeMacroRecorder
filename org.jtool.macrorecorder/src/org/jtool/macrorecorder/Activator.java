@@ -45,6 +45,9 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
         macroRecorder.displayMacrosOnConsole(MacroRecorderPreferencePage.displayMacros());
         macroRecorder.displayRawMacrosOnConsole(MacroRecorderPreferencePage.displayRawMacros());
+        
+        IMacroRecorder recorder = MacroRecorder.getInstance();
+        recorder.start();
     }
     
     /**
@@ -56,9 +59,6 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-        
-        IMacroRecorder recorder = MacroRecorder.getInstance();
-        recorder.start();
     }
     
     /**
