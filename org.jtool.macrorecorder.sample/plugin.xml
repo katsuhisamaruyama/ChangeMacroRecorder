@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <!-- 
    <extension
          point="org.jtool.macrorecorder.handlers">
-      <handler
+      <!-- <handler
             class="org.jtool.macrorecorder.sample.SampleMacroPrintHandler"
             commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
-      </handler>
-      <handler
+      </handler> -->
+      <!-- <handler
             class="org.jtool.macrorecorder.sample.SampleMacroPostHandler"
             commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
-      </handler>
+      </handler> -->
    </extension>
-   -->
    <!--
    <extension
          point="org.eclipse.ui.menus">
