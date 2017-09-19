@@ -49,9 +49,8 @@ public class MacroHandlerLoader {
         }
         
         IExtension[] extensions = point.getExtensions();
-        if (extensions.length > 0) {
-            IExtension ex = extensions[0];
-            IConfigurationElement[] elems = ex.getConfigurationElements();
+        for (IExtension extension : extensions) {
+            IConfigurationElement[] elems = extension.getConfigurationElements();
             for (IConfigurationElement elem : elems) {
                 if (elem.getName().equals(ELEMENT_NAME)) {
                     try {
@@ -62,7 +61,9 @@ public class MacroHandlerLoader {
                                 handlers.add(handler);
                             }
                         }
-                    } catch (CoreException e) { /* empty */ }
+                    } catch (CoreException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
