@@ -57,7 +57,10 @@ public class MacroHandlerLoader {
                     try {
                         Object obj = elem.createExecutableExtension(ATTRIBUTE_CALSS);
                         if (obj instanceof IMacroListener) {
-                            handlers.add((IMacroListener)obj);
+                            IMacroListener handler = (IMacroListener)obj;
+                            if (handler.recordingAllowed()) {
+                                handlers.add(handler);
+                            }
                         }
                     } catch (CoreException e) { /* empty */ }
                 }

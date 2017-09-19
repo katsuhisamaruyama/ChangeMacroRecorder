@@ -46,6 +46,11 @@ public class SampleMacroPrintCommand extends AbstractHandler implements IMacroLi
     }
     
     @Override
+    public boolean recordingAllowed() {
+        return true;
+    }
+    
+    @Override
     public void initialize() {
     }
     

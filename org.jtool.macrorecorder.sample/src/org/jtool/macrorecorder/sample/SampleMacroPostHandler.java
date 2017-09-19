@@ -39,6 +39,11 @@ public class SampleMacroPostHandler implements IMacroListener {
     }
     
     @Override
+    public boolean recordingAllowed() {
+        return true;
+    }
+    
+    @Override
     public void initialize() {
     }
     

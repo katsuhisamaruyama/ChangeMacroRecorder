@@ -52,7 +52,7 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * The collection of macro handlers that are loaded from the extension point.
      */
-    private Set<IMacroListener> handlers = new HashSet<IMacroListener>();
+    private Set<IMacroListener> macroHandlers = new HashSet<IMacroListener>();
     
     /**
      * Creates an object that records macros.
@@ -61,7 +61,7 @@ public class MacroRecorder implements IMacroRecorder {
         MacroCompressor defaultCompressor = new MacroCompressor();
         internalRecorder = new Recorder(this, defaultCompressor);
         
-        handlers = MacroHandlerLoader.load();
+        macroHandlers = MacroHandlerLoader.load();
     }
     
     /**
@@ -97,7 +97,7 @@ public class MacroRecorder implements IMacroRecorder {
      */
     @Override
     public void start() {
-        if (!displayMacro && !displayRawMacro && handlers.size() == 0) {
+        if (!displayMacro && !displayRawMacro && macroHandlers.size() == 0 && macroListeners.size() == 0) {
             return;
         }
         
@@ -113,7 +113,7 @@ public class MacroRecorder implements IMacroRecorder {
      */
     @Override
     public void stop() {
-        if (displayMacro || !displayRawMacro || handlers.size() > 0) {
+        if (displayMacro || !displayRawMacro || macroHandlers.size() > 0 || macroListeners.size() > 0) {
             return;
         }
         
@@ -128,7 +128,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Registers macro handlers that receives change macros.
      */
     private void registerHandlers() {
-        for (IMacroListener handler : handlers) {
+        for (IMacroListener handler : macroHandlers) {
             handler.initialize();
             addMacroListener(handler);
         }
@@ -138,7 +138,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Unregisters macro handlers that receives change macros.
      */
     private void unregisterHandlers() {
-        for (IMacroListener handler : handlers) {
+        for (IMacroListener handler : macroHandlers) {
             removeMacroListener(handler);
             handler.terminate();
         }

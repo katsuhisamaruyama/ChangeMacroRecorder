@@ -35,6 +35,11 @@ public class SampleMacroPrintHandler implements IMacroListener {
     }
     
     @Override
+    public boolean recordingAllowed() {
+        return true;
+    }
+    
+    @Override
     public void initialize() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
         recorder.setDelimiter(new char[] { '\n' });
