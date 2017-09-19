@@ -80,14 +80,17 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
             
             RefactoringMacro macro = new RefactoringMacro(getRefactoringAction(eventType),
                                          path, branch, refactoringId, argumentMap);
-            globalRecorder.recordMacro(macro);
-            globalRecorder.setPathToBeRefactored(path);
             
             DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
             if (docRecorder != null && docRecorder.isOn()) {
                 macro.setSelectionStart(docRecorder.getSelectionStart());
                 macro.setSelectionText(docRecorder.getSelectionText());
             }
+            
+            globalRecorder.recordMacro(macro);
+            globalRecorder.setPathToBeRefactored(path);
+            
+            
             
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
                                       path, branch, TriggerMacro.Timing.BEGIN);
