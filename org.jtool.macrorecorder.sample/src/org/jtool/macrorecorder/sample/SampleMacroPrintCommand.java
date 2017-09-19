@@ -6,15 +6,16 @@
 
 package org.jtool.macrorecorder.sample;
 
+import org.jtool.macrorecorder.macro.Macro;
+import org.jtool.macrorecorder.recorder.IMacroRecorder;
+import org.jtool.macrorecorder.recorder.MacroRecorder;
+import org.jtool.macrorecorder.recorder.MacroConsole;
+import org.jtool.macrorecorder.recorder.MacroEvent;
 import org.jtool.macrorecorder.recorder.IMacroListener;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.jtool.macrorecorder.macro.Macro;
-import org.jtool.macrorecorder.recorder.IMacroRecorder;
-import org.jtool.macrorecorder.recorder.MacroConsole;
-import org.jtool.macrorecorder.recorder.MacroEvent;
-import org.jtool.macrorecorder.recorder.MacroRecorder;
+
 
 public class SampleMacroPrintCommand extends AbstractHandler implements IMacroListener {
     

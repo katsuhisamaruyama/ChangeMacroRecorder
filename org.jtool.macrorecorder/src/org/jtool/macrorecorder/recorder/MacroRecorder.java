@@ -73,22 +73,23 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Returns the compressor that compresses change macros.
-     * @return the macro compressor
+     * Adds a listener that receives a change macro event.
+     * @param listener the event listener to be added
      */
     @Override
-    public MacroCompressor getMacroCompressor() {
-        return internalRecorder.getMacroCompressor();
+    public void addMacroListener(IMacroListener listener) {
+        assert listener != null;
+        macroListeners.add(listener);
     }
     
     /**
-     * Sets a compressor that compresses change macros.
-     * @param compressor the compressor
+     * Removes a listener that receives a change macro event.
+     * @param listener the event listener to be removed
      */
     @Override
-    public void setMacroCompressor(MacroCompressor compressor) {
-        assert compressor != null;
-        internalRecorder.setMacroCompressor(compressor);
+    public void removeMacroListener(IMacroListener listener) {
+        assert listener != null;
+        macroListeners.remove(listener);
     }
     
     /**
@@ -153,23 +154,29 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Adds a listener that receives a change macro event.
-     * @param listener the event listener to be added
+     * Returns the compressor that compresses change macros.
+     * @return the macro compressor
      */
-    @Override
-    public void addMacroListener(IMacroListener listener) {
-        assert listener != null;
-        macroListeners.add(listener);
+    protected MacroCompressor getMacroCompressor() {
+        return internalRecorder.getMacroCompressor();
     }
     
     /**
-     * Removes a listener that receives a change macro event.
-     * @param listener the event listener to be removed
+     * Sets characters that delimit recorded document change macros.
+     * @param chars characters representing delimiters
+     */
+    public void setDelimiter(char[] chars) {
+        getMacroCompressor().setDelimiter(chars);
+    }
+    
+    /**
+     * Sets a compressor that compresses change macros.
+     * @param compressor the compressor
      */
     @Override
-    public void removeMacroListener(IMacroListener listener) {
-        assert listener != null;
-        macroListeners.remove(listener);
+    public void setMacroCompressor(MacroCompressor compressor) {
+        assert compressor != null;
+        internalRecorder.setMacroCompressor(compressor);
     }
     
     /**

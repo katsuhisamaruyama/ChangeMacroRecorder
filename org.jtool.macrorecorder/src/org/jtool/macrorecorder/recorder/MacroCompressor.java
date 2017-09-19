@@ -17,19 +17,19 @@ public class MacroCompressor implements IMacroCompressor {
     /**
      * The collection of characters that represent delimiters.
      */
-    private char[] delimiters = new char[] { '\n', '\r', ',', '.', ';', '(', ')', '{', '}' };
+    protected char[] delimiters = new char[] { '\n', '\r', ',', '.', ';', '(', ')', '{', '}' };
     
     /**
      * Creates an object compressing macros.
      */
-    public MacroCompressor() {
+    protected MacroCompressor() {
     }
     
     /**
      * Sets characters that delimit recorded document change macros.
      * @param chars characters representing delimiters
      */
-    public void setDelimiter(char[] chars) {
+    protected void setDelimiter(char[] chars) {
         assert chars != null;
         delimiters = chars;
     }

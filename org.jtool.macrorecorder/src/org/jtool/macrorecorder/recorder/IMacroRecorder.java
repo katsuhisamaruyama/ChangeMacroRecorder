@@ -13,16 +13,16 @@ package org.jtool.macrorecorder.recorder;
 public interface IMacroRecorder {
     
     /**
-     * Returns the compressor that compresses change macros.
-     * @return the macro compressor
+     * Adds a listener that receives a change macro event.
+     * @param listener the event listener to be added
      */
-    public MacroCompressor getMacroCompressor();
+    public void addMacroListener(IMacroListener listener);
     
     /**
-     * Sets a compressor that compresses change macros.
-     * @param compressor the compressor
+     * Removes a listener that receives a change macro event.
+     * @param listener the event listener to be removed
      */
-    public void setMacroCompressor(MacroCompressor compressor);
+    public void removeMacroListener(IMacroListener listener);
     
     /**
      * Starts the recording of change macros.
@@ -41,14 +41,14 @@ public interface IMacroRecorder {
     public boolean isRunning();
     
     /**
-     * Adds a listener that receives a change macro event.
-     * @param listener the event listener to be added
+     * Sets characters that delimit recorded document change macros.
+     * @param chars characters representing delimiters
      */
-    public void addMacroListener(IMacroListener listener);
+    public void setDelimiter(char[] chars);
     
     /**
-     * Removes a listener that receives a change macro event.
-     * @param listener the event listener to be removed
+     * Sets a compressor that compresses change macros.
+     * @param compressor the compressor
      */
-    public void removeMacroListener(IMacroListener listener);
+    public void setMacroCompressor(MacroCompressor compressor);
 }
