@@ -16,7 +16,7 @@ public interface IMacroRecorder {
      * Returns the compressor that compresses change macros.
      * @return the macro compressor
      */
-    public IMacroCompressor getMacroCompressor();
+    public MacroCompressor getMacroCompressor();
     
     /**
      * Sets a compressor that compresses change macros.

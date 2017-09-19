@@ -76,7 +76,8 @@ public class MacroRecorder implements IMacroRecorder {
      * Returns the compressor that compresses change macros.
      * @return the macro compressor
      */
-    public IMacroCompressor getMacroCompressor() {
+    @Override
+    public MacroCompressor getMacroCompressor() {
         return internalRecorder.getMacroCompressor();
     }
     
@@ -84,6 +85,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Sets a compressor that compresses change macros.
      * @param compressor the compressor
      */
+    @Override
     public void setMacroCompressor(MacroCompressor compressor) {
         assert compressor != null;
         internalRecorder.setMacroCompressor(compressor);
@@ -92,6 +94,7 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * Starts the recording of change macros.
      */
+    @Override
     public void start() {
         if (!displayMacro && !displayRawMacro && handlers.size() == 0) {
             return;
@@ -107,6 +110,7 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * Stops the recording of change macros.
      */
+    @Override
     public void stop() {
         if (displayMacro || !displayRawMacro || handlers.size() > 0) {
             return;
@@ -152,6 +156,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Adds a listener that receives a change macro event.
      * @param listener the event listener to be added
      */
+    @Override
     public void addMacroListener(IMacroListener listener) {
         assert listener != null;
         macroListeners.add(listener);
@@ -161,6 +166,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Removes a listener that receives a change macro event.
      * @param listener the event listener to be removed
      */
+    @Override
     public void removeMacroListener(IMacroListener listener) {
         assert listener != null;
         macroListeners.remove(listener);

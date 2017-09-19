@@ -29,7 +29,6 @@ public class MacroCompressor implements IMacroCompressor {
      * Sets characters that delimit recorded document change macros.
      * @param chars characters representing delimiters
      */
-    @Override
     public void setDelimiter(char[] chars) {
         assert chars != null;
         delimiters = chars;

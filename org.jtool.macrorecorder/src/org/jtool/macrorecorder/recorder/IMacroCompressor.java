@@ -15,12 +15,6 @@ import org.jtool.macrorecorder.macro.DocumentMacro;
 public interface IMacroCompressor {
     
     /**
-     * Sets characters that delimit recorded document change macros.
-     * @param chars characters representing delimiters
-     */
-    public void setDelimiter(char[] chars);
-    
-    /**
      * Tests if a document change macros can be combined with its previous document change macro.
      * @param macro the document macro
      * @return <code>true</code> if the macros can be combined, otherwise <code>false</code>

@@ -10,7 +10,7 @@ import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.recorder.MacroRecorder;
 import org.jtool.macrorecorder.recorder.IMacroListener;
 import org.jtool.macrorecorder.recorder.IMacroRecorder;
-import org.jtool.macrorecorder.recorder.IMacroCompressor;
+import org.jtool.macrorecorder.recorder.MacroCompressor;
 import org.jtool.macrorecorder.recorder.MacroEvent;
 import org.jtool.macrorecorder.recorder.MacroConsole;
 
@@ -38,7 +38,7 @@ public class SampleMacroPrintHandler implements IMacroListener {
     @Override
     public void initialize() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
-        IMacroCompressor compressor = recorder.getMacroCompressor();
+        MacroCompressor compressor = recorder.getMacroCompressor();
         compressor.setDelimiter(new char[] { '\n' });
     }
     
