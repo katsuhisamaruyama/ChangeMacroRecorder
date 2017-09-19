@@ -7,7 +7,7 @@
       <handler
             class="org.jtool.macrorecorder.sample.SampleMacroPrintHandler"
             commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
-      </handler> -->
+      </handler>
       <handler
             class="org.jtool.macrorecorder.sample.SampleMacroPostHandler"
             commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
