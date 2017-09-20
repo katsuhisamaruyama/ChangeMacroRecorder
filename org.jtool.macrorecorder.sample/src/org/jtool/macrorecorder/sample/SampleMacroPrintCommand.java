@@ -46,19 +46,6 @@ public class SampleMacroPrintCommand extends AbstractHandler implements IMacroLi
     }
     
     @Override
-    public boolean recordingAllowed() {
-        return true;
-    }
-    
-    @Override
-    public void initialize() {
-    }
-    
-    @Override
-    public void terminate() {
-    }
-    
-    @Override
     public void macroAdded(MacroEvent evt) {
         Macro macro = evt.getMacro();
         MacroConsole.println("## " + macro.getDescription());

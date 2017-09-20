@@ -35,6 +35,11 @@ public class MacroRecorder implements IMacroRecorder {
     private List<IMacroListener> macroListeners = new ArrayList<IMacroListener>();
     
     /**
+     * The collection of macro handlers that are loaded from the extension point.
+     */
+    private Set<IMacroHandler> macroHandlers = new HashSet<IMacroHandler>();
+    
+    /**
      * A flag that indicates if recorded macros are displayed.
      */
     private boolean displayMacro;
@@ -48,11 +53,6 @@ public class MacroRecorder implements IMacroRecorder {
      * A flag that indicates if this macro recorder is running.
      */
     private boolean running = false;
-    
-    /**
-     * The collection of macro handlers that are loaded from the extension point.
-     */
-    private Set<IMacroListener> macroHandlers = new HashSet<IMacroListener>();
     
     /**
      * Creates an object that records macros.
@@ -97,12 +97,11 @@ public class MacroRecorder implements IMacroRecorder {
      */
     @Override
     public void start() {
-        if (!displayMacro && !displayRawMacro && macroHandlers.size() == 0 && macroListeners.size() == 0) {
+        if (!displayMacro && !displayRawMacro && macroListeners.size() == 0) {
             return;
         }
         
         if (!running) {
-            registerHandlers();
             internalRecorder.start();
         }
         running = true;
@@ -113,13 +112,12 @@ public class MacroRecorder implements IMacroRecorder {
      */
     @Override
     public void stop() {
-        if (displayMacro || !displayRawMacro || macroHandlers.size() > 0 || macroListeners.size() > 0) {
+        if (displayMacro || displayRawMacro || macroListeners.size() > 0) {
             return;
         }
         
         if (running) {
             internalRecorder.stop();
-            unregisterHandlers();
         }
         running = false;
     }
@@ -127,8 +125,8 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * Registers macro handlers that receives change macros.
      */
-    private void registerHandlers() {
-        for (IMacroListener handler : macroHandlers) {
+    public void registerHandlers() {
+        for (IMacroHandler handler : macroHandlers) {
             handler.initialize();
             addMacroListener(handler);
         }
@@ -137,8 +135,8 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * Unregisters macro handlers that receives change macros.
      */
-    private void unregisterHandlers() {
-        for (IMacroListener handler : macroHandlers) {
+    public void unregisterHandlers() {
+        for (IMacroHandler handler : macroHandlers) {
             removeMacroListener(handler);
             handler.terminate();
         }

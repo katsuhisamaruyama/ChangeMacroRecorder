@@ -62,7 +62,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.jtool.macrorecorder.recorder.IMacroListener"/>
+                  <meta.attribute kind="java" basedOn=":org.jtool.macrorecorder.recorder.IMacroHandler"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -90,7 +90,6 @@
 &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
-
       </documentation>
    </annotation>
 
@@ -103,21 +102,9 @@
 A handler must implements the four methods defined in &lt;code&gt;org.jtool.macrorecorder.recorder.IMacroListener&lt;/code&gt;.
 &lt;/p&gt;
 
-&lt;pre&gt;
+&lt;p&gt;&lt;pre&gt;
 public interface IMacroListener {
-    
-    /**
-     * Invoked to initialize this handler immediately before starting the macro recording.
-     */
-    public void initialize() {
-    }
-    
-    /**
-     * Invoked to terminate this handler immediately after stopping the macro recording.
-     */
-    public void terminate() {
-    }
-    
+
     /**
      * Receives an event when a new change macro is added.
      * @param evt the macro event
@@ -130,7 +117,28 @@ public interface IMacroListener {
      */
     public void rawMacroAdded(MacroEvent evt);
 }
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;
+public interface IMacroHandler extends IMacroListener {
+    
+    /**
+     * Tests if the macro recording is allowed.
+     * This handler will be registered if &lt;code&gt;true&lt;/code&gt; is returned, otherwise the handler will not be registered.
+     */
+    public boolean recordingAllowed();
+    
+    /**
+     * Invoked to initialize this handler immediately before starting the macro recording.
+     */
+    public void initialize();
+    
+    /**
+     * Invoked to terminate this handler immediately after stopping the macro recording.
+     */
+    public void terminate();
+}
+&lt;/pre&gt;&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -142,7 +150,6 @@ public interface IMacroListener {
          &lt;p&gt;
 See samples in the &lt;code&gt;org.jtool.macrorecorder.sample&lt;/code&gt;/.
 &lt;/p&gt;
-
       </documentation>
    </annotation>
 

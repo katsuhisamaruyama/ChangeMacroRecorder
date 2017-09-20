@@ -39,8 +39,8 @@ public class MacroHandlerLoader {
     /**
      * Loads macro handlers that are specified in the extension point.
      */
-    static Set<IMacroListener> load() {
-        Set<IMacroListener> handlers = new HashSet<IMacroListener>();
+    static Set<IMacroHandler> load() {
+        Set<IMacroHandler> handlers = new HashSet<IMacroHandler>();
         
         IExtensionRegistry registry = Platform.getExtensionRegistry();
         IExtensionPoint point = registry.getExtensionPoint(EXTENSION_POINT_ID);
@@ -55,8 +55,8 @@ public class MacroHandlerLoader {
                 if (elem.getName().equals(ELEMENT_NAME)) {
                     try {
                         Object obj = elem.createExecutableExtension(ATTRIBUTE_CALSS);
-                        if (obj instanceof IMacroListener) {
-                            IMacroListener handler = (IMacroListener)obj;
+                        if (obj instanceof IMacroHandler) {
+                            IMacroHandler handler = (IMacroHandler)obj;
                             if (handler.recordingAllowed()) {
                                 handlers.add(handler);
                             }

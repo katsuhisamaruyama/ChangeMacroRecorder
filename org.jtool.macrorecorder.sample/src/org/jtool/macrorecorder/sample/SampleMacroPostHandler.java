@@ -7,7 +7,7 @@
 package org.jtool.macrorecorder.sample;
 
 import org.jtool.macrorecorder.macro.Macro;
-import org.jtool.macrorecorder.recorder.IMacroListener;
+import org.jtool.macrorecorder.recorder.IMacroHandler;
 import org.jtool.macrorecorder.recorder.MacroEvent;
 import org.jtool.macrorecorder.recorder.MacroConsole;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.nio.charset.StandardCharsets;
  * )</pre>
  * </p>
  */
-public class SampleMacroPostHandler implements IMacroListener {
+public class SampleMacroPostHandler implements IMacroHandler {
     
     private static final String URL_FOR_POST = "http://localhost:1337/post";
     

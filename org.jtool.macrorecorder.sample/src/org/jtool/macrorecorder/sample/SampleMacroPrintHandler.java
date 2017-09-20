@@ -9,7 +9,7 @@ package org.jtool.macrorecorder.sample;
 import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.recorder.IMacroRecorder;
 import org.jtool.macrorecorder.recorder.MacroRecorder;
-import org.jtool.macrorecorder.recorder.IMacroListener;
+import org.jtool.macrorecorder.recorder.IMacroHandler;
 import org.jtool.macrorecorder.recorder.MacroEvent;
 import org.jtool.macrorecorder.recorder.MacroConsole;
 
@@ -29,7 +29,7 @@ import org.jtool.macrorecorder.recorder.MacroConsole;
  * </p>
  * @author Katsuhisa Maruyama
  */
-public class SampleMacroPrintHandler implements IMacroListener {
+public class SampleMacroPrintHandler implements IMacroHandler {
     
     public SampleMacroPrintHandler() {
     }
