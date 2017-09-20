@@ -25,6 +25,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
@@ -253,8 +254,7 @@ class EditorUtilities {
             IWorkbenchPage[] pages = window.getPages();
             
             for (IWorkbenchPage page : pages) {
-                IEditorPart part = page.findEditor(input);
-                return part;
+                return page.findEditor(input);
             }
         }
         return null;
@@ -289,8 +289,7 @@ class EditorUtilities {
     static IEditorPart getActiveEditor() {
         IWorkbenchWindow window = getActiveWorkbenchWindow();
         if (window != null) {
-            IEditorPart part = window.getActivePage().getActiveEditor();
-            return part;
+            return window.getActivePage().getActiveEditor();
         }
         return null;
     }
@@ -309,6 +308,18 @@ class EditorUtilities {
                     return getInputFilePath(editor);
                 }
             }
+        }
+        return null;
+    }
+    
+    /**
+     * Obtains a workbench part that is currently active.
+     * @return the active part, or <code>null</code> if none
+     */
+    static IWorkbenchPart getActivePart() {
+        IWorkbenchWindow window = getActiveWorkbenchWindow();
+        if (window != null) {
+            return window.getActivePage().getActivePart();
         }
         return null;
     }

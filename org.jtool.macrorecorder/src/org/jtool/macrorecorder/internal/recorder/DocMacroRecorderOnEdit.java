@@ -17,7 +17,9 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.jface.text.IDocument;
 
 /**
@@ -170,6 +172,11 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      * @return the starting point of the selected text, <code>-1</code> if the selection is invalid
      */
     int getSelectionStart() {
+        IWorkbenchPart part = EditorUtilities.getActivePart();
+        if (!(part instanceof AbstractTextEditor)) {
+            return -1;
+        }
+        
         if (styledText == null) {
             return -1;
         }
@@ -196,6 +203,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
         if (styledText == null) {
             return "";
         }
+        
         String path = EditorUtilities.getActiveInputFilePath();
         if (path == null) {
             return "";

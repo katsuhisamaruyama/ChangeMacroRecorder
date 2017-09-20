@@ -70,9 +70,9 @@ class FileListener implements IPartListener {
         if (!(part instanceof AbstractTextEditor)) {
             return;
         }
+        
         IEditorPart editor = (IEditorPart)part;
         globalRecorder.getRecorder().on(editor);
-        
         String path = EditorUtilities.getInputFilePath(editor);
         String branch = globalRecorder.getBranch(path);
         
@@ -96,8 +96,8 @@ class FileListener implements IPartListener {
         if (!(part instanceof AbstractTextEditor)) {
             return;
         }
-        IEditorPart editor = (IEditorPart)part;
         
+        IEditorPart editor = (IEditorPart)part;
         String path = EditorUtilities.getInputFilePath(editor);
         String branch = globalRecorder.getBranch(path);
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
