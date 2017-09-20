@@ -296,9 +296,7 @@ class DocMacroRecorder {
                 if (macro instanceof CancelMacro) {
                     CancelMacro cmacro = (CancelMacro)macro;
                     boolean suc = compoundMacro.cancelMacro(cmacro);
-                    if (suc) {
-                        applyMacro(macro);
-                    } else {
+                    if (!suc) {
                         MacroConsole.println("Cancellation failed: " + cmacro.toString());
                         MacroConsole.println(compoundMacro.toString());
                     }
@@ -399,9 +397,9 @@ class DocMacroRecorder {
                 
                 for (int i = 0; i < rtext.length(); i++) {
                     if (rtext.charAt(i) == dtext.charAt(i)) {
-                        MacroConsole.println("DEBUG:" + ((int)rtext.charAt(i)) + " == " + ((int)dtext.charAt(i)));
+                        MacroConsole.println("DEBUG:" + start + " " + ((int)rtext.charAt(i)) + " == " + ((int)dtext.charAt(i)));
                     } else {
-                        MacroConsole.println("DEBUG:" + ((int)rtext.charAt(i)) + " != " + ((int)dtext.charAt(i)));
+                        MacroConsole.println("DEBUG:" + start + " " + ((int)rtext.charAt(i)) + " != " + ((int)dtext.charAt(i)));
                     }
                 }
                 return true;

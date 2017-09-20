@@ -92,8 +92,8 @@ public class CompoundMacro extends Macro {
      * @param macro the macro that cancels the macro stored in this compound macro
      * @return <code>true</code> if the cancellation succeeded, otherwise <code>false</code> 
      */
-    public boolean cancelMacro(DocumentMacro macro) {
-        int index = getIndexOfCorrespondingMacro(macro);
+    public boolean cancelMacro(CancelMacro cmacro) {
+        int index = getIndexOfCorrespondingMacro(cmacro);
         if (index < 0) {
             return false;
         }
@@ -115,14 +115,14 @@ public class CompoundMacro extends Macro {
      * @param macro the given macro
      * @return the index number of the corresponding macro
      */
-    private int getIndexOfCorrespondingMacro(DocumentMacro macro) {
+    private int getIndexOfCorrespondingMacro(CancelMacro cmacro) {
         for (int i = 0; i < macros.size(); i++) {
-            Macro m = macros.get(i);
-            if (m instanceof DocumentMacro) {
-                DocumentMacro dm = (DocumentMacro)m;
-                if (dm.getStart() == macro.getStart() &&
-                    dm.getInsertedText().equals(macro.getDeletedText()) &&
-                    dm.getDeletedText().equals(macro.getInsertedText())) {
+            Macro macro = macros.get(i);
+            if (macro instanceof DocumentMacro) {
+                DocumentMacro dmacro = (DocumentMacro)macro;
+                if (dmacro.getStart() == cmacro.getStart() &&
+                    dmacro.getInsertedText().equals(cmacro.getDeletedText()) &&
+                    dmacro.getDeletedText().equals(cmacro.getInsertedText())) {
                     return i;
                 }
             }
