@@ -32,7 +32,7 @@ public class MacroHandlerLoader {
     private static final String ELEMENT_NAME = "handler";
     
     /**
-     * The attribute name that specifies the a macro handler to be loaded.
+     * The attribute name that specifies a macro handler to be loaded.
      */
     private static final String ATTRIBUTE_CALSS = "class";
     
