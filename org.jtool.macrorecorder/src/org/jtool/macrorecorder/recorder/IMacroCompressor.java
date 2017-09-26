@@ -9,7 +9,7 @@ package org.jtool.macrorecorder.recorder;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 
 /**
- * An interface for compressor of change macros.
+ * An interface for a compressor of change macros.
  * @author Katsuhisa Maruyama
  */
 public interface IMacroCompressor {
