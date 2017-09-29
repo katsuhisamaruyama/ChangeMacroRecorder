@@ -7,7 +7,7 @@
 package org.jtool.macrorecorder.recorder;
 
 /**
- * Records change macros that were performed on Eclipse.
+ * An interface for recording change macros that were performed on Eclipse.
  * @author Katsuhisa Maruyama
  */
 public interface IMacroRecorder {

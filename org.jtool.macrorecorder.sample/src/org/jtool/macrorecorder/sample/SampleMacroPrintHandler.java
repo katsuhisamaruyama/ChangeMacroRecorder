@@ -14,7 +14,7 @@ import org.jtool.macrorecorder.recorder.MacroEvent;
 import org.jtool.macrorecorder.recorder.MacroConsole;
 
 /**
- * SampleMacroPrintCommand sample handler that prints change macros.
+ * A sample handler that prints change macros.
  * <p>
  * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
  * <pre>(@code

@@ -16,7 +16,10 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
-
+/**
+ * A sample listener that prints change macros.
+ * Starting and stopping is switched to each other.
+ */
 public class SampleMacroPrintCommand extends AbstractHandler implements IMacroListener {
     
     private boolean recording = false;

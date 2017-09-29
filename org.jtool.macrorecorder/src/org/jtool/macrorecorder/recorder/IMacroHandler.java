@@ -7,7 +7,7 @@
 package org.jtool.macrorecorder.recorder;
 
 /**
- * Defines an interface for handling received change macro event.
+ * An interface for handling received change macro event.
  * @author Katsuhisa Maruyama
  */
 public interface IMacroHandler extends IMacroListener {
