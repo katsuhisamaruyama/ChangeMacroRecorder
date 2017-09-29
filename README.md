@@ -45,7 +45,7 @@ and put it in the 'plug-ins' directory under the Eclipse installation. Eclipse n
 
 ChangeMacroRecorder is intended to be embedded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are included in the `package org.jtool.macrorecorder.recorder`.
 
-#### Recording change macros
+### Recording change macros
 
 The single instance can be obtained from the invocation as `MacroRecorder.getInstance()`. 
 
@@ -114,7 +114,7 @@ Note that Eclipse does not automatically run your code. If your code starts reco
         </handler>
     </extension>
 
-#### Compressing document change macros
+### Compressing document change macros
 
 Without compression, ChangeMacroTRecorder sends a document macro when each character was recorded. Using compression, successive document macros are combined based on the delimiter-based strategy. The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits successive typing at the point where it detects one of these characters. For example, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". Your code freely the delimiter characters by invoking method `setDelimiter(char[])` of interface `IMacroRecorder` as follows.  
 
@@ -144,7 +144,7 @@ If you code wants to replace the default delimiter-based strategy with a differe
         public DocumentMacro combine(DocumentMacro last, DocumentMacro next);
     }
 
-#### Receiving change macros
+### Receiving change macros
 
 You code can receive recorded change macros that are sent from ChangeMacroRecorder to create a class implementing two abstract methods of `IMacroListener`.  
 
@@ -195,7 +195,7 @@ If you will register this class as a plug-in of ChangeMacroRecorder, you code al
         public void terminate();
     }
 
-#### Samples
+### Samples
 
 For example, if you will create a class `SampleMacroPrintHandler` that displays all of the amended code changes on the console, the class contains the following code:  
 
