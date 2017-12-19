@@ -45,9 +45,8 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         macroRecorder.displayMacrosOnConsole(MacroRecorderPreferencePage.displayMacros());
         macroRecorder.displayRawMacrosOnConsole(MacroRecorderPreferencePage.displayRawMacros());
         
-        MacroRecorder recorder = (MacroRecorder)MacroRecorder.getInstance();
-        recorder.registerHandlers();
-        recorder.start();
+        macroRecorder.registerHandlers();
+        macroRecorder.start();
     }
     
     /**

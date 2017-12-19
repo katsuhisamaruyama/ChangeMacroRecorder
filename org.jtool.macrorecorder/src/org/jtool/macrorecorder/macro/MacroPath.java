@@ -74,7 +74,7 @@ public class MacroPath {
         this.branch = branch;
         this.projectName = getProjectName(path);
         this.packageName = getPackageName(projectName, path);
-        this.fileName = getFileName(path);;
+        this.fileName = getFileName(path);
     }
     
     /**
