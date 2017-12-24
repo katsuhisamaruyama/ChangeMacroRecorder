@@ -374,6 +374,7 @@ class ResourceListener implements IResourceChangeListener {
         
         int type = elem.getElementType();
         if (type == IJavaElement.JAVA_PROJECT) {
+            globalRecorder.checkGitProject(elem.getJavaProject().getProject());
             return ResourceMacro.Target.PROJECT;
             
         } else if (type == IJavaElement.PACKAGE_FRAGMENT) {

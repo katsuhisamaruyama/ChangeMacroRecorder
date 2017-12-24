@@ -12,6 +12,7 @@ import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 
 import java.io.File;
@@ -326,6 +327,16 @@ class GlobalMacroRecorder {
         
         recorder.recordRawMacro(macro);
         recorder.recordMacro(macro);
+    }
+    
+    /**
+     * Checks if a project is under git.
+     * @param project the project to be checked
+     */
+    void checkGitProject(IProject project) {
+        if (project.getLocation() != null) {
+            gitRepositoryListener.registerGitProject(project);
+        }
     }
     
     /**

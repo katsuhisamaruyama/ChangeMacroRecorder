@@ -34,6 +34,36 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
     private GlobalMacroRecorder globalRecorder;
     
     /**
+     * Creates an object that records git events.
+     * @param recorder a recorder that records global macros
+     * @param projects the projects to be checked
+     */
+    GitRepositoryListener(GlobalMacroRecorder recorder, IProject[] projects) {
+        this.globalRecorder = recorder;
+        
+        for (IProject project : projects) {
+            registerGitProject(project);
+        }
+    }
+    
+    /**
+     * Registers a project if it is git one.
+     * @param project the project to be checked
+     */
+    void registerGitProject(IProject project) {
+        try {
+            String dir = project.getLocation().removeLastSegments(1).makeAbsolute().toOSString();
+            Git git = Git.open(new File(dir));
+            
+            String branch = git.getRepository().getBranch();
+            String path = extractLastPathElement(dir);
+            if (path != null) {
+                globalRecorder.putGitProject(path, branch);
+            }
+        } catch (IOException e) { /* empty */ }
+    }
+    
+    /**
      * Registers a git repository listener.
      */
     void register() {
@@ -45,27 +75,6 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
      * Unregisters a git repository listener.
      */
     void unregister() {
-    }
-    
-    /**
-     * Creates an object that records git events.
-     * @param recorder a recorder that records global macros
-     */
-    GitRepositoryListener(GlobalMacroRecorder recorder, IProject[] projects) {
-        this.globalRecorder = recorder;
-        
-        for (IProject project : projects) {
-            String ppath = project.getLocation().makeAbsolute().toOSString();
-            Git git;
-            try {
-                git = Git.open(new File(ppath));
-                GitMacro macro = createGitMacro(GitMacro.Action.OPEN, git);
-                if (macro != null) {
-                    globalRecorder.recordMacro(macro);
-                    globalRecorder.putGitProject(ppath, git.getRepository().getBranch());
-                }
-            } catch (IOException e) { /* empty */ }
-        }
     }
     
     /**
@@ -130,11 +139,12 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
         try {
             String branch = git.getRepository().getBranch();
             String gitPath = git.getRepository().getDirectory().getAbsolutePath();
-            String path = removeLastPathElement(gitPath);
-            if (path == null) {
+            String dir = removeLastPathElement(gitPath);
+            String path = extractLastPathElement(dir);
+            if (path == null || dir == null) {
                 return null;
             }
-            return new GitMacro(action, path, branch);
+            return new GitMacro(action, path, branch, dir);
         } catch (IOException e) { /* empty */ }
         return null;
     }
@@ -151,7 +161,24 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
         
         int lastIndexOf = path.lastIndexOf(File.separator);
         if (lastIndexOf != -1) {
-            path.substring(0, lastIndexOf);
+            return path.substring(0, lastIndexOf);
+        }
+        return null;
+    }
+    
+    /**
+     * Extracts a path elements on the first and returns it.
+     * @param path the original path
+     * @return the path after the extraction, or <code>null</code> if the original path is invalid
+     */
+    private String extractLastPathElement(String path) {
+        if (path == null) {
+            return null;
+        }
+        
+        int lastIndexOf = path.lastIndexOf(File.separator);
+        if (lastIndexOf != -1) {
+            return path.substring(lastIndexOf + 1);
         }
         return null;
     }

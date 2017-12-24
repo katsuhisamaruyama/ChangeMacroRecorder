@@ -20,17 +20,24 @@ public class GitMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        OPEN, REFS_CHANGE, INDEX_CHANGE;
+        REFS_CHANGE, INDEX_CHANGE;
     }
+    
+    /**
+     * The directory of the git repository.
+     */
+    private String dir;
     
     /**
      * Creates an object storing information about a git command macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
+     * @param dir the directory of the git repository
      */
-    public GitMacro(String action, String path, String branch) {
+    public GitMacro(String action, String path, String branch, String dir) {
         super(action, path, branch);
+        this.dir = dir;
     }
     
     /**
@@ -38,9 +45,10 @@ public class GitMacro extends Macro {
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
+     * @param dir the directory of the git repository
      */
-    public GitMacro(Action action, String path, String branch) {
-        this(action.toString(), path, branch);
+    public GitMacro(Action action, String path, String branch, String dir) {
+        this(action.toString(), path, branch, dir);
     }
     
     /**
@@ -48,9 +56,11 @@ public class GitMacro extends Macro {
      * @param time the time when this macro was performed
      * @param action the action of this macro
      * @param mpath the information about the path a resource on which this macro was performed
+     * @param dir the directory of the git repository
      */
-    protected GitMacro(ZonedDateTime time, String action, MacroPath mpath) {
+    protected GitMacro(ZonedDateTime time, String action, MacroPath mpath, String dir) {
         super(time, action, mpath);
+        this.dir = dir;
     }
     
     /**
@@ -58,15 +68,15 @@ public class GitMacro extends Macro {
      */
     @Override
     public GitMacro clone() {
-        return new GitMacro(time, action, macroPath);
+        return new GitMacro(time, action, macroPath, dir);
     }
     
     /**
-     * Tests if this macro represents an open action.
-     * @return <code>true</code> if this macro represents an open action, otherwise <code>false</code>
+     * Returns the directory of the git repository.
+     * @return the git directory
      */
-    public boolean isOpen() {
-        return action.equals(Action.OPEN.toString());
+    public String getDir() {
+        return dir;
     }
     
     /**
