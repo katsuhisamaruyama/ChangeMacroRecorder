@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.jtool.changetracker.feature_1.0.0.201709292340.jar" id="org.jtool.changetracker.feature" version="1.0.0.201709292340">
-      <category name="org.jtool.macrorecorder"/>
-   </feature>
+   <feature url="features/org.jtool.macrorecorder.feature_1.0.0.201712241600.jar" id="org.jtool.macrorecorder.feature" version="1.0.0.201712241600"/>
    <category-def name="org.jtool.macrorecorder" label="MacroRecorder"/>
 </site>
