@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
+<!--
+**********************************************************
+  Please recover the plugin configurations that are commented out
+***************************************************************
+-->
 <plugin>
    <extension
          point="org.jtool.macrorecorder.handlers">
