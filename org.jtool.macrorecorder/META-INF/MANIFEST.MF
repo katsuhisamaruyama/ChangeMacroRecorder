@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.108.0",
  org.eclipse.equinox.registry;bundle-version="3.6.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Bundle-Name: ChangeMacroRecorder for Eclipse
+Bundle-Name: ChangeMacroRecorder for Eclipse Neon
 Export-Package: org.jtool.macrorecorder.macro,
  org.jtool.macrorecorder.recorder
 Bundle-ClassPath: .,
