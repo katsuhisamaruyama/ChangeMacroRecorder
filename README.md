@@ -22,8 +22,8 @@ Recorded change macros include more detailed information such as the inserted an
 
 ## Requirement
 
-JDK 1.8 or later  
-[Eclipse](https://www.eclipse.org/) 4.6 (Neon) or later 
+JDK 1.8 
+[Eclipse](https://www.eclipse.org/) 4.6 (Neon) 
 
 ## License
 
