@@ -4,18 +4,16 @@
  *  Department of Computer Science, Ritsumeikan University
  */
 
-package org.jtool.macrorecorder.sample;
+package org.jtool.macrorecorder.sample2;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * Sample: Plug-in that prints and HTTP post macros
+ * Sample: Plug-in that prints change macros.
  * @author Katsuhisa Maruyama
  */
 public class Activator extends AbstractUIPlugin {
-    
-    public static final String PLUGIN_ID = "org.jtool.macrorecorder.sample";
     
     private static Activator plugin;
     

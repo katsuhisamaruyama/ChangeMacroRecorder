@@ -4,7 +4,7 @@
  *  Department of Computer Science, Ritsumeikan University
  */
 
-package org.jtool.macrorecorder.sample;
+package org.jtool.macrorecorder.sample2;
 
 import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.recorder.IMacroRecorder;
@@ -17,15 +17,15 @@ import org.jtool.macrorecorder.recorder.MacroConsole;
  * A sample handler that prints change macros.
  * <p>
  * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
- * <pre>(@code
+ * <pre><code>
  * <extension
  *        point="org.jtool.macrorecorder.handlers">
  *     <handler
- *           class="org.jtool.macrorecorder.sample.SampleMacroPrintHandler"
+ *           class="org.jtool.macrorecorder.sample2.SampleMacroPrintHandler"
  *           commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
  *     </handler>
  *  </extension>
- * )</pre>
+ * </code></pre>
  * </p>
  * @author Katsuhisa Maruyama
  */
