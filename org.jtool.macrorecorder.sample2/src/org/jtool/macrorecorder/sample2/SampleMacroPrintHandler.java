@@ -18,11 +18,9 @@ import org.jtool.macrorecorder.recorder.MacroConsole;
  * <p>
  * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
  * <pre><code>
- * <extension
- *        point="org.jtool.macrorecorder.handlers">
- *     <handler
- *           class="org.jtool.macrorecorder.sample2.SampleMacroPrintHandler"
- *           commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
+ * <extension point="org.jtool.macrorecorder.handlers">
+ *     <handler class="org.jtool.macrorecorder.sample2.SampleMacroPrintHandler"
+ *              commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
  *     </handler>
  *  </extension>
  * </code></pre>
@@ -52,7 +50,7 @@ public class SampleMacroPrintHandler implements IMacroHandler {
     @Override
     public void macroAdded(MacroEvent evt) {
         Macro macro = evt.getMacro();
-        MacroConsole.println("##" + macro.getDescription());
+        MacroConsole.println("S2 " + macro.getDescription());
     }
     
     @Override

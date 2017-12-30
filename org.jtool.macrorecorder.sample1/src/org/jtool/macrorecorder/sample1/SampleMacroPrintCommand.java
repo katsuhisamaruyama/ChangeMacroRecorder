@@ -18,7 +18,6 @@ import org.eclipse.core.commands.ExecutionException;
 
 /**
  * A sample listener that receives execution events and prints change macros.
- * Starting and stopping is switched to each other.
  */
 public class SampleMacroPrintCommand extends AbstractHandler implements IMacroListener {
     
@@ -51,7 +50,7 @@ public class SampleMacroPrintCommand extends AbstractHandler implements IMacroLi
     @Override
     public void macroAdded(MacroEvent evt) {
         Macro macro = evt.getMacro();
-        MacroConsole.println("## " + macro.getDescription());
+        MacroConsole.println("S1 " + macro.getDescription());
     }
     
     @Override

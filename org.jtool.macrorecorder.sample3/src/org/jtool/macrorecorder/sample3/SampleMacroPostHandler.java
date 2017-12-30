@@ -21,11 +21,9 @@ import java.nio.charset.StandardCharsets;
  * <p>
  * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
  * <pre><code>
- * <extension
- *        point="org.jtool.macrorecorder.handlers">
- *     <handler
- *           class="org.jtool.macrorecorder.sample3.SampleMacroPostHandler"
- *           commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
+ * <extension point="org.jtool.macrorecorder.handlers">
+ *     <handler class="org.jtool.macrorecorder.sample3.SampleMacroPostHandler"
+ *              commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
  *     </handler> -->
  *  </extension>
  * </code></pre>
