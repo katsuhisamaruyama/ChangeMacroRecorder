@@ -27,11 +27,17 @@ class CodeCompletionListener implements ICompletionListener {
     private DocMacroRecorder docRecorder;
     
     /**
+     * A flag that indicates the content assist is active.
+     */
+    private boolean contentAssistActive;
+    
+    /**
      * Creates an object that records code completion events.
      * @param recorder a recorder that records macros
      */
     CodeCompletionListener(DocMacroRecorder recorder) {
         this.docRecorder = recorder;
+        this.contentAssistActive = false;
     }
     
     /**
@@ -88,6 +94,8 @@ class CodeCompletionListener implements ICompletionListener {
         
         CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId, event);
         docRecorder.recordCodeCompletionMacro(cmacro);
+        
+        contentAssistActive = true;
     }
     
     /**
@@ -96,7 +104,7 @@ class CodeCompletionListener implements ICompletionListener {
      */
     @Override
     public void assistSessionEnded(ContentAssistEvent event) {
-        if (event.assistant == null) {
+        if (event.assistant == null || !contentAssistActive) {
             return;
         }
         
@@ -112,6 +120,8 @@ class CodeCompletionListener implements ICompletionListener {
         
         CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId, event);
         docRecorder.recordCodeCompletionMacro(cmacro);
+        
+        contentAssistActive = false;
     }
     
     /**

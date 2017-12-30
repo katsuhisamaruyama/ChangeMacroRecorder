@@ -323,10 +323,10 @@ class GlobalMacroRecorder {
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
             docRecorder.recordTriggerMacro(macro);
+        } else {
+            recorder.recordRawMacro(macro);
+            recorder.recordMacro(macro);
         }
-        
-        recorder.recordRawMacro(macro);
-        recorder.recordMacro(macro);
     }
     
     /**

@@ -38,6 +38,7 @@ public class MacroConsole {
         for (int i = 0; i < consoles.length; i++) {
             if (CONSOLE_NAME.equals(consoles[i].getName())) {
                 console = (MessageConsole)consoles[i];
+                break;
             }
         }
         if (console == null) {

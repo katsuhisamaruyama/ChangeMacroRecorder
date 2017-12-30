@@ -90,8 +90,6 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
             globalRecorder.recordMacro(macro);
             globalRecorder.setPathToBeRefactored(path);
             
-            
-            
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
                                       path, branch, TriggerMacro.Timing.BEGIN);
             globalRecorder.recordTriggerMacro(tmacro);
