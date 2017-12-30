@@ -52,7 +52,7 @@ public class SampleMacroPrintHandler implements IMacroHandler {
     @Override
     public void macroAdded(MacroEvent evt) {
         Macro macro = evt.getMacro();
-        MacroConsole.println(macro.getDescription());
+        MacroConsole.println("##" + macro.getDescription());
     }
     
     @Override

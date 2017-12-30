@@ -7,4 +7,5 @@
             class="org.jtool.macrorecorder.sample2.SampleMacroPrintHandler"
             commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
       </handler>
+   </extension>
 </plugin>
