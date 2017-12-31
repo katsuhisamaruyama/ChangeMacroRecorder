@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */

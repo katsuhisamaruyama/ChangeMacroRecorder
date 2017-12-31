@@ -7,7 +7,6 @@
 package org.jtool.macrorecorder.macro;
 
 import java.time.ZonedDateTime;
-
 import javax.json.JsonObject;
 
 /**
