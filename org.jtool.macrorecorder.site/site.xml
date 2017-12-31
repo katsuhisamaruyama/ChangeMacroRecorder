@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.jtool.macrorecorder.feature_1.0.0.qualifier.jar" id="org.jtool.macrorecorder.feature" version="1.0.0.qualifier">
+   <feature url="features/org.jtool.macrorecorder.feature_1.0.0.201712311331.jar" id="org.jtool.macrorecorder.feature" version="1.0.0.201712311331">
       <category name="ChaneMacroRecorder"/>
    </feature>
    <category-def name="ChaneMacroRecorder" label="ChaneMacroRecorder"/>
