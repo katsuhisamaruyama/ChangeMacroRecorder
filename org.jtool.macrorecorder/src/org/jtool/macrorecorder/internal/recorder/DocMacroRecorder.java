@@ -279,7 +279,7 @@ class DocMacroRecorder {
             TriggerMacro tmacro = (TriggerMacro)macro;
             if (compoundMacro == null && tmacro.isBegin()) {
                 compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(),
-                                    tmacro.getPath(), tmacro.getBranch(), tmacro.getCommandMacro());
+                        PathInfoFinder.getMacroPath(tmacro.getPath(), tmacro.getBranch()), tmacro.getCommandMacro());
                 
             } else if (tmacro.isEnd()) {
                 if (compoundMacro != null) {

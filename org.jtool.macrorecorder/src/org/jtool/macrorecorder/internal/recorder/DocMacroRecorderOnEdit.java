@@ -161,7 +161,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
         }
         
         CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY,
-                               macro.getPath(), macro.getBranch(), start, getSelectionText());
+                PathInfoFinder.getMacroPath(macro.getPath(), macro.getBranch()), start, getSelectionText());
         recorder.recordRawMacro(cmacro);
         
         dumpMacro(cmacro);
