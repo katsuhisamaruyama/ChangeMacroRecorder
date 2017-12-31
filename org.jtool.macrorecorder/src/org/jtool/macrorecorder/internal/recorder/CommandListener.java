@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -71,7 +71,7 @@ class CommandListener implements IExecutionListener {
         String branch = globalRecorder.getBranch(path);
         
         if (path != null && isCommandToBeRecorded(event)) {
-            CommandMacro macro = new CommandMacro(CommandMacro.Action.EXECUTION, path, branch, commandId, event);
+            CommandMacro macro = new CommandMacro(CommandMacro.Action.EXECUTION, path, branch, commandId);
             globalRecorder.recordCommandMacro(macro);
             
             DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);

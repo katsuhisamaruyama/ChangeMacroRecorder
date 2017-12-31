@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -12,8 +12,8 @@ import org.eclipse.jface.text.contentassist.ICompletionListener;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.source.ContentAssistantFacade;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.jface.text.contentassist.IContentAssistantExtension2;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * Listens code completion events (quick assist or content assist).
@@ -92,7 +92,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_BEGIN;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId, event);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
         docRecorder.recordCodeCompletionMacro(cmacro);
         
         contentAssistActive = true;
@@ -118,7 +118,7 @@ class CodeCompletionListener implements ICompletionListener {
             action = CodeCompletionMacro.Action.CONTENT_ASSIST_END;
         }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId, event);
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, path, branch, commandId);
         docRecorder.recordCodeCompletionMacro(cmacro);
         
         contentAssistActive = false;

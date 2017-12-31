@@ -1,15 +1,12 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2017
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
 
 package org.jtool.macrorecorder.macro;
 
-import org.eclipse.core.commands.ExecutionEvent;
-
 import java.time.ZonedDateTime;
-
 import javax.json.JsonObject;
 
 /**
@@ -31,22 +28,15 @@ public class CommandMacro extends Macro {
     private String commandId;
     
     /**
-     * An execution event related to this macro.
-     */
-    private ExecutionEvent event;
-    
-    /**
      * Creates an object storing information about a command execution macro.
      * @param action the action of this macro
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
      * @param commandId the command information about this macro
-     * @param event an execution event related to this macro
      */
-    public CommandMacro(String action, String path, String branch, String commandId, ExecutionEvent event) {
+    public CommandMacro(String action, String path, String branch, String commandId) {
         super(action, path, branch);
         this.commandId = commandId;
-        this.event = event;
     }
     
     /**
@@ -55,10 +45,9 @@ public class CommandMacro extends Macro {
      * @param path the path of a file or a package on which this macro was performed
      * @param branch the branch name of a file or a package on which this macro was performed
      * @param commandId the command information about this macro
-     * @param event an execution event related to this macro
      */
-    public CommandMacro(Action action, String path, String branch, String commandId, ExecutionEvent event) {
-        this(action.toString(), path, branch, commandId, event);
+    public CommandMacro(Action action, String path, String branch, String commandId) {
+        this(action.toString(), path, branch, commandId);
     }
     
     /**
@@ -67,12 +56,10 @@ public class CommandMacro extends Macro {
      * @param action the action of this macro
      * @param mpath the information about the path a resource on which this macro was performed
      * @param commandId the command information about this macro
-     * @param event an execution event related to this macro
      */
-    protected CommandMacro(ZonedDateTime time, String action, MacroPath mpath, String commandId, ExecutionEvent event) {
+    protected CommandMacro(ZonedDateTime time, String action, MacroPath mpath, String commandId) {
         super(time, action, mpath);
         this.commandId = commandId;
-        this.event = event;
     }
     
     /**
@@ -80,7 +67,7 @@ public class CommandMacro extends Macro {
      */
     @Override
     public CommandMacro clone() {
-        return new CommandMacro(time, action, macroPath, commandId, event);
+        return new CommandMacro(time, action, macroPath, commandId);
     }
     
     /**
@@ -92,16 +79,8 @@ public class CommandMacro extends Macro {
     }
     
     /**
-     * Returns the execution event related to this macro.
-     * @return the execution event
-     */
-    public ExecutionEvent getExecutionEvent() {
-        return event;
-    }
-    
-    /**
-     * Tests if this macro represents refacttoring.
-     * @return <code>true</code> if this macro represents refacttoring, otherwise <code>false</code>
+     * Tests if this macro represents refactoring.
+     * @return <code>true</code> if this macro represents refactoring, otherwise <code>false</code>
      */
     public boolean isRefactoring() {
         return action.equals(Action.REFACTORING.toString());
