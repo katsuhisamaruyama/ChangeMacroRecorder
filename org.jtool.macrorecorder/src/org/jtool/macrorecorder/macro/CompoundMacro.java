@@ -35,12 +35,11 @@ public class CompoundMacro extends Macro {
      * Creates an object storing information about a compound macro.
      * @param time the time when this macro was performed
      * @param action the action of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param commandId the string representing the contents of the macro
      */
-    public CompoundMacro(ZonedDateTime time, String action, String path, String branch, CommandMacro macro) {
-        super(time, action, path, branch);
+    public CompoundMacro(ZonedDateTime time, String action, MacroPath mpath, CommandMacro macro) {
+        super(time, action, mpath);
         this.commandMacro = macro;
     }
     

@@ -35,13 +35,12 @@ public class CopyMacro extends Macro {
     /**
      * Creates an object storing information about a copy macro.
      * @param action the action of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param start the leftmost offset of the document changed by this macro
      * @param text the contents of the document copied by the macro
      */
-    public CopyMacro(String action, String path, String branch, int start, String text) {
-        super(action, path, branch);
+    public CopyMacro(String action, MacroPath mpath, int start, String text) {
+        super(action, mpath);
         this.start = start;
         this.copiedText = text;
     }
@@ -49,13 +48,12 @@ public class CopyMacro extends Macro {
     /**
      * Creates an object storing information about a copy macro.
      * @param action the action of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param start the leftmost offset of the document changed by this macro
      * @param text the contents of the document copied by the macro
      */
-    public CopyMacro(Action action, String path, String branch, int start, String text) {
-        this(action.toString(), path, branch, start, text);
+    public CopyMacro(Action action, MacroPath mpath, int start, String text) {
+        this(action.toString(), mpath, start, text);
     }
     
     /**

@@ -56,23 +56,11 @@ public class Macro {
     
     /**
      * Creates an object storing information about a macro.
-     * @param time the time when this macro was performed
      * @param action the action of this macro
-     * @param path the path of a resource on which this macro was performed
-     * @param branch the branch of a resource on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      */
-    protected Macro(ZonedDateTime time, String action, String path, String branch) {
-        this(time, action, new MacroPath(path, branch));
-    }
-    
-    /**
-     * Creates an object storing information about a macro.
-     * @param action the action of this macro
-     * @param path the path of a resource on which this macro was performed
-     * @param branch the branch of a resource on which this macro was performed
-     */
-    protected Macro(String action, String path, String branch) {
-        this(ZonedDateTime.now(), action, path, branch);
+    protected Macro(String action, MacroPath mpath) {
+        this(ZonedDateTime.now(), action, mpath);
     }
     
     /**

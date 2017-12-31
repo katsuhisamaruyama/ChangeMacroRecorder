@@ -42,14 +42,13 @@ public class FileMacro extends Macro {
     /**
      * Creates an object storing information about a file macro.
      * @param action the type of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param code the contents of source code of the file
      * @param charset the name of a charset of the file
      * @param sdpath the path of the source or destination of the rename or move
      */
-    public FileMacro(String action, String path, String branch, String code, String charset, String sdpath) {
-        super(action, path, branch);
+    public FileMacro(String action, MacroPath mpath, String code, String charset, String sdpath) {
+        super(action, mpath);
         this.code = code;
         this.charset = charset;
         this.srcDstPath = sdpath;
@@ -58,26 +57,24 @@ public class FileMacro extends Macro {
     /**
      * Creates an object storing information about a file macro.
      * @param action the type of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param code the contents of source code of the file
      * @param charset the name of a charset of the file
      * @param sdpath the path of the source or destination of the rename or move
      */
-    public FileMacro(Action action, String path, String branch, String code, String charset, String sdpath) {
-        this(action.toString(), path, branch, code, charset, sdpath);
+    public FileMacro(Action action, MacroPath mpath, String code, String charset, String sdpath) {
+        this(action.toString(), mpath, code, charset, sdpath);
     }
     
     /**
      * Creates an object storing information about a file macro.
      * @param action the type of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param code the contents of source code of the file
      * @param charset the name of a charset of the file
      */
-    public FileMacro(Action action, String path, String branch, String code, String charset) {
-        this(action.toString(), path, branch, code, charset, path);
+    public FileMacro(Action action, MacroPath mpath, String code, String charset) {
+        this(action.toString(), mpath, code, charset, mpath.getPath());
     }
     
     /**

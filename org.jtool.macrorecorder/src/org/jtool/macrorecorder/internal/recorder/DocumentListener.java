@@ -152,24 +152,24 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         if (undoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.UNDO,
-                                          path, branch, event.getOffset(), insertedText, deletedText);
+                        PathInfoFinder.getMacroPath(path, branch), event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
                 
             } else {
                 DocumentMacro macro = new CancelMacro(DocumentMacro.Action.UNDO,
-                                          path, branch, event.getOffset(), insertedText, deletedText);
+                        PathInfoFinder.getMacroPath(path, branch), event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
             }
             
         } else if (redoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
                 DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.REDO,
-                                          path, branch, event.getOffset(), insertedText, deletedText);
+                        PathInfoFinder.getMacroPath(path, branch), event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
                 
             } else {
                 DocumentMacro macro = new CancelMacro(DocumentMacro.Action.REDO,
-                                          path, branch, event.getOffset(), insertedText, deletedText);
+                        PathInfoFinder.getMacroPath(path, branch), event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
             }
             
@@ -177,13 +177,13 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             DocumentMacro macro;
             if (docRecorder.getGlobalMacroRecorder().getCutInProgress()) {
                 macro = new DocumentMacro(DocumentMacro.Action.CUT,
-                            path, branch, event.getOffset(), insertedText, deletedText);
+                        PathInfoFinder.getMacroPath(path, branch), event.getOffset(), insertedText, deletedText);
             } else if (docRecorder.getGlobalMacroRecorder().getPasteInProgress()) {
                 macro = new DocumentMacro(DocumentMacro.Action.PASTE,
-                            path, branch, event.getOffset(), insertedText, deletedText);
+                        PathInfoFinder.getMacroPath(path, branch), event.getOffset(), insertedText, deletedText);
             } else {
                 macro = new DocumentMacro(DocumentMacro.Action.EDIT,
-                            path, branch, event.getOffset(), insertedText, deletedText);
+                        PathInfoFinder.getMacroPath(path, branch), event.getOffset(), insertedText, deletedText);
             }
             docRecorder.recordDocumentMacro(macro);
         }
@@ -205,32 +205,32 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         
         if (eventType == DocumentUndoEvent.ABOUT_TO_UNDO) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, path, branch,
-                                          TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO,
+                        PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
                 docRecorder.recordTriggerMacro(tmacro);
             }
             undoInprogress = true;
             
         } else if (eventType == DocumentUndoEvent.ABOUT_TO_REDO) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, path, branch,
-                                          TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO,
+                        PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
                 docRecorder.recordTriggerMacro(tmacro);
             }
             redoInprogress = true;
             
         } else if (eventType == DocumentUndoEvent.UNDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, path, branch,
-                                          TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO,
+                        PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
                 docRecorder.recordTriggerMacro(tmacro);
             }
             undoInprogress = false;
             
         } else if (eventType == DocumentUndoEvent.REDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, path, branch,
-                                          TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO,
+                        PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
                 docRecorder.recordTriggerMacro(tmacro);
             }
             redoInprogress = false;
@@ -256,7 +256,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             String branch = docRecorder.getGlobalMacroRecorder().getBranch(path);
             
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CURSOR_CHANGE,
-                                      path, branch, TriggerMacro.Timing.INSTANT);
+                    PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.INSTANT);
             docRecorder.recordTriggerMacro(tmacro);
         }
     }

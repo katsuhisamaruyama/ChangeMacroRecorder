@@ -77,7 +77,7 @@ class FileListener implements IPartListener {
         String branch = globalRecorder.getBranch(path);
         
         FileMacro macro = new FileMacro(FileMacro.Action.OPENED,
-                              path, branch, getCode(editor), getCharset(editor));
+                PathInfoFinder.getMacroPath(path, branch), getCode(editor), getCharset(editor));
         globalRecorder.recordMacro(macro);
         prevFilePath = null;
         
@@ -107,7 +107,8 @@ class FileListener implements IPartListener {
             String code = getCode(editor);
             String charset = getCharset(editor);
             
-            FileMacro macro = new FileMacro(FileMacro.Action.CLOSED, path, branch, code, charset);
+            FileMacro macro = new FileMacro(FileMacro.Action.CLOSED,
+                    PathInfoFinder.getMacroPath(path, branch), code, charset);
             globalRecorder.recordMacro(macro);
             prevFilePath = path;
             
@@ -134,7 +135,8 @@ class FileListener implements IPartListener {
         String charset = getCharset(editor);
         String branch = globalRecorder.getBranch(path);
         
-        FileMacro macro = new FileMacro(FileMacro.Action.ACTIVATED, path, branch, code, charset);
+        FileMacro macro = new FileMacro(FileMacro.Action.ACTIVATED,
+                PathInfoFinder.getMacroPath(path, branch), code, charset);
         globalRecorder.recordMacro(macro);
         prevFilePath = path;
         
@@ -173,7 +175,8 @@ class FileListener implements IPartListener {
             
             globalRecorder.getRecorder().on(editor);
             
-            FileMacro macro = new FileMacro(FileMacro.Action.OPENED, path, branch, code, charset);
+            FileMacro macro = new FileMacro(FileMacro.Action.OPENED,
+                    PathInfoFinder.getMacroPath(path, branch), code, charset);
             globalRecorder.recordMacro(macro);
         }
         
@@ -184,7 +187,8 @@ class FileListener implements IPartListener {
             String code = getCode(editor);
             String charset = getCharset(editor);
             
-            FileMacro macro = new FileMacro(FileMacro.Action.ACTIVATED, path, branch, code, charset);
+            FileMacro macro = new FileMacro(FileMacro.Action.ACTIVATED,
+                    PathInfoFinder.getMacroPath(path, branch), code, charset);
             globalRecorder.recordMacro(macro);
         }
     }

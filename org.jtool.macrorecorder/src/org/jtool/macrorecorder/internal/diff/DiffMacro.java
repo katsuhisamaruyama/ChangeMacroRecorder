@@ -6,6 +6,7 @@
 
 package org.jtool.macrorecorder.internal.diff;
 
+import org.jtool.macrorecorder.internal.recorder.PathInfoFinder;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 
 /**
@@ -24,7 +25,7 @@ public class DiffMacro extends DocumentMacro{
      * @param dtext the contents of the text deleted by the macro
      */
     public DiffMacro(Action action, String path, String branch, int start, String itext, String dtext) {
-        super(action.toString(), path, branch, start, itext, dtext);
+        super(action.toString(), PathInfoFinder.getMacroPath(path, branch), start, itext, dtext);
     }
     
     /**

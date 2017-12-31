@@ -257,12 +257,18 @@ public class Recorder {
      */
     void recordMacro(Macro macro) {
         if (macro instanceof TriggerMacro) {
+            
             TriggerMacro tmacro = (TriggerMacro)macro;
             if (compoundMacro == null && tmacro.isBegin()) {
                 compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(),
-                                    tmacro.getPath(), tmacro.getBranch(), tmacro.getCommandMacro());
+                        PathInfoFinder.getMacroPath(tmacro.getPath(), tmacro.getBranch()), tmacro.getCommandMacro());
+                
+                System.out.println("COMP1");
                 
             } else if (tmacro.isEnd()) {
+                
+                System.out.println("COMP1 END " + compoundMacro);
+                
                 if (compoundMacro != null) {
                     compoundMacro.setRawMacros(new ArrayList<Macro>(rawMacros));
                     rawMacros.clear();

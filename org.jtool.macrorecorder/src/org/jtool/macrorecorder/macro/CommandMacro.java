@@ -30,24 +30,22 @@ public class CommandMacro extends Macro {
     /**
      * Creates an object storing information about a command execution macro.
      * @param action the action of this macro
-     * @param path the path of a file or a package on which this macro was performed
-     * @param branch the branch name of a file or a package on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param commandId the command information about this macro
      */
-    public CommandMacro(String action, String path, String branch, String commandId) {
-        super(action, path, branch);
+    public CommandMacro(String action, MacroPath mpath, String commandId) {
+        super(action, mpath);
         this.commandId = commandId;
     }
     
     /**
      * Creates an object storing information about a command execution macro.
      * @param action the action of this macro
-     * @param path the path of a file or a package on which this macro was performed
-     * @param branch the branch name of a file or a package on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param commandId the command information about this macro
      */
-    public CommandMacro(Action action, String path, String branch, String commandId) {
-        this(action.toString(), path, branch, commandId);
+    public CommandMacro(Action action, MacroPath mpath, String commandId) {
+        this(action.toString(), mpath, commandId);
     }
     
     /**

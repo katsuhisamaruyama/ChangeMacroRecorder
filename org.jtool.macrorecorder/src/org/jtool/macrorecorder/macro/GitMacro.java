@@ -30,24 +30,22 @@ public class GitMacro extends Macro {
     /**
      * Creates an object storing information about a git command macro.
      * @param action the action of this macro
-     * @param path the path of a file or a package on which this macro was performed
-     * @param branch the branch name of a file or a package on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param dir the directory of the git repository
      */
-    public GitMacro(String action, String path, String branch, String dir) {
-        super(action, path, branch);
+    public GitMacro(String action, MacroPath mpath, String dir) {
+        super(action, mpath);
         this.dir = dir;
     }
     
     /**
      * Creates an object storing information about a git command macro.
      * @param action the action of this macro
-     * @param path the path of a file or a package on which this macro was performed
-     * @param branch the branch name of a file or a package on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param dir the directory of the git repository
      */
-    public GitMacro(Action action, String path, String branch, String dir) {
-        this(action.toString(), path, branch, dir);
+    public GitMacro(Action action, MacroPath mpath, String dir) {
+        this(action.toString(), mpath, dir);
     }
     
     /**

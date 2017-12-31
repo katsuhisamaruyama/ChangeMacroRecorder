@@ -105,24 +105,27 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
                 globalRecorder.recordMacro(macro);
                 
                 TriggerMacro bmacro = new TriggerMacro(TriggerMacro.Action.GIT,
-                        macro.getPath(), macro.getBranch(), TriggerMacro.Timing.BEGIN);
+                        PathInfoFinder.getMacroPath(macro.getPath(), macro.getBranch()), TriggerMacro.Timing.BEGIN);
                 globalRecorder.recordTriggerMacro(bmacro);
                 Status status = git.status().call();
                 String branch = macro.getBranch();
                 for (String path : status.getAdded()) {
-                    FileMacro fmacro = new FileMacro(FileMacro.Action.ADDED_GIT_INDEX_CHANGED, path, branch, "", "UTF-8");
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.ADDED_GIT_INDEX_CHANGED,
+                            PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
                     globalRecorder.recordMacro(fmacro);
                 }
                 for (String path : status.getRemoved()) {
-                    FileMacro fmacro = new FileMacro(FileMacro.Action.REMOVED_GIT_INDEX_CHANGED, path, branch, "", "UTF-8");
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.REMOVED_GIT_INDEX_CHANGED,
+                            PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
                     globalRecorder.recordMacro(fmacro);
                 }
                 for (String path : status.getModified()) {
-                    FileMacro fmacro = new FileMacro(FileMacro.Action.MODIFIED_GIT_INDEX_CHANGED, path, branch, "", "UTF-8");
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.MODIFIED_GIT_INDEX_CHANGED,
+                            PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
                     globalRecorder.recordMacro(fmacro);
                 }
                 TriggerMacro emacro = new TriggerMacro(TriggerMacro.Action.GIT,
-                        macro.getPath(), macro.getBranch(), TriggerMacro.Timing.END);
+                        PathInfoFinder.getMacroPath(macro.getPath(), macro.getBranch()), TriggerMacro.Timing.END);
                 globalRecorder.recordTriggerMacro(emacro);
             }
         } catch (NoWorkTreeException e) { /* empty */
@@ -144,7 +147,7 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
             if (path == null || dir == null) {
                 return null;
             }
-            return new GitMacro(action, path, branch, dir);
+            return new GitMacro(action, PathInfoFinder.getMacroPath(path, branch), dir);
         } catch (IOException e) { /* empty */ }
         return null;
     }

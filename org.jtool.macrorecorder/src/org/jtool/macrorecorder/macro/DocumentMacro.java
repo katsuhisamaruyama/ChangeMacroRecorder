@@ -40,14 +40,13 @@ public class DocumentMacro extends Macro {
     /**
      * Creates an object storing information about a document macro.
      * @param action the action of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param start the leftmost offset of the text changed by this macro
      * @param itext the contents of the text inserted by the macro
      * @param dtext the contents of the text deleted by the macro
      */
-    public DocumentMacro(String action, String path, String branch, int start, String itext, String dtext) {
-        super(action, path, branch);
+    public DocumentMacro(String action, MacroPath mpath, int start, String itext, String dtext) {
+        super(action, mpath);
         this.start = start;
         this.insertedText = itext;
         this.deletedText = dtext;
@@ -56,14 +55,13 @@ public class DocumentMacro extends Macro {
     /**
      * Creates an object storing information about a document macro.
      * @param action the action of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param start the leftmost offset of the text changed by this macro
      * @param itext the contents of the text inserted by the macro
      * @param dtext the contents of the text deleted by the macro
      */
-    public DocumentMacro(Action action, String path, String branch, int start, String itext, String dtext) {
-        this(action.toString(), path, branch, start, itext, dtext);
+    public DocumentMacro(Action action, MacroPath mpath, int start, String itext, String dtext) {
+        this(action.toString(), mpath, start, itext, dtext);
     }
     
     /**

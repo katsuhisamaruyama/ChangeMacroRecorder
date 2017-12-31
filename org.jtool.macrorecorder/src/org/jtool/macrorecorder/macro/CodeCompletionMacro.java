@@ -30,24 +30,22 @@ public class CodeCompletionMacro extends Macro {
     /**
      * Creates an object storing information about a code completion macro.
      * @param action the action of this macro
-     * @param path the path of a file or a package this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param commandId the command information about this macro
      */
-    protected CodeCompletionMacro(String action, String path, String branch, String commandId) {
-        super(action, path, branch);
+    protected CodeCompletionMacro(String action, MacroPath mpath, String commandId) {
+        super(action, mpath);
         this.commandId = commandId;
     }
     
     /**
      * Creates an object storing information about a code completion macro.
      * @param action the action of this macro
-     * @param path the path of a file on which this macro was performed
-     * @param branch the branch name of a file on which this macro was performed
+     * @param mpath the information about the path a resource on which this macro was performed
      * @param commandId the command information about this macro
      */
-    public CodeCompletionMacro(Action action, String path, String branch, String commandId) {
-        this(action.toString(), path, branch, commandId);
+    public CodeCompletionMacro(Action action, MacroPath mpath, String commandId) {
+        this(action.toString(), mpath, commandId);
     }
     
     /**
