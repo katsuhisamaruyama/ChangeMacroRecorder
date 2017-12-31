@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.jtool.macrorecorder.handlers" name="macrorecorderHandlers" schema="schema/org.jtool.macrorecorder.handlers.exsd"/>
+   <extension-point id="org.jtool.macrorecorder.handlers" name="org.jtool.macrorecorder.handlers" schema="schema/org.jtool.macrorecorder.handlers.exsd"/>
       <extension
          point="org.eclipse.ui.preferencePages">
       <page

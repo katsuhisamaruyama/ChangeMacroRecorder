@@ -3,7 +3,7 @@
 <schema targetNamespace="org.jtool.macrorecorder" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.jtool.macrorecorder" id="org.jtool.macrorecorder.handlers" name="macrorecorderHandlers"/>
+         <meta.schema plugin="org.jtool.macrorecorder" id="org.jtool.macrorecorder.handlers" name="org.jtool.macrorecorder.handlers"/>
       </appinfo>
       <documentation>
          The extension point of macro handlers that receive change macros.
@@ -69,6 +69,14 @@
       </complexType>
    </element>
 
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
 
    <annotation>
       <appinfo>
@@ -101,8 +109,15 @@
          &lt;p&gt;
 A handler must implements the four methods defined in &lt;code&gt;org.jtool.macrorecorder.recorder.IMacroListener&lt;/code&gt;.
 &lt;/p&gt;
+      </documentation>
+   </annotation>
 
-&lt;p&gt;&lt;pre&gt;
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         &lt;p&gt;&lt;pre&gt;
 public interface IMacroListener {
 
     /**
@@ -139,15 +154,8 @@ public interface IMacroHandler extends IMacroListener {
     public void terminate();
 }
 &lt;/pre&gt;&lt;/p&gt;
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="implementation"/>
-      </appinfo>
-      <documentation>
-         &lt;p&gt;
+&lt;p&gt;
 See samples in the &lt;code&gt;org.jtool.macrorecorder.sample&lt;/code&gt;/.
 &lt;/p&gt;
       </documentation>
