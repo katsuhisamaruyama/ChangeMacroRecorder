@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.108.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Name: ChangeMacroRecorder for Eclipse
-Export-Package: org.jtool.macrorecorder.recorder
+Export-Package: org.jtool.macrorecorder.macro,
+ org.jtool.macrorecorder.recorder
 Bundle-ClassPath: .,
  lib/javax.json-1.1.jar

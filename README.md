@@ -23,7 +23,7 @@ Recorded change macros include more detailed information such as the inserted an
 ## Requirement
 
 JDK 1.8 
-[Eclipse](https://www.eclipse.org/) 4.6 (Neon) 
+[Eclipse](https://www.eclipse.org/) 4.6 (Neon) and 4.7 (Oxygen)
 
 ## License
 
@@ -43,9 +43,9 @@ and put it in the 'plug-ins' directory under the Eclipse installation. Eclipse n
 
 ## Usage
 
-ChangeMacroRecorder is intended to be embedded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are included in the `package org.jtool.macrorecorder.recorder`.
+ChangeMacroRecorder is designed to be embedded into the user (your) program that utilizes (analyzing, visualizing, etc.) recorded fine-grained code changes. It provides three important interfaces that are included in the `package org.jtool.macrorecorder.recorder`.
 
-### Recording change macros
+### Controlling the recording of change macros
 
 The single instance can be obtained from the invocation as `MacroRecorder.getInstance()`. 
 
@@ -103,6 +103,7 @@ Common code that starts or stops the change macro recording is described below.
     recorder.addMacroListener(listener);
     recorder.start();
 
+
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.removeMacroListener(listener);
     recorder.stop();
@@ -114,9 +115,9 @@ Note that Eclipse does not automatically run your code. If your code starts reco
         </handler>
     </extension>
 
-### Compressing document change macros
+### Compressing change macros
 
-Without compression, ChangeMacroTRecorder sends a document macro when each character was recorded. Using compression, successive document macros are combined based on the delimiter-based strategy. The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits successive typing at the point where it detects one of these characters. For example, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". Your code freely the delimiter characters by invoking method `setDelimiter(char[])` of interface `IMacroRecorder` as follows.  
+Without compression, ChangeMacroTRecorder sends a document macro when each character was recorded. Using compression, successive document macros are combined based on the delimiter-based strategy. The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits successive typing at the point where it detects one of these characters. For example, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". Your code alters freely the delimiter characters by invoking method `setDelimiter(char[])` of interface `IMacroRecorder` as follows.  
 
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.setDelimiter(new char[] { '\n' });
@@ -146,7 +147,7 @@ If you code wants to replace the default delimiter-based strategy with a differe
 
 ### Receiving change macros
 
-You code can receive recorded change macros that are sent from ChangeMacroRecorder to create a class implementing two abstract methods of `IMacroListener`.  
+Your code can receive recorded change macros that are sent from ChangeMacroRecorder to create a class implementing two abstract methods of `IMacroListener`.  
 
     package org.jtool.macrorecorder.recorder;
     
@@ -197,60 +198,9 @@ If you will register this class as a plug-in of ChangeMacroRecorder, you code al
 
 ### Samples
 
-For example, if you will create a class `SampleMacroPrintHandler` that displays all of the amended code changes on the console, the class contains the following code:  
+For example, if you will create a class `SampleMacroPrintCommand` that switches starting and stopping of the change macro recording by the execution of the user's command, the class contains the following code:  
 
-    import org.jtool.macrorecorder.macro.Macro;
-    import org.jtool.macrorecorder.recorder.IMacroRecorder;
-    import org.jtool.macrorecorder.recorder.MacroRecorder;
-    import org.jtool.macrorecorder.recorder.IMacroHandler;
-    import org.jtool.macrorecorder.recorder.MacroEvent;
-    import org.jtool.macrorecorder.recorder.MacroConsole;
-    
-    /**
-     * SampleMacroPrintCommand sample handler that prints change macros.
-     *
-     * This is intended to be specified in the extension point of org.jtool.macrorecorder.handlers.
-     * 
-     * <extension point="org.jtool.macrorecorder.handlers">
-     *     <handler class="org.jtool.macrorecorder.sample.SampleMacroPrintHandler"
-     *              commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
-     *     </handler>
-     * </extension>
-     */
-    public class SampleMacroPrintHandler implements IMacroHandler {
-        
-        public SampleMacroPrintHandler() {
-        }
-        
-        @Override
-        public boolean recordingAllowed() {
-            return true;
-        }
-        
-        @Override
-        public void initialize() {
-            IMacroRecorder recorder = MacroRecorder.getInstance();
-            recorder.setDelimiter(new char[] { '\n' });
-        }
-        
-        @Override
-        public void terminate() {
-        }
-        
-        @Override
-        public void macroAdded(MacroEvent evt) {
-            Macro macro = evt.getMacro();
-            MacroConsole.println(macro.getDescription());
-        }
-        
-        @Override
-        public void rawMacroAdded(MacroEvent evt) {
-        }
-    }
-
-The following code directly switches starting and stopping by the execution of the user's command.
-
-    package org.jtool.macrorecorder.sample;
+    package org.jtool.macrorecorder.sample1;
     
     import org.jtool.macrorecorder.macro.Macro;
     import org.jtool.macrorecorder.recorder.IMacroRecorder;
@@ -263,8 +213,7 @@ The following code directly switches starting and stopping by the execution of t
     import org.eclipse.core.commands.ExecutionException;
     
     /**
-     * A sample listener that prints change macros.
-     * Starting and stopping is switched to each other.
+     * A sample listener that receives execution events and prints change macros.
      */
     public class SampleMacroPrintCommand extends AbstractHandler implements IMacroListener {
         
@@ -297,7 +246,53 @@ The following code directly switches starting and stopping by the execution of t
         @Override
         public void macroAdded(MacroEvent evt) {
             Macro macro = evt.getMacro();
-            MacroConsole.println("## " + macro.getDescription());
+            MacroConsole.println("S1 " + macro.getDescription());
+        }
+        
+        @Override
+        public void rawMacroAdded(MacroEvent evt) {
+        }
+    }
+
+The following code of `SampleMacroPrintHandler` displays all of the amended code changes on the console.  
+
+    package org.jtool.macrorecorder.sample;
+    
+    import org.jtool.macrorecorder.macro.Macro;
+    import org.jtool.macrorecorder.recorder.IMacroRecorder;
+    import org.jtool.macrorecorder.recorder.MacroRecorder;
+    import org.jtool.macrorecorder.recorder.IMacroHandler;
+    import org.jtool.macrorecorder.recorder.MacroEvent;
+    import org.jtool.macrorecorder.recorder.MacroConsole;
+    
+    /**
+     * A sample handler that prints change macros.
+     * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
+     */
+    public class SampleMacroPrintHandler implements IMacroHandler {
+        
+        public SampleMacroPrintHandler() {
+        }
+        
+        @Override
+        public boolean recordingAllowed() {
+            return true;
+        }
+        
+        @Override
+        public void initialize() {
+            IMacroRecorder recorder = MacroRecorder.getInstance();
+            recorder.setDelimiter(new char[] { '\n' });
+        }
+        
+        @Override
+        public void terminate() {
+        }
+        
+        @Override
+        public void macroAdded(MacroEvent evt) {
+            Macro macro = evt.getMacro();
+            MacroConsole.println("S2 " + macro.getDescription());
         }
         
         @Override
