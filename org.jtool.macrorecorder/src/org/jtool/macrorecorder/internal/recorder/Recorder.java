@@ -263,11 +263,7 @@ public class Recorder {
                 compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(),
                         PathInfoFinder.getMacroPath(tmacro.getPath(), tmacro.getBranch()), tmacro.getCommandMacro());
                 
-                System.out.println("COMP1");
-                
             } else if (tmacro.isEnd()) {
-                
-                System.out.println("COMP1 END " + compoundMacro);
                 
                 if (compoundMacro != null) {
                     compoundMacro.setRawMacros(new ArrayList<Macro>(rawMacros));

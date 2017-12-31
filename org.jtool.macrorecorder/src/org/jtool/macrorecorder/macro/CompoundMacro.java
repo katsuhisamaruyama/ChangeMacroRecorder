@@ -168,7 +168,7 @@ public class CompoundMacro extends Macro {
         buf.append(" commandId=[" + getCommandId() + "]");
         buf.append(" num=[" + getMacroNumber() + "]");
         for (Macro macros: macros) {
-            buf.append("\n " + macros.toString());
+            buf.append("\n !" + macros.toString());
         }
         return buf.toString();
     }

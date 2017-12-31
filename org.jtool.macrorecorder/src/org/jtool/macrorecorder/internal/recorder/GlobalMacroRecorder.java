@@ -325,8 +325,8 @@ class GlobalMacroRecorder {
             docRecorder.recordTriggerMacro(macro);
         } else {
             recorder.recordRawMacro(macro);
-            recorder.recordMacro(macro);
         }
+        recorder.recordMacro(macro);
     }
     
     /**
