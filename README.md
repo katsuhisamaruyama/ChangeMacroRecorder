@@ -300,7 +300,7 @@ The following code of `SampleMacroPrintHandler` displays all of the amended code
         }
     }
 
-For more detail of API usage, please see [samples](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample>)
+For more detail of API usage, please see [sample1](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample1>), [sample2](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample2>), and [sample3](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample3>).
 
 ## Author
 
