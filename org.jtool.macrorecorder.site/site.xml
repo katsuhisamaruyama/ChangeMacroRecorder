@@ -3,5 +3,5 @@
    <feature url="features/org.jtool.macrorecorder.feature_1.0.0.qualifier.jar" id="org.jtool.macrorecorder.feature" version="1.0.0.qualifier">
       <category name="ChaneMacroRecorder"/>
    </feature>
-   <category-def name="ChaneMacroRecorder" label="New Category 1"/>
+   <category-def name="ChaneMacroRecorder" label="ChaneMacroRecorder"/>
 </site>
