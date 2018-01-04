@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -14,7 +14,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,17 +72,17 @@ class GlobalMacroRecorder {
     /**
      * A flag that indicates the refactoring is currently progressed.
      */
-    private boolean refactoringInProgress;
+    private boolean refactoringInProgress = false;
     
     /**
      * A flag that indicates the cut action is currently progressed.
      */
-    private boolean cutInProgress;
+    private boolean cutInProgress = false;
     
     /**
      * A flag that indicates the paste action is currently progressed.
      */
-    private boolean pasteInProgress;
+    private boolean pasteInProgress = false;
     
     /**
      * The collection of projects in the git repository.
@@ -180,7 +179,7 @@ class GlobalMacroRecorder {
     }
     
     /**
-     * Sets the flag that indicates a refactoring is currently progressed.
+     * Sets the flag that indicates the refactoring is currently progressed.
      * @param bool <code>true</code> if the refactoring is currently progressed, otherwise <code>false</code>
      */
     void setRefactoringInProgress(boolean bool) {
@@ -277,6 +276,7 @@ class GlobalMacroRecorder {
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
             docRecorder.dumpLastDocumentMacro();
+            docRecorder.recordCodeCompletionCancelMacro();
         }
         
         recorder.recordRawMacro(macro);
@@ -292,6 +292,7 @@ class GlobalMacroRecorder {
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
             docRecorder.dumpLastDocumentMacro();
+            docRecorder.recordCodeCompletionCancelMacro();
         }
         
         recorder.recordRawMacro(macro);

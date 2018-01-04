@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -19,7 +19,7 @@ public class DocumentMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        EDIT, CUT, PASTE, UNDO, REDO, AUTO_DIFF, IRREGULAR_DIFF;
+        EDIT, CUT, PASTE, UNDO, REDO, CODE_COMPLETE, AUTO_DIFF, IRREGULAR_DIFF;
     }
     
     /**
@@ -174,6 +174,14 @@ public class DocumentMacro extends Macro {
      */
     public boolean isRedo() {
         return action.equals(Action.REDO.toString());
+    }
+    
+    /**
+     * Tests if this macro represents a code complete operation.
+     * @return <code>true</code> if this macro represents a code complete operation, otherwise <code>false</code>
+     */
+    public boolean isCodeComplete() {
+        return action.equals(Action.CODE_COMPLETE.toString());
     }
     
     /**

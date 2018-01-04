@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -19,14 +19,14 @@ public class TriggerMacro extends Macro {
      * The type of this macro.
      */
     public enum Action {
-        REFACTORING, COMMAND, UNDO, REDO, GIT, CURSOR_CHANGE;
+        REFACTORING, COMMAND, UNDO, REDO, GIT, CODE_COMPLETION, CURSOR_CHANGE;
     }
     
     /**
      * The timing of a trigger.
      */
     public enum Timing {
-        BEGIN, END, INSTANT;
+        BEGIN, END, CANCEL, INSTANT;
     }
     
     /**
@@ -125,6 +125,22 @@ public class TriggerMacro extends Macro {
      */
     public boolean isEnd() {
         return timing == Timing.END;
+    }
+    
+    /**
+     * Tests this macro indicates a trigger of the cancellation of the event.
+     * @return <code>true</code> if this macro indicates the cancellation, otherwise <code>false</code>
+     */
+    public boolean isCancel() {
+        return timing == Timing.CANCEL;
+    }
+    
+    /**
+     * Tests this macro indicates the instant event.
+     * @return <code>true</code> if this macro indicates the instant event, otherwise <code>false</code>
+     */
+    public boolean isInstant() {
+        return timing == Timing.INSTANT;
     }
     
     /**

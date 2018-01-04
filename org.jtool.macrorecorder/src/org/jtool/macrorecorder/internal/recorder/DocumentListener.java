@@ -56,6 +56,11 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
     private boolean redoInprogress = false;
     
     /**
+     * A flag that indicates if a code completion action currently progressed.
+     */
+    private boolean codeCompletionInProgress = false;
+    
+    /**
      * Creates an object that records document events.
      * @param recorder a recorder that records macros
      */
@@ -153,41 +158,48 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
         
         if (undoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.UNDO, mpath,
-                        event.getOffset(), insertedText, deletedText);
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.UNDO, mpath, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
                 
             } else {
-                DocumentMacro macro = new CancelMacro(DocumentMacro.Action.UNDO, mpath,
-                        event.getOffset(), insertedText, deletedText);
+                DocumentMacro macro = new CancelMacro(DocumentMacro.Action.UNDO, mpath, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
             }
             
         } else if (redoInprogress) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.REDO, mpath,
-                        event.getOffset(), insertedText, deletedText);
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.REDO, mpath, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
                 
             } else {
-                DocumentMacro macro = new CancelMacro(DocumentMacro.Action.REDO, mpath,
-                        event.getOffset(), insertedText, deletedText);
+                DocumentMacro macro = new CancelMacro(DocumentMacro.Action.REDO, mpath, event.getOffset(), insertedText, deletedText);
                 docRecorder.recordDocumentMacro(macro);
             }
             
         } else {
-            DocumentMacro macro;
             if (docRecorder.getGlobalMacroRecorder().getCutInProgress()) {
-                macro = new DocumentMacro(DocumentMacro.Action.CUT, mpath,
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.CUT, mpath,
                         event.getOffset(), insertedText, deletedText);
+                docRecorder.recordDocumentMacro(macro);
+                
             } else if (docRecorder.getGlobalMacroRecorder().getPasteInProgress()) {
-                macro = new DocumentMacro(DocumentMacro.Action.PASTE, mpath,
-                        event.getOffset(), insertedText, deletedText);
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.PASTE, mpath, event.getOffset(), insertedText, deletedText);
+                docRecorder.recordDocumentMacro(macro);
+                
+            } else if (!codeCompletionInProgress && docRecorder.getCodeCompletionInProgress()) {
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.EDIT, mpath, event.getOffset(), insertedText, deletedText);
+                docRecorder.recordDocumentMacro(macro);
+                codeCompletionInProgress = true;
+                
             } else {
-                macro = new DocumentMacro(DocumentMacro.Action.EDIT, mpath,
-                        event.getOffset(), insertedText, deletedText);
+                if (codeCompletionInProgress) {
+                    docRecorder.recordCodeCompletionCancelMacro();
+                    codeCompletionInProgress = false;
+                }
+                
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.EDIT, mpath, event.getOffset(), insertedText, deletedText);
+                docRecorder.recordDocumentMacro(macro);
             }
-            docRecorder.recordDocumentMacro(macro);
         }
     }
     
@@ -210,7 +222,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, mpath,
                         TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
-                docRecorder.recordTriggerMacro(tmacro);
+                docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
             }
             undoInprogress = true;
             
@@ -218,23 +230,21 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             if (docRecorder.getPathToBeRefactored() == null) {
                 TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, mpath,
                         TriggerMacro.Timing.BEGIN, docRecorder.getLastCommandMacro());
-                docRecorder.recordTriggerMacro(tmacro);
+                docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
             }
             redoInprogress = true;
             
         } else if (eventType == DocumentUndoEvent.UNDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, mpath,
-                        TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
-                docRecorder.recordTriggerMacro(tmacro);
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.UNDO, mpath, TriggerMacro.Timing.END);
+                docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
             }
             undoInprogress = false;
             
         } else if (eventType == DocumentUndoEvent.REDONE) {
             if (docRecorder.getPathToBeRefactored() == null) {
-                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, mpath,
-                        TriggerMacro.Timing.END, docRecorder.getLastCommandMacro());
-                docRecorder.recordTriggerMacro(tmacro);
+                TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REDO, mpath, TriggerMacro.Timing.END);
+                docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
             }
             redoInprogress = false;
         }

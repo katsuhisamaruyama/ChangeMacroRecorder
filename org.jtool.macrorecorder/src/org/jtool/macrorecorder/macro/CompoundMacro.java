@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -63,6 +63,18 @@ public class CompoundMacro extends Macro {
     }
     
     /**
+     * Returns a macro at the specified position into this compound macro.
+     * @param index the index number of the macro to return
+     * @return the macro at the specified position
+     */
+    public Macro getMacro(int index) {
+        if (0 <= index && index < macros.size()) {
+            return macros.get(index);
+        }
+        return null;
+    }
+    
+    /**
      * Adds a macro into this compound macro.
      * @param macro the macro to be added
      */
@@ -71,11 +83,24 @@ public class CompoundMacro extends Macro {
     }
     
     /**
+     * Inserts a macro at the specified position into this compound macro.
+     * @param index the index number at which the macro is to be inserted
+     * @param macro the macro to be inserted
+     */
+    public void addMacro(int index, Macro macro) {
+        if (0 <= index && index < macros.size()) {
+            macros.add(index, macro);
+        }
+    }
+    
+    /**
      * Removes a macro from this compound macro.
      * @param index the index number of the macro to be removed
      */
     public void removeMacro(int index) {
-        macros.remove(index);
+        if (0 <= index && index < macros.size()) {
+            macros.remove(index);
+        }
     }
     
     /**

@@ -1,25 +1,29 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
 
 package org.jtool.macrorecorder.internal.recorder;
 
+import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
+import org.jtool.macrorecorder.macro.DocumentMacro;
+import org.jtool.macrorecorder.macro.CompoundMacro;
+import org.jtool.macrorecorder.macro.TriggerMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionListener;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.contentassist.ICompletionListenerExtension2;
 import org.eclipse.jface.text.source.ContentAssistantFacade;
-import org.eclipse.jface.text.contentassist.IContentAssistantExtension2;
 import org.eclipse.ui.IEditorPart;
 
 /**
  * Listens code completion events (quick assist or content assist).
  * @author Katsuhisa Maruyama
  */
-class CodeCompletionListener implements ICompletionListener {
+class CodeCompletionListener implements ICompletionListener, ICompletionListenerExtension2 {
     
     /**
      * A recorder that records document macros.
@@ -27,9 +31,14 @@ class CodeCompletionListener implements ICompletionListener {
     private DocMacroRecorder docRecorder;
     
     /**
+     * A macro that represents the code completion.
+     */
+    private CodeCompletionMacro codeCompletionMacro;
+    
+    /**
      * A flag that indicates the content assist is active.
      */
-    private boolean contentAssistActive;
+    private boolean contentAssistActive = false;
     
     /**
      * Creates an object that records code completion events.
@@ -37,7 +46,6 @@ class CodeCompletionListener implements ICompletionListener {
      */
     CodeCompletionListener(DocMacroRecorder recorder) {
         this.docRecorder = recorder;
-        this.contentAssistActive = false;
     }
     
     /**
@@ -45,11 +53,6 @@ class CodeCompletionListener implements ICompletionListener {
      * @param editor the editor
      */
     void register(IEditorPart editor) {
-        IQuickAssistAssistant assistant = EditorUtilities.getQuickAssistAssistant(editor);
-        if (assistant != null) {
-            assistant.addCompletionListener(this);
-        }
-        
         ContentAssistantFacade facade = EditorUtilities.getContentAssistantFacade(editor);
         if (facade != null) {
             facade.addCompletionListener(this);
@@ -61,11 +64,6 @@ class CodeCompletionListener implements ICompletionListener {
      * @param editor the editor
      */
     void unregister(IEditorPart editor) {
-        IQuickAssistAssistant assistant = EditorUtilities.getQuickAssistAssistant(editor);
-        if (assistant != null) {
-            assistant.removeCompletionListener(this);
-        }
-        
         ContentAssistantFacade facade = EditorUtilities.getContentAssistantFacade(editor);
         if (facade != null) {
             facade.removeCompletionListener(this);
@@ -84,18 +82,16 @@ class CodeCompletionListener implements ICompletionListener {
         
         String path = docRecorder.getPath();
         String branch = docRecorder.getGlobalMacroRecorder().getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
         String commandId = event.assistant.getClass().getCanonicalName();
-        CodeCompletionMacro.Action action = CodeCompletionMacro.Action.NONE;
-        if (event.assistant instanceof IQuickAssistAssistant) {
-            action = CodeCompletionMacro.Action.QUICK_ASSIST_BEGIN;
-        } else if (event.assistant instanceof IContentAssistantExtension2) {
-            action = CodeCompletionMacro.Action.CONTENT_ASSIST_BEGIN;
-        }
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, PathInfoFinder.getMacroPath(path, branch), commandId);
-        docRecorder.recordCodeCompletionMacro(cmacro);
+        CodeCompletionMacro.Action action = CodeCompletionMacro.Action.CONTENT_ASSIST_BEGIN;
+        codeCompletionMacro = new CodeCompletionMacro(action, PathInfoFinder.getMacroPath(path, branch), commandId);
         
-        contentAssistActive = true;
+        TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CODE_COMPLETION, mpath, TriggerMacro.Timing.BEGIN);
+        docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
+        
+        this.contentAssistActive = false;
     }
     
     /**
@@ -110,16 +106,11 @@ class CodeCompletionListener implements ICompletionListener {
         
         String path = docRecorder.getPath();
         String branch = docRecorder.getGlobalMacroRecorder().getBranch(path);
-        String commandId = event.assistant.getClass().getCanonicalName();
-        CodeCompletionMacro.Action action = CodeCompletionMacro.Action.NONE;
-        if (event.assistant instanceof IQuickAssistAssistant) {
-            action = CodeCompletionMacro.Action.QUICK_ASSIST_END;
-        } else if (event.assistant instanceof IContentAssistantExtension2) {
-            action = CodeCompletionMacro.Action.CONTENT_ASSIST_END;
-        }
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
         
-        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, PathInfoFinder.getMacroPath(path, branch), commandId);
-        docRecorder.recordCodeCompletionMacro(cmacro);
+        TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CODE_COMPLETION, mpath, TriggerMacro.Timing.BEGIN);
+        docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
+        docRecorder.setCodeCompletionInProgress(true);
         
         contentAssistActive = false;
     }
@@ -131,5 +122,41 @@ class CodeCompletionListener implements ICompletionListener {
      */
     @Override
     public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
+    }
+    
+    /**
+     * Invoked after applying a proposal.
+     * @param proposal the applied proposal
+     */
+    public void applied(ICompletionProposal proposal) {
+        docRecorder.setCodeCompletionInProgress(false);
+        
+        String path = docRecorder.getPath();
+        String branch = docRecorder.getGlobalMacroRecorder().getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+        CompoundMacro compoundMacro = docRecorder.getCompoundMacro();
+        int size = compoundMacro.getMacroNumber();
+        
+        if (size > 0) {
+            Macro cmacro = compoundMacro.getMacro(size - 1);
+            if (cmacro instanceof DocumentMacro) {
+                DocumentMacro dmacro = (DocumentMacro)cmacro;
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.CODE_COMPLETE, dmacro.getMacroPath(),
+                        dmacro.getStart(), dmacro.getInsertedText(), dmacro.getDeletedText());
+                compoundMacro.removeMacro(size - 1);
+                compoundMacro.addMacro(macro);
+            }
+        }
+        
+        docRecorder.recordCodeCompletionMacro(codeCompletionMacro);
+        compoundMacro.removeMacro(compoundMacro.getMacroNumber() - 1);
+        compoundMacro.addMacro(0, codeCompletionMacro);
+        
+        TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CODE_COMPLETION, mpath, TriggerMacro.Timing.END);
+        docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
+        
+        CodeCompletionMacro.Action action = CodeCompletionMacro.Action.CONTENT_ASSIST_END;
+        CodeCompletionMacro cmacro = new CodeCompletionMacro(action, codeCompletionMacro.getMacroPath(), codeCompletionMacro.getCommandId());
+        docRecorder.recordCodeCompletionMacro(cmacro);
     }
 }

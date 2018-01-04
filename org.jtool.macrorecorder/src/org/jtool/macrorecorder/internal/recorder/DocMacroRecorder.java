@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.Macro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
@@ -76,6 +77,11 @@ class DocMacroRecorder {
     protected boolean dispose;
     
     /**
+     * A flag that indicates the code completion is currently progressed.
+     */
+    private boolean codeCompletionInProgress = false;
+    
+    /**
      * Creates an object that records document macros related to a file.
      * @param path the of the file
      * @param recorder a recorder that sends macro events
@@ -97,22 +103,6 @@ class DocMacroRecorder {
      */
     GlobalMacroRecorder getGlobalMacroRecorder() {
         return recorder.getGlobalMacroRecorder();
-    }
-    
-    /**
-     * Sets the previous contents of the source code.
-     * @param code the contents of the source code
-     */
-    void setPreCode(String code) {
-        preCode = code;
-    }
-    
-    /**
-     * Returns the previous contents of the source code.
-     * @return the contents of the source code
-     */
-    String getPreCode() {
-        return preCode;
     }
     
     /**
@@ -160,6 +150,38 @@ class DocMacroRecorder {
     }
     
     /**
+     * Sets the previous contents of the source code.
+     * @param code the contents of the source code
+     */
+    void setPreCode(String code) {
+        preCode = code;
+    }
+    
+    /**
+     * Returns the previous contents of the source code.
+     * @return the contents of the source code
+     */
+    String getPreCode() {
+        return preCode;
+    }
+    
+    /**
+     * Sets the flag that indicates the code completion is currently progressed.
+     * @param bool <code>true</code> if the code completion is currently progressed, otherwise <code>false</code>
+     */
+    void setCodeCompletionInProgress(boolean bool) {
+        codeCompletionInProgress = bool;
+    }
+    
+    /**
+     * Returns the flag that indicates the code completion is currently progressed.
+     * @return <code>true</code> if the code completion is currently progressed, otherwise <code>false</code>
+     */
+    boolean getCodeCompletionInProgress() {
+        return codeCompletionInProgress;
+    }
+    
+    /**
      * Returns a resource to be refactored.
      * @return the path name of the resource to be refactored
      */
@@ -199,7 +221,23 @@ class DocMacroRecorder {
     void recordCodeCompletionMacro(CodeCompletionMacro macro) {
         dumpLastDocumentMacro();
         recorder.recordRawMacro(macro);
-        recorder.recordMacro(macro);
+        recordMacro(macro);
+    }
+    
+    /**
+     * Records a macro that cancels the code completion.
+     * @param mpath information about the path of the macro
+     */
+    void recordCodeCompletionCancelMacro() {
+        if (getCodeCompletionInProgress()) {
+            String path = getPath();
+            String branch = getGlobalMacroRecorder().getBranch(path);
+            MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+            
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CODE_COMPLETION, mpath, TriggerMacro.Timing.CANCEL);
+            getGlobalMacroRecorder().recordTriggerMacro(tmacro);
+            setCodeCompletionInProgress(false);
+        }
     }
     
     /**
@@ -207,8 +245,9 @@ class DocMacroRecorder {
      * @param macro the trigger macro to be recorded
      */
     void recordTriggerMacro(TriggerMacro macro) {
-        dumpMacro(macro);
+        dumpLastDocumentMacro();
         recorder.recordRawMacro(macro);
+        recordMacro(macro);
     }
     
     /**
@@ -224,6 +263,14 @@ class DocMacroRecorder {
      */
     CommandMacro getLastCommandMacro() {
         return getGlobalMacroRecorder().getLastCommandMacro();
+    }
+    
+    /**
+     * Returns the current compound macro.
+     * @return the compound macro
+     */
+    CompoundMacro getCompoundMacro() {
+        return compoundMacro;
     }
     
     /**
@@ -286,6 +333,14 @@ class DocMacroRecorder {
                     rawMacros.clear();
                     
                     recorder.recordCompoundMacro(compoundMacro);
+                }
+                compoundMacro = null;
+                
+            } else if (tmacro.isCancel()) {
+                if (compoundMacro != null) {
+                    for (Macro m : compoundMacro.getMacros()) {
+                        recorder.recordMacro(m);
+                    }
                 }
                 compoundMacro = null;
             }
@@ -358,16 +413,18 @@ class DocMacroRecorder {
      * @param macro the macro to be applied
      */
     boolean applyMacro(Macro macro) {
-        if (macro instanceof DocumentMacro) {
-            DocumentMacro dmacro = (DocumentMacro)macro;
-            StringBuilder postCode = new StringBuilder(preCode);
-            
-            int start = dmacro.getStart();
-            int end = start + dmacro.getDeletedText().length();
-            String itext = dmacro.getInsertedText();
-            postCode.replace(start, end, itext);
-            preCode = postCode.toString();
+        if (!(macro instanceof DocumentMacro)) {
+            return false;
         }
+        
+        DocumentMacro dmacro = (DocumentMacro)macro;
+        StringBuilder postCode = new StringBuilder(preCode);
+        
+        int start = dmacro.getStart();
+        int end = start + dmacro.getDeletedText().length();
+        String itext = dmacro.getInsertedText();
+        postCode.replace(start, end, itext);
+        preCode = postCode.toString();
         return true;
     }
     

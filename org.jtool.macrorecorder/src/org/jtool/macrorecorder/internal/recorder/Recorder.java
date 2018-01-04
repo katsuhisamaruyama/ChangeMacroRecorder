@@ -274,6 +274,14 @@ public class Recorder {
                     }
                 }
                 compoundMacro = null;
+                
+            } else if (tmacro.isCancel()) {
+                if (compoundMacro != null) {
+                    for (Macro m : compoundMacro.getMacros()) {
+                        notifyMacro(m);
+                    }
+                }
+                compoundMacro = null;
             }
             
         } else {
