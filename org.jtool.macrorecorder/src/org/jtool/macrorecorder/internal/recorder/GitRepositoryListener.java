@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -104,11 +104,11 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
             if (macro != null) {
                 globalRecorder.recordMacro(macro);
                 
-                TriggerMacro bmacro = new TriggerMacro(TriggerMacro.Action.GIT,
-                        PathInfoFinder.getMacroPath(macro.getPath(), macro.getBranch()), TriggerMacro.Timing.BEGIN);
+                TriggerMacro bmacro = new TriggerMacro(TriggerMacro.Action.GIT, macro.getMacroPath(), TriggerMacro.Timing.BEGIN);
                 globalRecorder.recordTriggerMacro(bmacro);
                 Status status = git.status().call();
                 String branch = macro.getBranch();
+                
                 for (String path : status.getAdded()) {
                     FileMacro fmacro = new FileMacro(FileMacro.Action.ADDED_GIT_INDEX_CHANGED,
                             PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
@@ -124,8 +124,7 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
                             PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
                     globalRecorder.recordMacro(fmacro);
                 }
-                TriggerMacro emacro = new TriggerMacro(TriggerMacro.Action.GIT,
-                        PathInfoFinder.getMacroPath(macro.getPath(), macro.getBranch()), TriggerMacro.Timing.END);
+                TriggerMacro emacro = new TriggerMacro(TriggerMacro.Action.GIT, macro.getMacroPath(), TriggerMacro.Timing.END);
                 globalRecorder.recordTriggerMacro(emacro);
             }
         } catch (NoWorkTreeException e) { /* empty */

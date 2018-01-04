@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -160,8 +160,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
             return;
         }
         
-        CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY,
-                PathInfoFinder.getMacroPath(macro.getPath(), macro.getBranch()), start, getSelectionText());
+        CopyMacro cmacro = new CopyMacro(CopyMacro.Action.COPY, macro.getMacroPath(), start, getSelectionText());
         recorder.recordRawMacro(cmacro);
         
         dumpMacro(cmacro);

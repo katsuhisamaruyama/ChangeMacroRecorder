@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -260,8 +260,7 @@ public class Recorder {
             
             TriggerMacro tmacro = (TriggerMacro)macro;
             if (compoundMacro == null && tmacro.isBegin()) {
-                compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(),
-                        PathInfoFinder.getMacroPath(tmacro.getPath(), tmacro.getBranch()), tmacro.getCommandMacro());
+                compoundMacro = new CompoundMacro(tmacro.getTime(), tmacro.getAction(), tmacro.getMacroPath(), tmacro.getCommandMacro());
                 
             } else if (tmacro.isEnd()) {
                 

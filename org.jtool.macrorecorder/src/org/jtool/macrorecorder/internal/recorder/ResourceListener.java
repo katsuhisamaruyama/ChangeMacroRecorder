@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -9,6 +9,7 @@ package org.jtool.macrorecorder.internal.recorder;
 import org.jtool.macrorecorder.macro.ResourceMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.FileMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -150,6 +151,8 @@ class ResourceListener implements IResourceChangeListener {
      */
     private void recordFileResourceAddedMacro(IResourceDelta delta, String path, ResourceMacro.Target target) {
         String branch = globalRecorder.getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+        
         IResource resource = delta.getResource();
         String code = getCode(resource);
         String charset = getCharset(resource);
@@ -160,19 +163,16 @@ class ResourceListener implements IResourceChangeListener {
         if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
             fromPath = delta.getMovedFromPath().toString();
             if (getName(path).equals(getName(fromPath))) {
-                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_FROM,
-                        PathInfoFinder.getMacroPath(path, branch), target, fromPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_FROM, mpath, target, fromPath);
                 ftype = FileMacro.Action.MOVED_FROM;
                 
             } else {
-                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_FROM,
-                        PathInfoFinder.getMacroPath(path, branch), target, fromPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_FROM, mpath, target, fromPath);
                 ftype = FileMacro.Action.RENAMED_FROM;
             }
             
         } else {
-            rmacro = new ResourceMacro(ResourceMacro.Action.ADDED,
-                    PathInfoFinder.getMacroPath(path, branch), target, path);
+            rmacro = new ResourceMacro(ResourceMacro.Action.ADDED, mpath, target, path);
             ftype = FileMacro.Action.ADDED;
         }
         
@@ -186,21 +186,18 @@ class ResourceListener implements IResourceChangeListener {
         if (ftype == FileMacro.Action.MOVED_FROM || ftype == FileMacro.Action.RENAMED_FROM) {
             String preCode = getPrevCode(resource);
             
-            FileMacro fmacro = new FileMacro(ftype,
-                    PathInfoFinder.getMacroPath(path, branch), preCode, charset, fromPath);
+            FileMacro fmacro = new FileMacro(ftype, mpath, preCode, charset, fromPath);
             globalRecorder.recordMacro(fmacro);
             
             docRecorder.setPreCode(preCode);
             docRecorder.applyDiff(true);
             
         } else {
-            FileMacro fmacro = new FileMacro(ftype,
-                    PathInfoFinder.getMacroPath(path, branch), "", charset, path);
+            FileMacro fmacro = new FileMacro(ftype, mpath, "", charset, path);
             globalRecorder.recordMacro(fmacro);
             
             docRecorder.setPreCode("");
-            DocumentMacro dmacro = new DocumentMacro(DocumentMacro.Action.EDIT,
-                    PathInfoFinder.getMacroPath(path, branch), 0, code, "");
+            DocumentMacro dmacro = new DocumentMacro(DocumentMacro.Action.EDIT, mpath, 0, code, "");
             docRecorder.recordDocumentMacro(dmacro);
             
             docRecorder.applyDiff(false);
@@ -215,21 +212,20 @@ class ResourceListener implements IResourceChangeListener {
      */
     private void recordNonFileResourceAddedMacro(IResourceDelta delta, String path, ResourceMacro.Target target) {
         String branch = globalRecorder.getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+        
         ResourceMacro rmacro = null;
         if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
             String fromPath = delta.getMovedFromPath().toString();
             if (getName(path).equals(getName(fromPath))) {
-                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_FROM,
-                        PathInfoFinder.getMacroPath(path, branch), target, fromPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_FROM, mpath, target, fromPath);
                 
             } else {
-                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_FROM,
-                        PathInfoFinder.getMacroPath(path, branch), target, fromPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_FROM, mpath, target, fromPath);
             }
             
         } else {
-            rmacro = new ResourceMacro(ResourceMacro.Action.ADDED,
-                    PathInfoFinder.getMacroPath(path, branch), target, path);
+            rmacro = new ResourceMacro(ResourceMacro.Action.ADDED, mpath, target, path);
         }
         
         globalRecorder.recordMacro(rmacro);
@@ -257,6 +253,8 @@ class ResourceListener implements IResourceChangeListener {
      */
     private void recordFileResourceRemovedMacro(IResourceDelta delta, String path, ResourceMacro.Target target) {
         String branch = globalRecorder.getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+        
         IResource resource = delta.getResource();
         String charset = getCharset(resource);
         
@@ -266,19 +264,16 @@ class ResourceListener implements IResourceChangeListener {
         if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
             toPath = delta.getMovedToPath().toString();
             if (getName(path).equals(getName(toPath))) {
-                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_TO,
-                        PathInfoFinder.getMacroPath(path, branch), target, toPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_TO, mpath, target, toPath);
                 ftype = FileMacro.Action.MOVED_TO;
                 
             } else {
-                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_TO,
-                        PathInfoFinder.getMacroPath(path, branch), target, toPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_TO, mpath, target, toPath);
                 ftype = FileMacro.Action.RENAMED_TO;
             }
             
         } else {
-            rmacro = new ResourceMacro(ResourceMacro.Action.REMOVED,
-                    PathInfoFinder.getMacroPath(path, branch), target, path);
+            rmacro = new ResourceMacro(ResourceMacro.Action.REMOVED, mpath, target, path);
             ftype = FileMacro.Action.REMOVED;
         }
         
@@ -291,7 +286,7 @@ class ResourceListener implements IResourceChangeListener {
         
         globalRecorder.recordMacro(rmacro);
         
-        FileMacro fmacro = new FileMacro(ftype, PathInfoFinder.getMacroPath(path, branch), "", charset, toPath);
+        FileMacro fmacro = new FileMacro(ftype, mpath, "", charset, toPath);
         globalRecorder.recordMacro(fmacro);
     }
     
@@ -303,21 +298,20 @@ class ResourceListener implements IResourceChangeListener {
      */
     private void recordNonFileResourceRemovedMacro(IResourceDelta delta, String path, ResourceMacro.Target target) {
         String branch = globalRecorder.getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+        
         ResourceMacro rmacro = null;
         if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
             String toPath = delta.getMovedToPath().toString();
             if (getName(path).equals(getName(toPath))) {
-                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_TO,
-                        PathInfoFinder.getMacroPath(path, branch), target, toPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.MOVED_TO, mpath, target, toPath);
                 
             } else {
-                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_TO,
-                        PathInfoFinder.getMacroPath(path, branch), target, toPath);
+                rmacro = new ResourceMacro(ResourceMacro.Action.RENAMED_TO, mpath, target, toPath);
             }
             
         } else {
-            rmacro = new ResourceMacro(ResourceMacro.Action.REMOVED,
-                    PathInfoFinder.getMacroPath(path, branch), target, path);
+            rmacro = new ResourceMacro(ResourceMacro.Action.REMOVED, mpath, target, path);
         }
         
         globalRecorder.recordMacro(rmacro);
@@ -343,6 +337,8 @@ class ResourceListener implements IResourceChangeListener {
      */
     private void recordFileResourceChangedMacro(IResourceDelta delta, String path, ResourceMacro.Target target) {
         String branch = globalRecorder.getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+        
         IResource resource = delta.getResource();
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
         if (docRecorder == null) {
@@ -363,12 +359,10 @@ class ResourceListener implements IResourceChangeListener {
         
         docRecorder.setPreCode(preCode);
         
-        ResourceMacro rmacro = new ResourceMacro(ResourceMacro.Action.CHANGED,
-                PathInfoFinder.getMacroPath(path, branch), target, path);
+        ResourceMacro rmacro = new ResourceMacro(ResourceMacro.Action.CHANGED, mpath, target, path);
         globalRecorder.recordMacro(rmacro);
         
-        FileMacro fmacro = new FileMacro(FileMacro.Action.CONTENT_CHANGED,
-                PathInfoFinder.getMacroPath(path, branch), code, charset);
+        FileMacro fmacro = new FileMacro(FileMacro.Action.CONTENT_CHANGED, mpath, code, charset);
         globalRecorder.recordMacro(fmacro);
         
         docRecorder.applyDiff(true);

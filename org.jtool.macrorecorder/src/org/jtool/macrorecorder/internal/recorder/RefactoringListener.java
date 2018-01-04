@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -8,6 +8,7 @@ package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.RefactoringMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
 import org.eclipse.ltk.core.refactoring.RefactoringContribution;
@@ -66,6 +67,7 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
     public void executionNotification(RefactoringExecutionEvent event) {
         String path = globalRecorder.getPathToBeRefactored();
         String branch = globalRecorder.getBranch(path);
+        MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
         
         RefactoringDescriptorProxy refactoringDescriptorProxy = event.getDescriptor();
         RefactoringDescriptor refactoringDescriptor = refactoringDescriptorProxy.requestDescriptor(null);
@@ -78,8 +80,7 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
             eventType == RefactoringExecutionEvent.ABOUT_TO_UNDO ||
             eventType == RefactoringExecutionEvent.ABOUT_TO_REDO) {
             
-            RefactoringMacro macro = new RefactoringMacro(getRefactoringAction(eventType),
-                    PathInfoFinder.getMacroPath(path, branch), refactoringId, argumentMap);
+            RefactoringMacro macro = new RefactoringMacro(getRefactoringAction(eventType), mpath, refactoringId, argumentMap);
             
             DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
             if (docRecorder != null && docRecorder.isOn()) {
@@ -90,8 +91,7 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
             globalRecorder.recordMacro(macro);
             globalRecorder.setPathToBeRefactored(path);
             
-            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                    PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.BEGIN);
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, mpath, TriggerMacro.Timing.BEGIN);
             globalRecorder.recordTriggerMacro(tmacro);
             globalRecorder.setRefactoringInProgress(true);
             
@@ -99,13 +99,11 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
                    eventType == RefactoringExecutionEvent.UNDONE ||
                    eventType == RefactoringExecutionEvent.REDONE) {
             
-            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                    PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.END);
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, mpath, TriggerMacro.Timing.END);
             globalRecorder.recordTriggerMacro(tmacro);
             globalRecorder.setPathToBeRefactored(null);
             
-            RefactoringMacro macro = new RefactoringMacro(getRefactoringAction(eventType),
-                    PathInfoFinder.getMacroPath(path, branch), refactoringId, argumentMap);
+            RefactoringMacro macro = new RefactoringMacro(getRefactoringAction(eventType), mpath, refactoringId, argumentMap);
             globalRecorder.recordMacro(macro);
             globalRecorder.setRefactoringInProgress(false);
             
