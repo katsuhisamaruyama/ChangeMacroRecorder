@@ -8,6 +8,7 @@ package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
@@ -161,8 +162,7 @@ class CommandListener implements IExecutionListener {
             }
             
             macro.setAction(CommandMacro.Action.REFACTORING.toString());
-            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, 
-                    PathInfoFinder.getMacroPath(path, macro.getBranch()), TriggerMacro.Timing.BEGIN, macro);
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, macro.getMacroPath(), TriggerMacro.Timing.BEGIN, macro);
             globalRecorder.recordTriggerMacro(tmacro);
         }
     }
@@ -181,9 +181,8 @@ class CommandListener implements IExecutionListener {
             
             String path = globalRecorder.getPathToBeRefactored();
             String branch = globalRecorder.getBranch(path);
-            
-            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
-                    PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.END); 
+            MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, mpath, TriggerMacro.Timing.CANCEL); 
             globalRecorder.recordTriggerMacro(tmacro);
         }
     }
