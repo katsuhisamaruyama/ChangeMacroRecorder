@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -31,6 +31,11 @@ class CommandListener implements IExecutionListener {
      * A recorder that records global macros.
      */
     private GlobalMacroRecorder globalRecorder;
+    
+    /**
+     * A flag that indicates if the refactoring is about to execute.
+     */
+    private boolean isRefactoring = false;
     
     /**
      * Creates an object that records command execution events.
@@ -148,6 +153,8 @@ class CommandListener implements IExecutionListener {
      */
     private void checkRefactoringBegin(ExecutionEvent event, CommandMacro macro) {
         if (isRefactoringCommand(event)) {
+            isRefactoring = true;
+            
             String path = macro.getPath();
             if (path != null) {
                 globalRecorder.setPathToBeRefactored(path);
@@ -168,6 +175,17 @@ class CommandListener implements IExecutionListener {
     @Override
     public void postExecuteSuccess(String commandId, Object returnValue) {
         setInProgressAction(commandId, false);
+        
+        if (isRefactoring && !globalRecorder.getRefactoringInProgress()) {
+            isRefactoring = false;
+            
+            String path = globalRecorder.getPathToBeRefactored();
+            String branch = globalRecorder.getBranch(path);
+            
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING,
+                    PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.END); 
+            globalRecorder.recordTriggerMacro(tmacro);
+        }
     }
     
     /**
@@ -178,6 +196,7 @@ class CommandListener implements IExecutionListener {
     @Override
     public void postExecuteFailure(String commandId, ExecutionException exception) {
         setInProgressAction(commandId, false);
+        isRefactoring = false;
     }
     
     /**
