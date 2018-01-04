@@ -38,13 +38,11 @@ public class SampleMacroPrintCommand extends AbstractHandler implements IMacroLi
     private void start() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
         recorder.addMacroListener(this);
-        recorder.start();
     }
     
     private void stop() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
         recorder.removeMacroListener(this);
-        recorder.stop();
     }
     
     @Override

@@ -25,16 +25,6 @@ public interface IMacroRecorder {
     public void removeMacroListener(IMacroListener listener);
     
     /**
-     * Starts the recording of change macros.
-     */
-    public void start();
-    
-    /**
-     * Stops the recording of change macros.
-     */
-    public void stop();
-    
-    /**
      * Tests if this macro recorder is running.
      * @return <code>true</code> if this macro recorder is running, otherwise <code>false</code>
      */

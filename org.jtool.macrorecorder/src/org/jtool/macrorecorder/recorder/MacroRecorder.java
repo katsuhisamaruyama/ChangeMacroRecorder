@@ -80,6 +80,8 @@ public class MacroRecorder implements IMacroRecorder {
     public void addMacroListener(IMacroListener listener) {
         assert listener != null;
         macroListeners.add(listener);
+        
+        start();
     }
     
     /**
@@ -90,12 +92,13 @@ public class MacroRecorder implements IMacroRecorder {
     public void removeMacroListener(IMacroListener listener) {
         assert listener != null;
         macroListeners.remove(listener);
+        
+        stop();
     }
     
     /**
      * Starts the recording of change macros.
      */
-    @Override
     public void start() {
         if (!displayMacro && !displayRawMacro && macroListeners.size() == 0) {
             return;
@@ -110,7 +113,6 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * Stops the recording of change macros.
      */
-    @Override
     public void stop() {
         if (displayMacro || displayRawMacro || macroListeners.size() > 0) {
             return;

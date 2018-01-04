@@ -69,16 +69,6 @@ The single instance can be obtained from the invocation as `MacroRecorder.getIns
         public void removeMacroListener(IMacroListener listener);
         
         /**
-         * Starts the recording of change macros.
-         */
-        public void start();
-        
-        /**
-         * Stops the recording of change macros.
-         */
-        public void stop();
-        
-        /**
          * Tests if this macro recorder is running.
          * @return <code>true</code> if this macro recorder is running, otherwise <code>false</code>
          */
@@ -101,12 +91,10 @@ Common code that starts or stops the change macro recording is described below.
 
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.addMacroListener(listener);
-    recorder.start();
 
 
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.removeMacroListener(listener);
-    recorder.stop();
 
 Note that Eclipse does not automatically run your code. If your code starts recording change macros form the beginning of the Eclipse activation and stops the recording, you should register your code into the extension point (`org.jtool.macrorecorder.handlers`) as a plug-in. In this case, the following code is described in `plugin,xml`.  
 
@@ -234,13 +222,11 @@ For example, if you will create a class `SampleMacroPrintCommand` that switches 
         private void start() {
             IMacroRecorder recorder = MacroRecorder.getInstance();
             recorder.addMacroListener(this);
-            recorder.start();
         }
         
         private void stop() {
             IMacroRecorder recorder = MacroRecorder.getInstance();
             recorder.removeMacroListener(this);
-            recorder.stop();
         }
         
         @Override
