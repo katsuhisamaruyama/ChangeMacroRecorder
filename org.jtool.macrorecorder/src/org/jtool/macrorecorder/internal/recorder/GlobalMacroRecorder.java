@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.Macro;
+import org.jtool.macrorecorder.macro.MacroPath;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.eclipse.ui.IWorkbenchCommandConstants;
@@ -163,6 +164,21 @@ class GlobalMacroRecorder {
     }
     
     /**
+     * Cancels the refactoring being in execution.
+     */
+    void cancelRefactoring() {
+        if (getRefactoringInProgress()) {
+            String path = getPathToBeRefactored();
+            String branch = getBranch(path);
+            MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
+            
+            TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.REFACTORING, mpath, TriggerMacro.Timing.CANCEL);
+            recordTriggerMacro(tmacro);
+            setRefactoringInProgress(false);
+        }
+    }
+    
+    /**
      * Sets the flag that indicates a save action is currently progressed.
      * @param bool <code>true</code> if the save action is currently progressed, otherwise <code>false</code>
      */
@@ -276,7 +292,6 @@ class GlobalMacroRecorder {
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
             docRecorder.dumpLastDocumentMacro();
-            docRecorder.recordCodeCompletionCancelMacro();
         }
         
         recorder.recordRawMacro(macro);
@@ -292,8 +307,9 @@ class GlobalMacroRecorder {
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
             docRecorder.dumpLastDocumentMacro();
-            docRecorder.recordCodeCompletionCancelMacro();
+            docRecorder.cancelCodeCompletion();
         }
+        cancelRefactoring();
         
         recorder.recordRawMacro(macro);
         recorder.recordMacro(macro);
@@ -322,6 +338,14 @@ class GlobalMacroRecorder {
     void recordTriggerMacro(TriggerMacro macro) {
         String path = macro.getPath();
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
+        
+        if (macro.cursorChanged()) {
+            if (docRecorder != null) {
+                docRecorder.cancelCodeCompletion();
+            }
+            cancelRefactoring();
+        }
+        
         if (docRecorder != null) {
             docRecorder.recordTriggerMacro(macro);
         } else {

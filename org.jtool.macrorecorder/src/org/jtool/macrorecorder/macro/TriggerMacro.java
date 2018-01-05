@@ -144,11 +144,19 @@ public class TriggerMacro extends Macro {
     }
     
     /**
+     * Tests this macro indicates the cursor change event.
+     * @return <code>true</code> if this macro indicates the cursor change event, otherwise <code>false</code>
+     */
+    public boolean cursorChanged() {
+        return action.equals(Action.CURSOR_CHANGE.toString());
+    }
+    
+    /**
      * Tests this macro indicates completion of the event.
      * @return <code>true</code> if this macro indicates completion of the event, otherwise <code>false</code>
      */
     public boolean isComplete() {
-        return isEnd() || action.equals(Action.CURSOR_CHANGE.toString());
+        return isEnd() || cursorChanged();
     }
     
     /**

@@ -193,7 +193,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
                 
             } else {
                 if (codeCompletionInProgress) {
-                    docRecorder.recordCodeCompletionCancelMacro();
+                    docRecorder.cancelCodeCompletion();
                     codeCompletionInProgress = false;
                 }
                 
@@ -270,7 +270,7 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
             
             TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CURSOR_CHANGE,
                     PathInfoFinder.getMacroPath(path, branch), TriggerMacro.Timing.INSTANT);
-            docRecorder.recordTriggerMacro(tmacro);
+            docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
         }
     }
     
@@ -282,7 +282,6 @@ class DocumentListener implements IDocumentListener, IDocumentUndoListener, List
     private boolean cursorMoved(Event event) {
         final int key = (SWT.KEY_MASK & event.keyCode);
         switch (key) {
-            case SWT.CR:
             case SWT.ARROW_DOWN:
             case SWT.ARROW_LEFT:
             case SWT.ARROW_RIGHT: 

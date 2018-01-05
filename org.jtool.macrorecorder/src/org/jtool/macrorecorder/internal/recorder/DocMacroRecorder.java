@@ -225,10 +225,9 @@ class DocMacroRecorder {
     }
     
     /**
-     * Records a macro that cancels the code completion.
-     * @param mpath information about the path of the macro
+     * Cancels the code completion being in execution.
      */
-    void recordCodeCompletionCancelMacro() {
+    void cancelCodeCompletion() {
         if (getCodeCompletionInProgress()) {
             String path = getPath();
             String branch = getGlobalMacroRecorder().getBranch(path);
