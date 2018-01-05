@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -42,11 +42,9 @@ public class Activator extends AbstractUIPlugin implements IStartup {
     @Override
     public void earlyStartup() {
         MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
+        macroRecorder.registerHandlers();
         macroRecorder.displayMacrosOnConsole(MacroRecorderPreferencePage.displayMacros());
         macroRecorder.displayRawMacrosOnConsole(MacroRecorderPreferencePage.displayRawMacros());
-        
-        macroRecorder.registerHandlers();
-        macroRecorder.start();
     }
     
     /**
@@ -67,9 +65,10 @@ public class Activator extends AbstractUIPlugin implements IStartup {
      */
     @Override
     public void stop(BundleContext context) throws Exception {
-        MacroRecorder recorder = (MacroRecorder)MacroRecorder.getInstance();
-        recorder.unregisterHandlers();
-        recorder.stop();
+        MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
+        macroRecorder.unregisterHandlers();
+        macroRecorder.displayMacrosOnConsole(false);
+        macroRecorder.displayRawMacrosOnConsole(false);
         
         super.stop(context);
         plugin = null;

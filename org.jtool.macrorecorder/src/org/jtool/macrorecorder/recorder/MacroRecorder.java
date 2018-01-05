@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -42,12 +42,12 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * A flag that indicates if recorded macros are displayed.
      */
-    private boolean displayMacro;
+    private boolean displayMacro = false;
     
     /**
      * A flag that indicates if recorded raw macros are displayed.
      */
-    private boolean displayRawMacro;
+    private boolean displayRawMacro = false;
     
     /**
      * A flag that indicates if this macro recorder is running.
@@ -99,8 +99,8 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * Starts the recording of change macros.
      */
-    public void start() {
-        if (!displayMacro && !displayRawMacro && macroListeners.size() == 0) {
+    private void start() {
+        if (macroListeners.size() == 0) {
             return;
         }
         
@@ -113,8 +113,8 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * Stops the recording of change macros.
      */
-    public void stop() {
-        if (displayMacro || displayRawMacro || macroListeners.size() > 0) {
+    private void stop() {
+        if (macroListeners.size() > 0) {
             return;
         }
         
@@ -185,12 +185,12 @@ public class MacroRecorder implements IMacroRecorder {
      * @param display <code>true</code> if recorded macros are displayed, otherwise <code>false</code>
      */
     public void displayMacrosOnConsole(boolean display) {
-        displayMacro = display;
-        if (displayMacro) {
+        if (!displayMacro && display) {
             start();
-        } else {
+        } else if (displayMacro && !display) {
             stop();
         }
+        displayMacro = display;
     }
     
     /**
@@ -198,12 +198,12 @@ public class MacroRecorder implements IMacroRecorder {
      * @param display <code>true</code> if recorded raw macros are displayed, otherwise <code>false</code>
      */
     public void displayRawMacrosOnConsole(boolean display) {
-        displayRawMacro = display;
-        if (displayRawMacro) {
+        if (!displayRawMacro && display) {
             start();
-        } else {
+        } else if (displayRawMacro && !display) {
             stop();
         }
+        displayRawMacro = display;
     }
     
     /**
