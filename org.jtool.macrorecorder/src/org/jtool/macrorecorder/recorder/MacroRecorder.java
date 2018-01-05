@@ -100,7 +100,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Starts the recording of change macros.
      */
     private void start() {
-        if (macroListeners.size() == 0) {
+        if (!displayMacro && !displayRawMacro && macroListeners.size() == 0) {
             return;
         }
         
@@ -114,7 +114,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Stops the recording of change macros.
      */
     private void stop() {
-        if (macroListeners.size() > 0) {
+        if (displayMacro || displayRawMacro || macroListeners.size() > 0) {
             return;
         }
         
@@ -185,12 +185,12 @@ public class MacroRecorder implements IMacroRecorder {
      * @param display <code>true</code> if recorded macros are displayed, otherwise <code>false</code>
      */
     public void displayMacrosOnConsole(boolean display) {
-        if (!displayMacro && display) {
+        displayMacro = display;
+        if (displayMacro) {
             start();
-        } else if (displayMacro && !display) {
+        } else {
             stop();
         }
-        displayMacro = display;
     }
     
     /**
@@ -198,12 +198,12 @@ public class MacroRecorder implements IMacroRecorder {
      * @param display <code>true</code> if recorded raw macros are displayed, otherwise <code>false</code>
      */
     public void displayRawMacrosOnConsole(boolean display) {
-        if (!displayRawMacro && display) {
+        displayRawMacro = display;
+        if (displayRawMacro) {
             start();
-        } else if (displayRawMacro && !display) {
+        } else {
             stop();
         }
-        displayRawMacro = display;
     }
     
     /**
