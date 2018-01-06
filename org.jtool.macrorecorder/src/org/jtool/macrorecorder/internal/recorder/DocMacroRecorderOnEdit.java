@@ -9,7 +9,7 @@ package org.jtool.macrorecorder.internal.recorder;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.CopyMacro;
-import org.jtool.macrorecorder.recorder.MacroCompressor;
+import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -36,7 +36,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     /**
      * A compressor that compresses macros.
      */
-    private MacroCompressor compressor;
+    private IMacroCompressor compressor;
     
     /**
      * The document of a file.
@@ -65,7 +65,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      * @param recorder a recorder that sends macro events
      * @param compressor a compressor that compresses macros
      */
-    DocMacroRecorderOnEdit(IEditorPart editor, Recorder recorder, MacroCompressor compressor) {
+    DocMacroRecorderOnEdit(IEditorPart editor, Recorder recorder, IMacroCompressor compressor) {
         super(EditorUtilities.getInputFilePath(editor), recorder);
         
         assert editor != null;

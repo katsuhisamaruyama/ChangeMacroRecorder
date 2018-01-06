@@ -157,7 +157,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Returns the compressor that compresses change macros.
      * @return the macro compressor
      */
-    protected MacroCompressor getMacroCompressor() {
+    protected IMacroCompressor getMacroCompressor() {
         return internalRecorder.getMacroCompressor();
     }
     
@@ -167,7 +167,10 @@ public class MacroRecorder implements IMacroRecorder {
      */
     @Override
     public void setDelimiter(char[] chars) {
-        getMacroCompressor().setDelimiter(chars);
+        IMacroCompressor compressor = getMacroCompressor();
+        if (compressor instanceof MacroCompressor) {
+            ((MacroCompressor)compressor).setDelimiter(chars);
+        }
     }
     
     /**
@@ -175,7 +178,7 @@ public class MacroRecorder implements IMacroRecorder {
      * @param compressor the compressor
      */
     @Override
-    public void setMacroCompressor(MacroCompressor compressor) {
+    public void setMacroCompressor(IMacroCompressor compressor) {
         assert compressor != null;
         internalRecorder.setMacroCompressor(compressor);
     }
