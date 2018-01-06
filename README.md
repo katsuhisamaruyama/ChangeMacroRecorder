@@ -84,7 +84,7 @@ The single instance can be obtained from the invocation as `MacroRecorder.getIns
          * Sets a compressor that compresses change macros.
          * @param compressor the compressor
          */
-        public void setMacroCompressor(MacroCompressor compressor);
+        public void setMacroCompressor(IMacroCompressor compressor);
     }
 
 Common code that starts or stops the change macro recording is described below.  
