@@ -17,7 +17,7 @@ public class MacroCompressor implements IMacroCompressor {
     /**
      * The collection of characters that represent delimiters.
      */
-    protected char[] delimiters = new char[] { '\n', '\r', ',', '.', ';', '(', ')', '{', '}' };
+    protected char[] delimiters = new char[] { '\n', '\r', ' ', ',', '.', ';', '[', ']', '{', '}' };
     
     /**
      * Creates an object compressing macros.
