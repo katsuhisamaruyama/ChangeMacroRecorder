@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -15,14 +15,20 @@ import org.jtool.macrorecorder.macro.DocumentMacro;
 public class MacroCompressor implements IMacroCompressor {
     
     /**
+     * Defines the default delimiters
+     */
+    protected final String DEFAULT_DELIMITERS = "\n\r ,.;()[]{}";
+    
+    /**
      * The collection of characters that represent delimiters.
      */
-    protected char[] delimiters = new char[] { '\n', '\r', ' ', ',', '.', ';', '{', '}' };
+    protected char[] delimiterChars;
     
     /**
      * Creates an object compressing macros.
      */
     protected MacroCompressor() {
+        setDelimiter(DEFAULT_DELIMITERS);
     }
     
     /**
@@ -30,8 +36,18 @@ public class MacroCompressor implements IMacroCompressor {
      * @param chars characters representing delimiters
      */
     protected void setDelimiter(char[] chars) {
-        assert chars != null;
-        delimiters = chars;
+        delimiterChars = chars;
+    }
+    
+    /**
+     * Sets characters that delimit recorded document change macros.
+     * @param delimiters string that contains delimiter characters
+     */
+    protected void setDelimiter(String delimiters) {
+        delimiterChars = new char[delimiters.length()];
+        for (int i = 0; i < delimiters.length(); i++) {
+            delimiterChars[i] = delimiters.charAt(i);
+        }
     }
     
     /**
@@ -179,12 +195,16 @@ public class MacroCompressor implements IMacroCompressor {
      * @return <code>true</code> if the can be combined or no delimiter is specified, otherwise <code>false</code>
      */
     private boolean combineWith(String text) {
-        if (delimiters.length == 0) {
+        if (delimiterChars == null) {
             return false;
         }
         
-        for (int i = 0; i < delimiters.length; i++) {
-            if (text.indexOf(delimiters[i]) >= 0) {
+        if (delimiterChars.length == 0) {
+            return true;
+        }
+        
+        for (int i = 0; i < delimiterChars.length; i++) {
+            if (text.indexOf(delimiterChars[i]) >= 0) {
                 return false;
             }
         }

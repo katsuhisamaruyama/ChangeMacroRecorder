@@ -32,9 +32,9 @@ public interface IMacroRecorder {
     
     /**
      * Sets characters that delimit recorded document change macros.
-     * @param chars characters representing delimiters
+     * @param delimiters string that contains delimiter characters
      */
-    public void setDelimiter(char[] chars);
+    public void setDelimiter(String delimiters);
     
     /**
      * Sets a compressor that compresses change macros.

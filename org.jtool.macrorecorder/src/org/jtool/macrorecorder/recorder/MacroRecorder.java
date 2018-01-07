@@ -161,15 +161,16 @@ public class MacroRecorder implements IMacroRecorder {
         return internalRecorder.getMacroCompressor();
     }
     
+    
     /**
      * Sets characters that delimit recorded document change macros.
-     * @param chars characters representing delimiters
+     * @param delimiters string that contains delimiter characters
      */
     @Override
-    public void setDelimiter(char[] chars) {
+    public void setDelimiter(String delimiters) {
         IMacroCompressor compressor = getMacroCompressor();
         if (compressor instanceof MacroCompressor) {
-            ((MacroCompressor)compressor).setDelimiter(chars);
+            ((MacroCompressor)compressor).setDelimiter(delimiters);
         }
     }
     
