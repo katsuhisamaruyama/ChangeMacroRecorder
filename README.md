@@ -105,10 +105,10 @@ Note that Eclipse does not automatically run your code. If your code starts reco
 
 ### Compressing change macros
 
-Without compression, ChangeMacroTRecorder sends a document macro when each character was recorded. Using compression, successive document macros are combined based on the delimiter-based strategy. The default delimiters are `'\n'`, `'\r'`, `','`, `'.'`, `';'`, `'('`, `')'`, `'{'`, `'}'`. ChangeMacroRecorder delimits successive typing at the point where it detects one of these characters. For example, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". Your code alters freely the delimiter characters by invoking method `setDelimiter(char[])` of interface `IMacroRecorder` as follows.  
+Without compression, ChangeMacroTRecorder sends a document macro when each character was recorded. Using compression, successive document macros are combined based on the delimiter-based strategy. The default delimiters are characters appearing in "\n\r ,.;()[]{}". ChangeMacroRecorder delimits successive typing at the point where it detects one of these characters. For example, typing the text of "ab(c)" are divided into four document change macros: "ab", "(", "c", and ")". The characters "a" and "b" are combined since a delimiter does not exist between "a" and "b". Your code alters freely the delimiter characters by invoking method `setDelimiter(char[])` of interface `IMacroRecorder` as follows.  
 
     IMacroRecorder recorder = MacroRecorder.getInstance();
-    recorder.setDelimiter(new char[] { '\n' });
+    recorder.setDelimiter("\n");
 
 If you code wants to replace the default delimiter-based strategy with a different one, you will prepare a class implementing `canCombine(DocumentMacro)` and `combine(DocumentMacro, DocumentMacro)` of interface `IMacroCompressor`. This class is registered by invoking `setMacroCompressor(MacroCompressor compressor)` of interface `IMacroRecorder`.  
 
@@ -268,7 +268,7 @@ The following code of `SampleMacroPrintHandler` displays all of the amended code
         @Override
         public void initialize() {
             IMacroRecorder recorder = MacroRecorder.getInstance();
-            recorder.setDelimiter(new char[] { '\n' });
+            recorder.setDelimiter("\n");
         }
         
         @Override
