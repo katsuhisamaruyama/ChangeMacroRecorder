@@ -69,16 +69,10 @@ The single instance can be obtained from the invocation as `MacroRecorder.getIns
         public void removeMacroListener(IMacroListener listener);
         
         /**
-         * Tests if this macro recorder is running.
-         * @return <code>true</code> if this macro recorder is running, otherwise <code>false</code>
-         */
-        public boolean isRunning();
-        
-        /**
          * Sets characters that delimit recorded document change macros.
-         * @param chars characters representing delimiters
+         * @param delimiters string that contains delimiter characters
          */
-        public void setDelimiter(char[] chars);
+        public void setDelimiters(String delimiters);
         
         /**
          * Sets a compressor that compresses change macros.
