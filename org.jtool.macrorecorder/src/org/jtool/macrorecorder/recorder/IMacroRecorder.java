@@ -25,16 +25,10 @@ public interface IMacroRecorder {
     public void removeMacroListener(IMacroListener listener);
     
     /**
-     * Tests if this macro recorder is running.
-     * @return <code>true</code> if this macro recorder is running, otherwise <code>false</code>
-     */
-    public boolean isRunning();
-    
-    /**
      * Sets characters that delimit recorded document change macros.
      * @param delimiters string that contains delimiter characters
      */
-    public void setDelimiter(String delimiters);
+    public void setDelimiters(String delimiters);
     
     /**
      * Sets a compressor that compresses change macros.

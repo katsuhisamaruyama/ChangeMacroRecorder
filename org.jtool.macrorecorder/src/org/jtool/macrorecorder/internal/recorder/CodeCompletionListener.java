@@ -141,7 +141,7 @@ class CodeCompletionListener implements ICompletionListener, ICompletionListener
             Macro cmacro = compoundMacro.getMacro(size - 1);
             if (cmacro instanceof DocumentMacro) {
                 DocumentMacro dmacro = (DocumentMacro)cmacro;
-                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.CODE_COMPLETE, dmacro.getMacroPath(),
+                DocumentMacro macro = new DocumentMacro(DocumentMacro.Action.COMPLETE, dmacro.getMacroPath(),
                         dmacro.getStart(), dmacro.getInsertedText(), dmacro.getDeletedText());
                 compoundMacro.removeMacro(size - 1);
                 compoundMacro.addMacro(macro);

@@ -148,7 +148,6 @@ public class MacroRecorder implements IMacroRecorder {
      * Tests if this macro recorder is running.
      * @return <code>true</code> if this macro recorder is running, otherwise <code>false</code>
      */
-    @Override
     public boolean isRunning() {
         return running;
     }
@@ -167,7 +166,7 @@ public class MacroRecorder implements IMacroRecorder {
      * @param delimiters string that contains delimiter characters
      */
     @Override
-    public void setDelimiter(String delimiters) {
+    public void setDelimiters(String delimiters) {
         IMacroCompressor compressor = getMacroCompressor();
         if (compressor instanceof MacroCompressor) {
             ((MacroCompressor)compressor).setDelimiter(delimiters);
