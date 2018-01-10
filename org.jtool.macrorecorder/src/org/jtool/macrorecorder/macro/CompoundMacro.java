@@ -204,11 +204,16 @@ public class CompoundMacro extends Macro {
      */
     @Override
     public String getJSON() {
+        String path = "";
+        if (getPath() != null) {
+            path = getPath();
+        }
+        
         JsonObjectBuilder builder = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_MACRO_CLASS, getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
           .add(MacroJSON.JSON_MACRO_ACTION, action)
-          .add(MacroJSON.JSON_MACRO_PATH, getPath())
+          .add(MacroJSON.JSON_MACRO_PATH, path)
           .add(MacroJSON.JSON_ATTR_COMMAND, getCommandId())
           .add(MacroJSON.JSON_ATTR_NUMBER, getMacroNumber());
         JsonArrayBuilder array = MacroJSON.getJSONArrayBuilder(macros);
