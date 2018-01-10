@@ -1,10 +1,10 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
 
-package org.jtool.macrorecorder.recorder;
+package org.jtool.macrorecorder;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.jtool.macrorecorder.recorder.IMacroHandler;
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -29,17 +31,22 @@ public class MacroHandlerLoader {
     /**
      * The element name that specifies the collection of macro handlers.
      */
-    private static final String ELEMENT_NAME = "handler";
+    static final String ELEMENT_NAME = "handler";
     
     /**
-     * The attribute name that specifies a macro handler to be loaded.
+     * The attribute name that specifies a macro handler class to be loaded.
      */
-    private static final String ATTRIBUTE_CALSS = "class";
+    static final String ATTRIBUTE_CALSS = "class";
+    
+    /**
+     * The attribute name that specifies commandId of a macro handler to be loaded.
+     */
+    static final String ATTRIBUTE_COMMAND_ID = "commandId";
     
     /**
      * Loads macro handlers that are specified in the extension point.
      */
-    static Set<IMacroHandler> load() {
+    public static Set<IMacroHandler> load() {
         Set<IMacroHandler> handlers = new HashSet<IMacroHandler>();
         
         IExtensionRegistry registry = Platform.getExtensionRegistry();

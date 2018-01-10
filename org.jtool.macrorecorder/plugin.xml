@@ -22,4 +22,44 @@
             class="org.jtool.macrorecorder.Activator">
       </startup>
    </extension>
+   <extension
+         point="org.eclipse.pde.ui.pluginContent">
+      <wizard
+            class="org.jtool.macrorecorder.MacroHandlerPluginWizard"
+            icon="icons/newexprj_wiz.gif"
+            id="org.jtool.macrorecorder.extention.wizard"
+            java="true"
+            name="Macro Handler plug-in"
+            pureOSGi="false"
+            rcp="false"
+            requiresActivator="false"
+            ui-content="true">
+         <description>
+            This wizard creates standard plug-in directory structure and adds a basic macro handler that receives change macros.
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.pde.ui.newExtension">
+      <wizard
+            availableAsShortcut="true"
+            category="templates"
+            icon="icons/newex_wiz.gif"
+            id="org.jtool.macrorecorder.extention.wizard2"
+            name="Macro Handler"
+            template="org.jtool.macrorecorder.template">
+         <description>
+            This template creates a basic macro handler that receives change macros.
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.pde.ui.templates">
+      <template
+            class="org.jtool.macrorecorder.MacroHandlerTemplateSection"
+            contributingId="org.jtool.macrorecorder.handlers"
+            id="org.jtool.macrorecorder.template"
+            name="Macro Handler">
+      </template>
+   </extension>
 </plugin>

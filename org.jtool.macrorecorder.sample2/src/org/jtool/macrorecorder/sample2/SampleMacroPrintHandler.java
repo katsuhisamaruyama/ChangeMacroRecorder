@@ -40,7 +40,7 @@ public class SampleMacroPrintHandler implements IMacroHandler {
     @Override
     public void initialize() {
         IMacroRecorder recorder = MacroRecorder.getInstance();
-        recorder.setDelimiter("\n");
+        recorder.setDelimiters("\n");
     }
     
     @Override

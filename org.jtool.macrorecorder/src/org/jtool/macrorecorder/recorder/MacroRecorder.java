@@ -6,8 +6,9 @@
 
 package org.jtool.macrorecorder.recorder;
 
-import org.jtool.macrorecorder.internal.recorder.Recorder;
 import org.jtool.macrorecorder.macro.Macro;
+import org.jtool.macrorecorder.MacroHandlerLoader;
+import org.jtool.macrorecorder.internal.recorder.Recorder;
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
