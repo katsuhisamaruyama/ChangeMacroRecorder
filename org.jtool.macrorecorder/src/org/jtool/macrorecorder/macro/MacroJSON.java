@@ -58,11 +58,16 @@ public class MacroJSON {
      * @return the created JSON object builder
      */
     protected static JsonObjectBuilder getJSONObjectBuikder(Macro macro) {
+        String path = "";
+        if (macro.getPath() != null) {
+            path = macro.getPath();
+        }
+        
         JsonObjectBuilder builder = Json.createObjectBuilder()
           .add(MacroJSON.JSON_MACRO_CLASS, macro.getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, macro.getTimeAsISOString(macro.getTime()))
           .add(MacroJSON.JSON_MACRO_ACTION, macro.getAction())
-          .add(MacroJSON.JSON_MACRO_PATH, macro.getPath())
+          .add(MacroJSON.JSON_MACRO_PATH, path)
           .add(MacroJSON.JSON_MACRO_PROJECT_NAME, macro.getProjectName())
           .add(MacroJSON.JSON_MACRO_PACKAGE_NAME, macro.getPackageName())
           .add(MacroJSON.JSON_MACRO_FILE_NAME, macro.getFileName());
