@@ -101,6 +101,7 @@ Common code that starts or stops the change macro recording is described below.
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.addMacroListener(listener);  
 
+
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.removeMacroListener(listener);
 
