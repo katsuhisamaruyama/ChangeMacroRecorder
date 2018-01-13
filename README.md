@@ -24,7 +24,7 @@ Recorded change macros include more detailed information such as the inserted an
 
 ### Demostrations
 
-The following four [demonstrations](<http://www.jtool.org/cmr/demos/>) are available.  
+The following four [demonstrations](<http://www.jtool.org/cmr/demos/demo.html>) are available.  
 
 * Demo 0: Creating a plug-in containing a macro handler that receives change macros</li>
 * Demo 1: Recording textual changes in programmer's edit and refactoring</li>
