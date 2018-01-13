@@ -99,8 +99,7 @@ This interface provides the functionality of managing the macro recording. Its c
 Common code that starts or stops the change macro recording is described below.  
 
     IMacroRecorder recorder = MacroRecorder.getInstance();
-    recorder.addMacroListener(listener);
-
+    recorder.addMacroListener(listener);  
 
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.removeMacroListener(listener);
@@ -260,52 +259,6 @@ The following class switches starting and stopping of the change macro recording
         }
     }
     
-    The following code of `SampleMacroPrintHandler` displays all of the amended code changes on the console.  
-    
-        package org.jtool.macrorecorder.sample;
-        
-        import org.jtool.macrorecorder.macro.Macro;
-        import org.jtool.macrorecorder.recorder.IMacroRecorder;
-        import org.jtool.macrorecorder.recorder.MacroRecorder;
-        import org.jtool.macrorecorder.recorder.IMacroHandler;
-        import org.jtool.macrorecorder.recorder.MacroEvent;
-        import org.jtool.macrorecorder.recorder.MacroConsole;
-        
-        /**
-         * A sample handler that prints change macros.
-         * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
-         */
-        public class SampleMacroPrintHandler implements IMacroHandler {
-            
-            public SampleMacroPrintHandler() {
-            }
-            
-            @Override
-            public boolean recordingAllowed() {
-                return true;
-            }
-            
-            @Override
-            public void initialize() {
-                IMacroRecorder recorder = MacroRecorder.getInstance();
-                recorder.setDelimiter("\n");
-            }
-            
-            @Override
-            public void terminate() {
-            }
-            
-            @Override
-            public void macroAdded(MacroEvent evt) {
-                Macro macro = evt.getMacro();
-                MacroConsole.println("S2 " + macro.getDescription());
-            }
-            
-            @Override
-            public void rawMacroAdded(MacroEvent evt) {
-            }
-        }
-    }
 
 ## Sample2
 
