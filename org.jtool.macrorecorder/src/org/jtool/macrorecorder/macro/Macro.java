@@ -208,7 +208,7 @@ public class Macro {
      * @return the string corresponding the time
      */
     protected String getTimeAsISOString(ZonedDateTime t) {
-        return time.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        return t.format(DateTimeFormatter.ISO_ZONED_DATE_TIME);
     }
     
     /**

@@ -50,7 +50,7 @@ Input `http://katsuhisamaruyama.github.io/ChangeMacroRecorder/org.jtool.macrorec
 ### Manually Downloading
 
 Download the latest release of the jar file in the [plug-in directory](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.site/plugins>)
-and put it in the 'plug-ins' directory under the Eclipse installation. Eclipse needs to be  restarted.  
+and put it in the 'plug-ins' directory under the Eclipse. Eclipse needs to be restarted.  
 
 ### Checking Installation
 
