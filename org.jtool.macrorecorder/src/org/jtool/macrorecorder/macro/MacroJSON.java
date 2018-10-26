@@ -25,7 +25,7 @@ import javax.json.JsonWriter;
  */
 public class MacroJSON {
     
-    protected static final String JSON_MACRO_CLASS = "class";
+    protected static final String JSON_MACRO = "macro";
     protected static final String JSON_MACRO_TIME = "time";
     protected static final String JSON_MACRO_ACTION = "action";
     protected static final String JSON_MACRO_PATH = "path";
@@ -64,7 +64,7 @@ public class MacroJSON {
         }
         
         JsonObjectBuilder builder = Json.createObjectBuilder()
-          .add(MacroJSON.JSON_MACRO_CLASS, macro.getThisClassName())
+          .add(MacroJSON.JSON_MACRO, macro.getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, macro.getTimeAsISOString(macro.getTime()))
           .add(MacroJSON.JSON_MACRO_ACTION, macro.getAction())
           .add(MacroJSON.JSON_MACRO_PATH, path)

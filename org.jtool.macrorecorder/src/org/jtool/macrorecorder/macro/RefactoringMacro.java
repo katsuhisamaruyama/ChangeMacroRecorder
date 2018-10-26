@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -212,11 +212,11 @@ public class RefactoringMacro extends Macro {
     }
     
     /**
-     * Returns a string that represents a JSON object for a macro.
-     * @return the JSON string representation
+     * Obtains a JSON object that stores information on this macro.
+     * @return the JSON object
      */
     @Override
-    public String getJSON() {
+    public JsonObject getJSON() {
         JsonObjectBuilder builder = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_REFACTORING_NAME, name)
           .add(MacroJSON.JSON_ATTR_REFACTORING_START, getSelectionStart())
@@ -227,7 +227,7 @@ public class RefactoringMacro extends Macro {
             builder.add(MacroJSON.JSON_RAW_MACROS, array);
         }
         JsonObject json = builder.build();
-        return MacroJSON.stringify(json);
+        return json;
     }
     
     /**

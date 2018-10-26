@@ -173,15 +173,15 @@ public class TriggerMacro extends Macro {
     }
     
     /**
-     * Returns a string that represents a JSON object for a macro.
-     * @return the JSON string representation
+     * Obtains a JSON object that stores information on this macro.
+     * @return the JSON object
      */
     @Override
-    public String getJSON() {
+    public JsonObject getJSON() {
         JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_TIMING, timing.toString())
           .build();
-        return MacroJSON.stringify(json);
+        return json;
     }
     
     /**

@@ -232,20 +232,20 @@ public class Macro {
     }
     
     /**
-     * Returns the name of this instance.
+     * Obtains the name of this instance.
      * @return the name of the instance without its package name.
      */
     protected String getThisClassName() {
         String fqn = this.getClass().getName();
         int sep = fqn.lastIndexOf('.');
         if (sep != -1) {
-            return fqn.substring(sep + 1, fqn.length());
+            return fqn.substring(sep + 1, fqn.length() - 5);
         }
         return fqn;
     }
     
     /**
-     * Returns the textual description of this macro.
+     * Obtains the textual description of this macro.
      * @return the textual description
      */
     public String getDescription() {
@@ -260,12 +260,20 @@ public class Macro {
     }
     
     /**
-     * Returns a string that represents a JSON object for a macro.
-     * @return the JSON string representation
+     * Obtains a JSON object that stores information on this macro.
+     * @return the JSON object
      */
-    public String getJSON() {
+    public JsonObject getJSON() {
         JsonObject json = MacroJSON.getJSONObjectBuikder(this).build();
-        return MacroJSON.stringify(json);
+        return json;
+    }
+    
+    /**
+     * Obtains the string representation of a JSON object that stores information on this macro.
+     * @return the string representation of the JSON object
+     */
+    public String getJSONString() {
+        return MacroJSON.stringify(getJSON());
     }
     
     /**

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -109,16 +109,16 @@ public class CopyMacro extends Macro {
     }
     
     /**
-     * Returns a string that represents a JSON object for a macro.
-     * @return the JSON string representation
+     * Obtains a JSON object that stores information on this macro.
+     * @return the JSON object
      */
     @Override
-    public String getJSON() {
+    public JsonObject getJSON() {
         JsonObject json = MacroJSON.getJSONObjectBuikder(this)
           .add(MacroJSON.JSON_ATTR_OFFSET, start)
           .add(MacroJSON.JSON_ATTR_COPYED_TEXT, copiedText)
           .build();
-        return MacroJSON.stringify(json);
+        return json;
     }
     
     /**
