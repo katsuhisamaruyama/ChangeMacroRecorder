@@ -9,7 +9,6 @@ package org.jtool.macrorecorder.internal.recorder;
 import org.jtool.macrorecorder.macro.CommandMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.CopyMacro;
-import org.jtool.macrorecorder.recorder.IMacroCompressor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -32,11 +31,6 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      * An editor on which document macros are recorded.
      */
     private IEditorPart editor;
-    
-    /**
-     * A compressor that compresses macros.
-     */
-    private IMacroCompressor compressor;
     
     /**
      * The document of a file.
@@ -63,16 +57,14 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
      * Creates an object that records document macros performed on an editor.
      * @param editor the editor
      * @param recorder a recorder that sends macro events
-     * @param compressor a compressor that compresses macros
      */
-    DocMacroRecorderOnEdit(IEditorPart editor, Recorder recorder, IMacroCompressor compressor) {
+    DocMacroRecorderOnEdit(IEditorPart editor, Recorder recorder) {
         super(EditorUtilities.getInputFilePath(editor), recorder);
         
         assert editor != null;
         this.editor = editor;
         this.doc = EditorUtilities.getDocument(editor);
         this.preCode = doc.get();
-        this.compressor = compressor;
         this.styledText = EditorUtilities.getStyledText(editor);
     }
     
@@ -129,7 +121,9 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     @Override
     void recordDocumentMacro(DocumentMacro macro) {
         recorder.recordRawMacro(macro);
+        dumpMacro(macro);
         
+        /*
         if (macro.isCut() || macro.isPaste()) {
             dumpMacro(macro);
             return;
@@ -147,6 +141,7 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
         } else {
             dumpMacro(macro);
         }
+        */
     }
     
     /**

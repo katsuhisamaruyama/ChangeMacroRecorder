@@ -12,10 +12,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.jtool.macrorecorder.recorder.IDocMacroCombinator;
 import org.jtool.macrorecorder.recorder.IMacroHandler;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Loads extensions for a macro hander.
@@ -39,21 +38,10 @@ public class MacroHandlerLoader {
     static final String ATTRIBUTE_CLASS = "class";
     
     /**
-     * The attribute name that specifies a combinator class to be loaded.
-     */
-    static final String ATTRIBUTE_COMBINATOR = "combinator";
-    
-    /**
-     * The attribute name that specifies commandId of a macro handler to be loaded.
-     */
-    static final String ATTRIBUTE_COMMAND_ID = "commandId";
-    
-    /**
      * Loads macro handlers that are specified in the extension point.
-     * @return the collection of handlers.
      */
-    public static Map<IMacroHandler, IDocMacroCombinator> load() {
-        Map<IMacroHandler, IDocMacroCombinator> handlers = new HashMap<IMacroHandler, IDocMacroCombinator>();
+    public static Set<IMacroHandler> load() {
+        Set<IMacroHandler> handlers = new HashSet<IMacroHandler>();
         
         IExtensionRegistry registry = Platform.getExtensionRegistry();
         IExtensionPoint point = registry.getExtensionPoint(EXTENSION_POINT_ID);
@@ -71,14 +59,7 @@ public class MacroHandlerLoader {
                         if (obj instanceof IMacroHandler) {
                             IMacroHandler handler = (IMacroHandler)obj;
                             if (handler.recordingAllowed()) {
-                                
-                                Object obj2 = elem.createExecutableExtension(ATTRIBUTE_COMBINATOR);
-                                IDocMacroCombinator combinator = null;
-                                if (obj2 instanceof IDocMacroCombinator) {
-                                    combinator = (IDocMacroCombinator)obj2;
-                                }
-                                
-                                handlers.put(handler, combinator);
+                                handlers.add(handler);
                             }
                         }
                     } catch (CoreException e) {

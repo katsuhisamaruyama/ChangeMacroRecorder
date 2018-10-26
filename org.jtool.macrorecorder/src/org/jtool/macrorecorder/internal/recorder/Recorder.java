@@ -7,11 +7,12 @@
 package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.recorder.MacroRecorder;
+import org.jtool.macrorecorder.recorder.IDocMacroCombinator;
+import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.jtool.macrorecorder.macro.CompoundMacro;
+import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.Macro;
-import org.jtool.macrorecorder.recorder.IMacroCompressor;
-import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -46,11 +47,6 @@ public class Recorder {
     private MacroRecorder macroRecorder;
     
     /**
-     * A compressor that compresses macros.
-     */
-    private IMacroCompressor macroCompressor;
-    
-    /**
      * A compound macro that contains macros.
      */
     private CompoundMacro compoundMacro;
@@ -73,11 +69,9 @@ public class Recorder {
     /**
      * Creates an object that records macros.
      * @param recorder the facade of a macro recorder
-     * @param compressor the compressor
      */
-    public Recorder(MacroRecorder recorder, IMacroCompressor compressor) {
+    public Recorder(MacroRecorder recorder) {
         this.macroRecorder = recorder;
-        this.macroCompressor = compressor;
         globalRecorder = new GlobalMacroRecorder(this);
     }
     
@@ -87,24 +81,6 @@ public class Recorder {
      */
     GlobalMacroRecorder getGlobalMacroRecorder() {
         return globalRecorder;
-    }
-    
-    /**
-     * Sets a compressor that compresses macros.
-     * @param compressor the compressor
-     */
-    public void setMacroCompressor(IMacroCompressor compressor) {
-        if (compressor != null) {
-            this.macroCompressor = compressor;
-        }
-    }
-    
-    /**
-     * Returns the compressor that compresses macros.
-     * @return the macro compressor
-     */
-    public IMacroCompressor getMacroCompressor() {
-        return macroCompressor;
     }
     
     /**
@@ -201,7 +177,7 @@ public class Recorder {
         DocMacroRecorder docRecorder = getDocMacroRecorder(path);
         
         if (docRecorder == null) {
-            docRecorder = new DocMacroRecorderOnEdit(editor, this, macroCompressor);
+            docRecorder = new DocMacroRecorderOnEdit(editor, this);
             docRecorder.start();
             docRecorders.put(path, docRecorder);
             
@@ -209,7 +185,7 @@ public class Recorder {
             docRecorders.remove(path);
             docRecorder.stop();
             
-            docRecorder = new DocMacroRecorderOnEdit(editor, this, macroCompressor);
+            docRecorder = new DocMacroRecorderOnEdit(editor, this);
             docRecorder.start();
             docRecorders.put(path, docRecorder);
         }
@@ -327,8 +303,46 @@ public class Recorder {
             }
         }
         
-        macroRecorder.notifyMacro(macro);
+        if (macro instanceof DocumentMacro) {
+            for (MacroNotifier notifier : macroRecorder.getMacroNotifiers()) {
+                notifyDocMacro(notifier, (DocumentMacro)macro);
+            }
+        } else {
+            for (MacroNotifier notifier : macroRecorder.getMacroNotifiers()) {
+                macroRecorder.notifyMacro(notifier.getMacroListener(), macro);
+            }
+        }
         lastMacro = macro;
+    }
+    
+    /**
+     * Records a document macro.
+     * @param macro the document macro to be recorded
+     */
+    void notifyDocMacro(MacroNotifier notifier, DocumentMacro macro) {
+        if (macro.isCut() || macro.isPaste()) {
+            macroRecorder.notifyMacro(notifier.getMacroListener(), macro);
+            return;
+        }
+        
+        IDocMacroCombinator combinator = notifier.getDocMacroCombinator();
+        if (combinator.canCombine(macro)) {
+            DocumentMacro newMacro = combinator.combine(notifier.getLastDocumentMacro(), macro);
+            if (newMacro != null) {
+                notifier.setLastDocumentMacro(newMacro);
+            } else {
+                macroRecorder.notifyMacro(notifier.getMacroListener(), notifier.getLastDocumentMacro());
+                notifier.setLastDocumentMacro(macro);
+            }
+            
+        } else {
+            Macro lastDocumentMacro = notifier.getLastDocumentMacro();
+            if (lastDocumentMacro != null) {
+                macroRecorder.notifyMacro(notifier.getMacroListener(), lastDocumentMacro);
+                notifier.setLastDocumentMacro(null);
+            }
+            macroRecorder.notifyMacro(notifier.getMacroListener(), macro);
+        }
     }
     
     /**
@@ -359,7 +373,9 @@ public class Recorder {
      * @param macro the raw macro sent to the listeners
      */
     private void notifyRawMacro(Macro macro) {
-        macroRecorder.notifyRawMacro(macro);
+        for (MacroNotifier notifier : macroRecorder.getMacroNotifiers()) {
+            macroRecorder.notifyRawMacro(notifier.getMacroListener(), macro);
+        }
     }
     
     /**

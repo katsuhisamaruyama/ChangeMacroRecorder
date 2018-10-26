@@ -39,16 +39,6 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
     private static final String DEFAULT_CLASS_NAME = "SampleMacroHandler";
     
     /**
-     * The default processor name.
-     */
-    private static final String DEFAULT_COMBINATOR_NAME = "";
-    
-    /**
-     * The default prefix string of the command ID.
-     */
-    private static final String COMMAND_ID_PREFIX = "org.eclipse.macrorecorder.handler";
-    
-    /**
      * A key that indicates the package name in the option page.
      */
     private static final String KEY_PACKAGE_NAME = "packageName";
@@ -57,11 +47,6 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
      * A key that indicates the class name for a handler in the option page.
      */
     private static final String KEY_CLASS_NAME = "className";
-    
-    /**
-     * A key that indicates the class name of a combinator in the option page.
-     */
-    private static final String KEY_COMBINATOR_NAME = "combinatorName";
     
     /**
      * The identifier for this section.
@@ -82,11 +67,10 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
     private void createOptions() {
         addOption(KEY_PACKAGE_NAME, "Package Name", DEFAULT_PACKAGE_NAME, 0);
         addOption(KEY_CLASS_NAME, "Handler Class Name ", DEFAULT_CLASS_NAME, 0);
-        addOption(KEY_COMBINATOR_NAME , "Processor Class Name ", DEFAULT_COMBINATOR_NAME, 0);
     }
     
     /**
-     * Adds pages to the wizard, which prompt nedded information.
+     * Adds pages to the wizard, which prompt beeded information.
      * @param wizard the host wizard to add pages into
      */
     @Override
@@ -179,20 +163,10 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
         IPluginModelFactory factory = model.getPluginFactory();
         
         String fqn = getStringOption(KEY_PACKAGE_NAME) + "." + getStringOption(KEY_CLASS_NAME);
-        String combinatorName = getStringOption(KEY_COMBINATOR_NAME);
-        if (combinatorName.length() > 0) {
-            combinatorName = getStringOption(KEY_PACKAGE_NAME) + "." + combinatorName;
-        }
-        String commandId = COMMAND_ID_PREFIX + "." + getStringOption(KEY_CLASS_NAME);
-        
         IPluginExtension extension = createExtension(getUsedExtensionPoint(), true);
         IPluginElement element = factory.createElement(extension);
         element.setName(MacroHandlerLoader.ELEMENT_NAME);
         element.setAttribute(MacroHandlerLoader.ATTRIBUTE_CLASS, fqn);
-        if (combinatorName.length() > 0) {
-            element.setAttribute(MacroHandlerLoader.ATTRIBUTE_COMBINATOR, combinatorName);
-        }
-        element.setAttribute(MacroHandlerLoader.ATTRIBUTE_COMMAND_ID, commandId);
         extension.add(element);
         
         plugin.add(extension);

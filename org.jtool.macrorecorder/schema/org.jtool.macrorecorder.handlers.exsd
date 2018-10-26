@@ -49,13 +49,6 @@
 
    <element name="handler">
       <complexType>
-         <attribute name="commandId" type="string" use="default" value="org.eclipse.macrorecorder.handler">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
@@ -89,11 +82,6 @@
          point=&quot;org.jtool.macrorecorder.handlers&quot;&gt;
       &lt;handler
             class=&quot;org.jtool.macrorecorder.sample.SampleMacroPrintHandler&quot;
-            commandId=&quot;org.eclipse.macrorecorder.handler.SampleMacroPrintHandler&quot;&gt;
-      &lt;/handler&gt;
-      &lt;handler
-            class=&quot;org.jtool.macrorecorder.sample.SampleMacroPostHandler&quot;
-            commandId=&quot;org.eclipse.macrorecorder.handler.SampleMacroPostHandler&quot;&gt;
       &lt;/handler&gt;
 &lt;/extension&gt;
 &lt;/pre&gt;
@@ -166,7 +154,7 @@ See samples in the &lt;code&gt;org.jtool.macrorecorder.sample&lt;/code&gt;/.
          <meta.section type="copyright"/>
       </appinfo>
       <documentation>
-         Copyright 2017
+         Copyright 2018
 Software Science and Technology Lab.
 Department of Computer Science, Ritsumeikan University
       </documentation>

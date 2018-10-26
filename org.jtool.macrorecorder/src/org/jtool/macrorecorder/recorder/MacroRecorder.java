@@ -12,8 +12,8 @@ import org.jtool.macrorecorder.internal.recorder.MacroNotifier;
 import org.jtool.macrorecorder.internal.recorder.Recorder;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Records macros that were performed on Eclipse.
@@ -25,11 +25,6 @@ public class MacroRecorder implements IMacroRecorder {
      * The single instance of this recorder.
      */
     private static MacroRecorder instance = new MacroRecorder();
-    
-    /**
-     * The default combinator that combines document macros.
-     */
-    private IDocMacroCombinator defaultCombinator = new DocMacroCombinator();
     
     /**
      * An internal recorder that records all kinds of macros.
@@ -44,7 +39,7 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * The collection of macro handlers that are loaded from the extension point.
      */
-    private Map<IMacroHandler, IDocMacroCombinator> macroHandlers = new HashMap<IMacroHandler, IDocMacroCombinator>();
+    private Set<IMacroHandler> macroHandlers = new HashSet<IMacroHandler>();
     
     /**
      * A flag that indicates if recorded macros are displayed.
@@ -66,6 +61,7 @@ public class MacroRecorder implements IMacroRecorder {
      */
     private MacroRecorder() {
         internalRecorder = new Recorder(this);
+        
         macroHandlers = MacroHandlerLoader.load();
     }
     
@@ -84,19 +80,7 @@ public class MacroRecorder implements IMacroRecorder {
     @Override
     public void addMacroListener(IMacroListener listener) {
         assert listener != null;
-        macroNotifiers.add(new MacroNotifier(this, listener, defaultCombinator));
-        
-        start();
-    }
-    
-    /**
-     * Adds a listener that receives a change macro event and its combinator that combines document macros.
-     * @param listener the event listener to be added
-     * @param combinator the combinator corresponding to the added listener
-     */
-    public void addMacroListener(IMacroListener listener, IDocMacroCombinator combinator) {
-        assert listener != null;
-        macroNotifiers.add(new MacroNotifier(this, listener, combinator));
+        macroNotifiers.add(new MacroNotifier(listener, new DocMacroCombinator()));
         
         start();
     }
@@ -162,15 +146,9 @@ public class MacroRecorder implements IMacroRecorder {
      * Registers macro handlers that receives change macros.
      */
     public void registerHandlers() {
-        for (IMacroHandler handler : macroHandlers.keySet()) {
+        for (IMacroHandler handler : macroHandlers) {
+            addMacroListener(handler);
             handler.initialize();
-            
-            IDocMacroCombinator combinator = macroHandlers.get(handler);
-            if (combinator != null) {
-                addMacroListener(handler, combinator);
-            } else {
-                addMacroListener(handler, defaultCombinator);
-            }
         }
     }
     
@@ -178,7 +156,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Unregisters macro handlers that receives change macros.
      */
     public void unregisterHandlers() {
-        for (IMacroHandler handler : macroHandlers.keySet()) {
+        for (IMacroHandler handler : macroHandlers) {
             removeMacroListener(handler);
             handler.terminate();
         }
@@ -193,8 +171,8 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Returns listener proxies that receive macro events.
-     * @return the collection of listener proxies
+     * Returns notifiers that send macro events.
+     * @return the collection of notifiers
      */
     public List<MacroNotifier> getMacroNotifiers() {
         return macroNotifiers;
@@ -214,7 +192,7 @@ public class MacroRecorder implements IMacroRecorder {
             return false;
         }
         
-        IDocMacroCombinator combinator = notifier.getDocMacroProcessor();
+        IDocMacroCombinator combinator = notifier.getDocMacroCombinator();
         if (combinator instanceof DocMacroCombinator) {
             ((DocMacroCombinator)combinator).setDelimiter(delimiters);
             return true;
@@ -237,7 +215,7 @@ public class MacroRecorder implements IMacroRecorder {
             return false;
         }
         
-        notifier.setDocMacroProcessor(combinator);
+        notifier.setDocMacroCombinator(combinator);
         return true;
     }
     
