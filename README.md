@@ -10,7 +10,7 @@ ChangeMacroRecorder is an Eclipse plug-in that automatically records fine-graine
     - The class `IMacroCompressor` was renamed to `IDocMacroCombinator` that is responsible for combining document macros  
     - A combinator can be assigned to each listener. The previous version has only one combinator (compressor) for all listeners.
     
-### Change Macros
+## Change Macros
 
 Recorded textual changes and actions constitute a series of the following eleven change macros.  
 
@@ -28,7 +28,7 @@ Recorded textual changes and actions constitute a series of the following eleven
 
 Recorded change macros include more detailed information such as the inserted and deleted text for each edit or command. See the source code of the the [macros](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/src/org/jtool/macrorecorder/macro>).
 
-### Demostrations
+## Demostrations
 
 You can see change macros on the console, which were recorded by ChangeMacroRecorder.
 
