@@ -37,7 +37,7 @@ public class MacroRecorder implements IMacroRecorder {
     private Recorder internalRecorder;
     
     /**
-     * The collection of notifiers that notify change macros.
+     * The collection of notifiers that send change macros.
      */
     private List<MacroNotifier> macroNotifiers = new ArrayList<MacroNotifier>();
     
