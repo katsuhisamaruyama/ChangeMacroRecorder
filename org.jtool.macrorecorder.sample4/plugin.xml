@@ -4,7 +4,7 @@
    <extension
          point="org.jtool.macrorecorder.handlers">
       <handler
-         class="org.jtool.macrorecorder.sample2.SampleMacroPrintHandler">
-     </handler>
+            class="org.jtool.macrorecorder.sample4.SampleMacroPrintHandler">
+      </handler>
    </extension>
 </plugin>
