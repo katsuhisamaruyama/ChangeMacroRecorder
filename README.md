@@ -30,6 +30,10 @@ Recorded change macros include more detailed information such as the inserted an
 
 ### Demostrations
 
+You can see change macros on the console, which were recorded by ChangeMacroRecorder.
+
+<img src="https://user-images.githubusercontent.com/4454230/47576466-84fc4780-d97f-11e8-9f09-8b6880689b27.png" width="720px" alt="screenshot" hspace="5px">
+
 The following four [demonstrations](<http://www.jtool.org/cmr/demos/demo.html>) are available.  
 
 * Demo 1: Recording textual changes in programmer's edit and refactoring</li>
