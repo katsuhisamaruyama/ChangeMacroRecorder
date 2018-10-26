@@ -2,17 +2,17 @@
 <feature
       id="org.jtool.macrorecorder.feature"
       label="ChangeMacroRecorder for Eclipse"
-      version="1.0.0.qualifier"
+      version="1.1.0.qualifier"
       provider-name="FSE@Ristumeikan Univ.">
 
    <description>
-      ChangeMacroRecorder is an Eclipse plugin that automatically records
-fine-grained changes by continuously tracking the code edits and commands
-performed on Eclipse’s Java editor.
+      ChangeMacroRecorder is an Eclipse plugin that automatically and
+silently records fine-grained changes by monitoring textual
+edits and commands performed on Eclipse’s Java editor.
    </description>
 
    <copyright>
-      Copyright 2017
+      Copyright 2018
 Software Science and Technology Lab.
 Department of Computer Science, Ritsumeikan University
    </copyright>
@@ -134,7 +134,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="org.jtool.macrorecorder"
          download-size="0"
          install-size="0"
-         version="1.0.0.qualifier"
+         version="1.1.0.qualifier"
          unpack="false"/>
 
 </feature>

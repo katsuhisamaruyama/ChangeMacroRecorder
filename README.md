@@ -4,21 +4,27 @@ An Eclipse plug-in that automatically records fine-grained textual changes of Ja
 
 ChangeMacroRecorder is an Eclipse plug-in that automatically records fine-grained textual changes of source code and actions involving those changes while programmers (developers or maintainers) write and modify their source code.
 
+### Changes
+
+* v1.0 &rarr; v1.1  
+    - The class `IMacroCompressor` was renamed to `IDocMacroCombinator` that is responsible for combining document macros  
+    - A combinator can be assigned to each listener. The previous version has only one combinator (compressor) for all listeners.
+    
 ### Change Macros
 
 Recorded textual changes and actions constitute a series of the following eleven change macros.  
 
-* DocumentMacro - textual changes by typing text, cutting text, pasting text, and activating the undo or redo action  
-* CancelMacro - cancellation of the textual changes of previous DocumentMacro  
-* CopyMacro - actions of copying text  
-* CommandMacro - execution of command services  
-* CodeCompletionMacro - code completion by content assist  
-* RefactoringMacro - refactoring actions  
-* GitMacro - Git events related to refs changing and index changing  
-* ResourceMacro - property change of resources (files, packages, and projects)  
-* FileMacro - basic file operations (adding, removing, opening, closing, saving, and activating for a file), the move or rename refactoring to a file, and git events for a file  
-* TriggerMacro - trigger to start, end, or cancel the composite actions and the change of the cursor location  
-* CompoundMacro - a collection of change macros, which composes textual changes that are simultaneously made by the same action  
+* __DocumentMacro__ - textual changes by typing text, cutting text, pasting text, and activating the undo or redo action  
+* __CancelMacro__ - cancellation of the textual changes of previous DocumentMacro  
+* __CopyMacro__ - actions of copying text  
+* __CommandMacro__ - execution of command services  
+* __CodeCompletionMacro__ - code completion by content assist  
+* __RefactoringMacro__ - refactoring actions  
+* __GitMacro__ - Git events related to refs changing and index changing  
+* __ResourceMacro__ - property change of resources (files, packages, and projects)  
+* __FileMacro__ - basic file operations (adding, removing, opening, closing, saving, and activating for a file), the move or rename refactoring to a file, and git events for a file  
+* __TriggerMacro__ - trigger to start, end, or cancel the composite actions and the change of the cursor location  
+* __CompoundMacro__ - a collection of change macros, which composes textual changes that are simultaneously made by the same action  
 
 Recorded change macros include more detailed information such as the inserted and deleted text for each edit or command. See the source code of the the [macros](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/src/org/jtool/macrorecorder/macro>).
 
@@ -26,15 +32,13 @@ Recorded change macros include more detailed information such as the inserted an
 
 The following four [demonstrations](<http://www.jtool.org/cmr/demos/demo.html>) are available.  
 
-* Demo 0: Creating a plug-in containing a macro handler that receives change macros</li>
 * Demo 1: Recording textual changes in programmer's edit and refactoring</li>
 * Demo 2: Recording textual changes in refactoring and its undoing</li>
-* Demo 3: Recording textual changes in code completion</li>
 
 ## Requirement
 
 JDK 1.8 
-[Eclipse](https://www.eclipse.org/) 4.6 (Neon) and later  
+[Eclipse](https://www.eclipse.org/) 4.7 (Oxygen) and later  
 
 ## License
 
@@ -58,11 +62,11 @@ Select menu items: "Eclipse" -> "Preferences..." -> "ChangemacroRecorder" and to
 
 ## Usage
 
-ChangeMacroRecorder is designed to be embedded into various application tools that leverage fine-grained textual changes and adopts the event-listener model in order to notify the tools of the changes. Here is how to utilize four primary interfaces `IMacroRecorder`, `IMacroCompressor`, `IMacroListener`, and `IMacroHandler` that are included in the `package org.jtool.macrorecorder.recorder`.
+ChangeMacroRecorder is designed to be embedded into various application tools that leverage fine-grained textual changes and adopts the event-listener model in order to notify the tools of the changes. Here is how to utilize four primary interfaces `IMacroRecorder`, `IDocMacroCombinator`, `IMacroListener`, and `IMacroHandler` that are included in the `package org.jtool.macrorecorder.recorder`.
 
-### IMacroRecorder & IMacroCompressor
+### IMacroRecorder
 
-This interface provides the functionality of managing the macro recording. Its concrete instance can be obtained by invoking the static method `getInstance()` of the class `MacroRecorder`. Once your code registers or unregisters the receiver instance, it becomes able or unable to receive recorded macros.  
+This interface provides the functionality of managing the macro recording. Its concrete instance can be obtained by invoking the static method `getInstance()` of the class `MacroRecorder`. Once your code registers or unregisters the listener (or receiver) instance, it becomes able or unable to receive recorded macros, respectively.  
 
     package org.jtool.macrorecorder.recorder;
     
@@ -70,7 +74,7 @@ This interface provides the functionality of managing the macro recording. Its c
      * An interface for recording change macros that were performed on Eclipse.
      */
     public interface IMacroRecorder {
-    
+        
         /**
          * Adds a listener that receives a change macro event.
          * @param listener the event listener to be added
@@ -85,15 +89,19 @@ This interface provides the functionality of managing the macro recording. Its c
         
         /**
          * Sets characters that delimit recorded document change macros.
+         * @param a listener that receives a change macro event
          * @param delimiters string that contains delimiter characters
+         * @return true if the delimiters are attached to a combinator corresponding to the listener, otherwise false
          */
-        public void setDelimiters(String delimiters);
+        public boolean setDelimiters(IMacroListener listener, String delimiters);
         
         /**
-         * Sets a compressor that compresses change macros.
-         * @param compressor the compressor
+         * Sets a combinator that combines document macros.
+         * @param a listener that receives a change macro event
+         * @param combinator the combinator
+         * @return true if the combinator is attached to the listener, otherwise false
          */
-        public void setMacroCompressor(IMacroCompressor compressor);
+        public boolean setDocMacroCombinator(IMacroListener listener, IDocMacroCombinator combinator);
     }
 
 Common code that starts or stops the change macro recording is described below.  
@@ -105,44 +113,49 @@ Common code that starts or stops the change macro recording is described below.
     IMacroRecorder recorder = MacroRecorder.getInstance();
     recorder.removeMacroListener(listener);
 
-Without compression, ChangeMacroRecorder sends a document macro when each character was recorded. Using compression, successive document macros are combined based on the delimiter-based strategy. The default delimiters are all characters appearing in string "\n\r ,.;()[]{}". For example, when a programmer inputs the text of "ab;c", this text is separately recorded as DocumentMacro that store four string "a", "b", ";", and "c". In this case, ChangeMacroRecorder concatenates "a" and "b" since there is no delimiter between these two strings. As a result, it creates that store three strings "ab", ";", and "c".  
+The `listener` is an instance of a class implements the listener interface `IMacroListener`.  
 
-To customize delimiters, your code passes a string containing all delimiter characters through the invocation to the method `setDelimiters()`. No compression is performed if <code>null</code> is given. On the other hand, the empty string denotes compression of all consecutive texts not chopped by any action.  
+### IDocMacroCombinator
+
+Not using combination of document macros, ChangeMacroRecorder sends a document macro when each character was recorded. With combination, successive document macros might be combined based on the delimiter-based combination strategy. The default delimiters are all characters appearing in string "\n\r ,.;()[]{}". For example, when a programmer inputs the text of "ab;c", this text is separately recorded as DocumentMacro that store four strings "a", "b", ";", and "c". In this case, ChangeMacroRecorder concatenates "a" and "b" since there is no delimiter between these two strings. As a result, it creates that store three strings "ab", ";", and "c".  
+
+To customize delimiters, your code passes a string containing all delimiter characters through the invocation to the method `setDelimiters()`.  
 
     IMacroRecorder recorder = MacroRecorder.getInstance();
-    recorder.setDelimiter("\n");
+    recorder.setDelimiters(listener, "\n");
 
-Moreover, your code can entirely replace a compression strategy of the class `MacroCompressor` with another one. In this case, it registers an instance of a class implementing the interface `IMacroCompressor`, as shown below, by invoking the method `setMacroCompressor()`.  
+No combination is performed if <code>null</code> is given. On the other hand, the empty string denotes combination of all consecutive texts not chopped by any action.  
+
+Moreover, your code can entirely replace a combination strategy implemented in the class `DocMacroCombinator` with another one. In this case, it registers an instance of a class implementing the interface `IDocMacroCombinator`, as shown below, by invoking the method `setDocMacroCombinator()`.  
 
     package org.jtool.macrorecorder.recorder;
     
     import org.jtool.macrorecorder.macro.DocumentMacro;
     
     /**
-     * An interface for document change macros before they are sent to listeners.
+     * An interface for combining document macros before they are sent to listeners.
      */
-    public interface IMacroCompressor {
+    public interface IDocMacroCombinator {
         
         /**
-         * Tests if a document change macros can be combined with its previous document change macro.
+         * Tests if a document macros can be combined with its previous document macro.
          * @param macro the document macro
          * @return <code>true</code> if the macros can be combined, otherwise <code>false</code>
          */
         public boolean canCombine(DocumentMacro macro);
         
         /**
-         * Combines successive two document change macros.
-         * @param last the former document change macro 
-         * @param next the latter document change macro
-         * @return the combined document change macro,
-         *         or <code>null</code> if the macro cannot be combined
+         * Combines successive two document macros.
+         * @param last the former document macro 
+         * @param next the latter document macro
+         * @return the combined document macro, or <code>null</code> if the macro cannot be combined
          */
         public DocumentMacro combine(DocumentMacro last, DocumentMacro next);
     }
 
 ### IMacroListener &amp; IMacroHandler
 
-To actually receive macros, your user code should prepare a receiver instance of a class that implements the methods `rawMacroAdded()` and `macroAdded()` of `IMacroListener`. Whereas The former receives recorded change macros as-is, the latter receives treated ones. To be precise, ChangeMacroRecorder passes an instance of the class `MacroEvent` that stores either change macro with or without treatment.  
+To actually receive macros, your application code should prepare a listener instance of a class that implements the methods `rawMacroAdded()` and `macroAdded()` of the interface `IMacroListener`. Whereas the former receives recorded change macros as-is, the latter receives treated ones. To be precise, ChangeMacroRecorder passes an instance of the class `MacroEvent` that stores either change macro with or without treatment.  
 
     package org.jtool.macrorecorder.recorder;
     
@@ -164,7 +177,7 @@ To actually receive macros, your user code should prepare a receiver instance of
         public void rawMacroAdded(MacroEvent evt);
     }
 
-Besides the basic usage of manually starting and stopping receiving macros, an extension point of the Eclipse plug-in is provided to help you register a receiver instance if you wants to develop a tool that records the whole textual change while Eclipse is running. In this case, your code should define a class for the receiver instance, which implements the methods of `IMacroHandler<` in addition to the methods of `IMacroListener`.  
+Besides the basic usage of manually starting and stopping receiving macros, an extension point of the Eclipse plug-in is provided to alleviate your registering a listener instance. This is convenient when you wants to develop a tool that records the whole textual change while Eclipse is running. In this case, your code should define a class for the listener instance, which implements three additional methods of the class `IMacroHandler<` in addition to the methods of the class `IMacroListener`.  
 
     package org.jtool.macrorecorder.recorder;
     
@@ -191,16 +204,20 @@ Besides the basic usage of manually starting and stopping receiving macros, an e
         public void terminate();
     }
 
-Then, you registers the receiver class into the extension point (`org.jtool.macrorecorder.handlers`) of the plug-in configuration file. For the receiver class `SampleMacroHandler`, the following code is described in `plugin.xml`.  
+The method `initialize()` is invoked when Eclipse is activated (not the time when ChangeMacroRecorder starts), and the method `terminate()` is invoked when Eclipse stops. The method <code>recordingAllowed()</code> is responsible for determining whether the change recording is allowed or not. A listener instance is successfully registered if <code>true</code> is returned, otherwise it is never registered.  
 
-    <extension point="org.jtool.macrorecorder.handlers">
-        <handler class="SampleMacroHandler" commandId="SampleMMacroHandler">
-        </handler>
+After writing a listener class, you registers it into the extension point (`org.jtool.macrorecorder.handlers`) of the plug-in configuration file. For the listener class `SampleMacroHandler`, the following code is described in `plugin.xml`.  
+
+    <extension
+          point="org.jtool.macrorecorder.handlers">
+       <handler class="SampleMacroHandler">
+       </handler>
     <extension>
 
-To make your work easier, ChangeMacroRecorder provides the Eclipse's wizard that creates a template of the receiver class and registers. It automatically starts notifying it of recorded macros when Eclipse is activated.  
+To make your work easier, ChangeMacroRecorder provides the Eclipse's "Extension Point Selection" wizard that creates a template of the listener class and registers. It automatically starts notifying it of recorded macros when Eclipse is activated.  
 
-The method `initialize()` is invoked when Eclipse is activated (not the time when ChangeMacroRecorder starts), and the method `terminate()` is invoked when Eclipse stops. The method <code>recordingAllowed()</code> is responsible for determining whether the change recording is allowed or not. A receiver instance is successfully registered if <code>true</code> is returned, otherwise it is never registered.  
+<img src="https://user-images.githubusercontent.com/4454230/47562786-a434ae00-d95a-11e8-85b3-1ef769dd6dc8.png" width="250px" alt="wizard1" hspace="5px">
+<img src="https://user-images.githubusercontent.com/4454230/47562816-c0d0e600-d95a-11e8-9b56-33faf2ec06ad.png" width="250px" alt="wizard2" hspace="5px">
 
 ## Samples
 
@@ -259,7 +276,6 @@ The following class switches starting and stopping of the change macro recording
         public void rawMacroAdded(MacroEvent evt) {
         }
     }
-    
 
 ## Sample2
 
@@ -268,10 +284,10 @@ The following class displays all of the amended code changes on the console.
     package org.jtool.macrorecorder.sample2;
     
     import org.jtool.macrorecorder.macro.Macro;
-    import org.jtool.macrorecorder.recorder.IMacroRecorder;
-    import org.jtool.macrorecorder.recorder.MacroRecorder;
     import org.jtool.macrorecorder.recorder.IMacroHandler;
+    import org.jtool.macrorecorder.recorder.IMacroRecorder;
     import org.jtool.macrorecorder.recorder.MacroEvent;
+    import org.jtool.macrorecorder.recorder.MacroRecorder;
     import org.jtool.macrorecorder.recorder.MacroConsole;
     
     /**
@@ -290,7 +306,7 @@ The following class displays all of the amended code changes on the console.
         @Override
         public void initialize() {
             IMacroRecorder recorder = MacroRecorder.getInstance();
-            recorder.setDelimiters("\n");
+            recorder.setDelimiters(this, "\n");
         }
         
         @Override
@@ -308,7 +324,7 @@ The following class displays all of the amended code changes on the console.
         }
     }
 
-For more detail of API usage, please see [sample1](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample1>), [sample2](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample2>), and [sample3](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample3>).
+For more detail of API usage, please see [sample1](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample1>), [sample2](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample2>), [sample3](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample3>), and [sample4](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder.sample4>).
 
 ## Author
 
