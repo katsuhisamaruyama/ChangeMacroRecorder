@@ -22,8 +22,7 @@ import java.nio.charset.StandardCharsets;
  * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
  * <pre><code>
  * <extension point="org.jtool.macrorecorder.handlers">
- *     <handler class="org.jtool.macrorecorder.sample3.SampleMacroPostHandler"
- *              commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
+ *     <handler class="org.jtool.macrorecorder.sample3.SampleMacroPostHandler">
  *     </handler> -->
  *  </extension>
  * </code></pre>
@@ -52,7 +51,7 @@ public class SampleMacroPostHandler implements IMacroHandler {
     @Override
     public void macroAdded(MacroEvent evt) {
         Macro macro = evt.getMacro();
-        executePost(macro.getJSON());
+        executePost(macro.getJSONString());
     }
     
     @Override
@@ -68,6 +67,8 @@ public class SampleMacroPostHandler implements IMacroHandler {
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
+                connection.setRequestProperty("Content-Length", String.valueOf(jsonString.length()));
                 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
                 writer.write(jsonString);

@@ -4,8 +4,7 @@
    <extension
          point="org.jtool.macrorecorder.handlers">
      <handler
-            class="org.jtool.macrorecorder.sample3.SampleMacroPostHandler"
-            commandId="org.eclipse.macrorecorder.handler.SampleMacroPostHandler">
+            class="org.jtool.macrorecorder.sample3.SampleMacroPostHandler">
       </handler>
    </extension>
 </plugin>

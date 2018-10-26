@@ -9,8 +9,8 @@ var querystring = require('querystring');
 http.createServer(function (req, res) {
     
     if (req.url === '/' && req.method === 'GET') {
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('This is a test HTTP server!\n');
+        res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8'});
+    Res.end('This is a test HTTP server!\n');
     
     } else if (req.url === '/post' && req.method === 'POST') {
     var data = '';

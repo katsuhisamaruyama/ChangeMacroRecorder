@@ -4,7 +4,7 @@
  *  Department of Computer Science, Ritsumeikan University
  */
 
-package org.jtool.macrorecorder.sample2;
+package org.jtool.macrorecorder.sample4;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
