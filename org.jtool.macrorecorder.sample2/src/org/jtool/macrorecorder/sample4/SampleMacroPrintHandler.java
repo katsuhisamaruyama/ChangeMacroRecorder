@@ -22,7 +22,6 @@ import org.jtool.macrorecorder.recorder.MacroConsole;
  *  </extension>
  * </code></pre>
  * </p>
- * @author Katsuhisa Maruyama
  */
 public class SampleMacroPrintHandler implements IMacroHandler {
     
