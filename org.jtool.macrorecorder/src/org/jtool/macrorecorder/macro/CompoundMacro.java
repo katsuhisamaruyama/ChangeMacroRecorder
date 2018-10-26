@@ -112,21 +112,6 @@ public class CompoundMacro extends Macro {
     }
     
     /**
-     * Removes a macro that will be canceled by a given macro.
-     * @param macro the macro that cancels the macro stored in this compound macro
-     * @return <code>true</code> if the cancellation succeeded, otherwise <code>false</code> 
-     */
-    public boolean cancelMacro(CancelMacro cmacro) {
-        int index = getIndexOfCorrespondingMacro(cmacro);
-        if (index < 0) {
-            return false;
-        }
-        
-        macros.remove(index);
-        return true;
-    }
-    
-    /**
      * Returns the collection of macros contained in this compound macro.
      * @return the the collection of the contained macros
      */
@@ -135,23 +120,74 @@ public class CompoundMacro extends Macro {
     }
     
     /**
+     * Removes a macro that will be canceled by a given macro.
+     * @param macro the macro that cancels the macro stored in this compound macro
+     * @return <code>true</code> if the cancellation succeeded, otherwise <code>false</code> 
+     */
+    public boolean cancelMacro(CancelMacro cmacro) {
+        int index = indexOfCorrespondingMacro(cmacro);
+        if (index < 0) {
+            return false;
+        }
+        
+        int last = index + 1;
+        for (int pos = 1; pos < cmacro.getDeletedText().length(); pos++) {
+            int start = cmacro.getStart() + pos;
+            char ch = cmacro.getDeletedText().charAt(pos);
+            
+            if (!existsCorrespondingMacro(last, start, ch)) {
+                return false;
+            }
+            last++;
+        }
+        
+        String dtext = "";
+        for (int i = index; i < last; i++) {
+            DocumentMacro dmacro = (DocumentMacro)macros.get(i);
+            dtext = dtext + dmacro.getDeletedText();
+        }
+        if (!cmacro.getInsertedText().equals(dtext)) {
+            return false;
+        }
+        
+        for (int i = index; i < last; i++) {
+            macros.remove(index);
+        }
+        return true;
+    }
+    
+    /**
      * Obtains the index number of the macro corresponding to a given macro.
      * @param macro the given macro
      * @return the index number of the corresponding macro
      */
-    private int getIndexOfCorrespondingMacro(CancelMacro cmacro) {
-        for (int i = 0; i < macros.size(); i++) {
-            Macro macro = macros.get(i);
-            if (macro instanceof DocumentMacro) {
-                DocumentMacro dmacro = (DocumentMacro)macro;
-                if (dmacro.getStart() == cmacro.getStart() &&
-                    dmacro.getInsertedText().equals(cmacro.getDeletedText()) &&
-                    dmacro.getDeletedText().equals(cmacro.getInsertedText())) {
-                    return i;
-                }
+    private int indexOfCorrespondingMacro(CancelMacro cmacro) {
+        int start = cmacro.getStart();
+        char ch = cmacro.getDeletedText().charAt(0);
+        for (int index = macros.size() - 1; index >= 0; index--) {
+            if (existsCorrespondingMacro(index, start, ch)) {
+                return index;
             }
         }
         return -1;
+    }
+    
+    /**
+     * Tests if there is a corresponding document macro.
+     * @param index the index number of the macro
+     * @param start the offset value of the starting position of the macro
+     * @param ch the character at the starting position of the  macro
+     * @return <code>true</code> if there is a corresponding document macro, otherwise <code>false</code>
+     */
+    private boolean existsCorrespondingMacro(int index, int start, char ch) {
+        Macro macro = macros.get(index);
+        if (macro instanceof DocumentMacro) {
+            DocumentMacro dmacro = (DocumentMacro)macro;
+            if (dmacro.getStart() == start && dmacro.getInsertedText().equals(String.valueOf(ch))) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -199,18 +235,18 @@ public class CompoundMacro extends Macro {
     }
     
     /**
-     * Returns a string that represents a JSON object for a macro.
-     * @return the JSON string representation
+     * Obtains a JSON object that stores information on this macro.
+     * @return the JSON object
      */
     @Override
-    public String getJSON() {
+    public JsonObject getJSON() {
         String path = "";
         if (getPath() != null) {
             path = getPath();
         }
         
         JsonObjectBuilder builder = MacroJSON.getJSONObjectBuikder(this)
-          .add(MacroJSON.JSON_MACRO_CLASS, getThisClassName())
+          .add(MacroJSON.JSON_MACRO, getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
           .add(MacroJSON.JSON_MACRO_ACTION, action)
           .add(MacroJSON.JSON_MACRO_PATH, path)
@@ -221,7 +257,7 @@ public class CompoundMacro extends Macro {
             builder.add(MacroJSON.JSON_MACRO_PATH, array);
         }
         JsonObject json = builder.build();
-        return MacroJSON.stringify(json);
+        return json;
     }
     
     /**
