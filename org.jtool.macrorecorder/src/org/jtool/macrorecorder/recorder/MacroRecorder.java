@@ -8,11 +8,12 @@ package org.jtool.macrorecorder.recorder;
 
 import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.MacroHandlerLoader;
+import org.jtool.macrorecorder.internal.recorder.MacroNotifier;
 import org.jtool.macrorecorder.internal.recorder.Recorder;
 import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Records macros that were performed on Eclipse.
@@ -26,19 +27,24 @@ public class MacroRecorder implements IMacroRecorder {
     private static MacroRecorder instance = new MacroRecorder();
     
     /**
+     * The default combinator that combines document macros.
+     */
+    private IDocMacroCombinator defaultCombinator = new DocMacroCombinator();
+    
+    /**
      * An internal recorder that records all kinds of macros.
      */
     private Recorder internalRecorder;
     
     /**
-     * The collection of listeners that receives macro events.
+     * The collection of notifiers that notify change macros.
      */
-    private List<IMacroListener> macroListeners = new ArrayList<IMacroListener>();
+    private List<MacroNotifier> macroNotifiers = new ArrayList<MacroNotifier>();
     
     /**
      * The collection of macro handlers that are loaded from the extension point.
      */
-    private Set<IMacroHandler> macroHandlers = new HashSet<IMacroHandler>();
+    private Map<IMacroHandler, IDocMacroCombinator> macroHandlers = new HashMap<IMacroHandler, IDocMacroCombinator>();
     
     /**
      * A flag that indicates if recorded macros are displayed.
@@ -59,9 +65,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Creates an object that records macros.
      */
     private MacroRecorder() {
-        MacroCompressor defaultCompressor = new MacroCompressor();
-        internalRecorder = new Recorder(this, defaultCompressor);
-        
+        internalRecorder = new Recorder(this);
         macroHandlers = MacroHandlerLoader.load();
     }
     
@@ -80,7 +84,19 @@ public class MacroRecorder implements IMacroRecorder {
     @Override
     public void addMacroListener(IMacroListener listener) {
         assert listener != null;
-        macroListeners.add(listener);
+        macroNotifiers.add(new MacroNotifier(this, listener, defaultCombinator));
+        
+        start();
+    }
+    
+    /**
+     * Adds a listener that receives a change macro event and its combinator that combines document macros.
+     * @param listener the event listener to be added
+     * @param combinator the combinator corresponding to the added listener
+     */
+    public void addMacroListener(IMacroListener listener, IDocMacroCombinator combinator) {
+        assert listener != null;
+        macroNotifiers.add(new MacroNotifier(this, listener, combinator));
         
         start();
     }
@@ -92,16 +108,33 @@ public class MacroRecorder implements IMacroRecorder {
     @Override
     public void removeMacroListener(IMacroListener listener) {
         assert listener != null;
-        macroListeners.remove(listener);
+        MacroNotifier notifier = getMacroNotifier(listener);
+        if (notifier != null) {
+            macroNotifiers.remove(notifier);
+        }
         
         stop();
+    }
+    
+    /**
+     * Obtains a notifier that corresponds to a listener.
+     * @param listener the listener
+     * @return the corresponding notifier
+     */
+    private MacroNotifier getMacroNotifier(IMacroListener listener) {
+        for (MacroNotifier notifier : macroNotifiers) {
+            if (notifier.getMacroListener().equals(listener)) {
+                return notifier;
+            }
+        }
+        return null;
     }
     
     /**
      * Starts the recording of change macros.
      */
     private void start() {
-        if (!displayMacro && !displayRawMacro && macroListeners.size() == 0) {
+        if (!displayMacro && !displayRawMacro && macroNotifiers.size() == 0) {
             return;
         }
         
@@ -115,7 +148,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Stops the recording of change macros.
      */
     private void stop() {
-        if (displayMacro || displayRawMacro || macroListeners.size() > 0) {
+        if (displayMacro || displayRawMacro || macroNotifiers.size() > 0) {
             return;
         }
         
@@ -129,9 +162,15 @@ public class MacroRecorder implements IMacroRecorder {
      * Registers macro handlers that receives change macros.
      */
     public void registerHandlers() {
-        for (IMacroHandler handler : macroHandlers) {
+        for (IMacroHandler handler : macroHandlers.keySet()) {
             handler.initialize();
-            addMacroListener(handler);
+            
+            IDocMacroCombinator combinator = macroHandlers.get(handler);
+            if (combinator != null) {
+                addMacroListener(handler, combinator);
+            } else {
+                addMacroListener(handler, defaultCombinator);
+            }
         }
     }
     
@@ -139,7 +178,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Unregisters macro handlers that receives change macros.
      */
     public void unregisterHandlers() {
-        for (IMacroHandler handler : macroHandlers) {
+        for (IMacroHandler handler : macroHandlers.keySet()) {
             removeMacroListener(handler);
             handler.terminate();
         }
@@ -154,34 +193,52 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Returns the compressor that compresses change macros.
-     * @return the macro compressor
+     * Returns listener proxies that receive macro events.
+     * @return the collection of listener proxies
      */
-    protected IMacroCompressor getMacroCompressor() {
-        return internalRecorder.getMacroCompressor();
+    public List<MacroNotifier> getMacroNotifiers() {
+        return macroNotifiers;
     }
-    
     
     /**
      * Sets characters that delimit recorded document change macros.
+     * @param a listener that receives a change macro event
      * @param delimiters string that contains delimiter characters
+     * @return <code>true</code> if the delimiters are attached to a combinator corresponding to the listener, otherwise <code>false</code>
      */
     @Override
-    public void setDelimiters(String delimiters) {
-        IMacroCompressor compressor = getMacroCompressor();
-        if (compressor instanceof MacroCompressor) {
-            ((MacroCompressor)compressor).setDelimiter(delimiters);
+    public boolean setDelimiters(IMacroListener listener, String delimiters) {
+        assert listener != null;
+        MacroNotifier notifier = getMacroNotifier(listener);
+        if (notifier == null) {
+            return false;
+        }
+        
+        IDocMacroCombinator combinator = notifier.getDocMacroProcessor();
+        if (combinator instanceof DocMacroCombinator) {
+            ((DocMacroCombinator)combinator).setDelimiter(delimiters);
+            return true;
+        } else {
+            return false;
         }
     }
     
     /**
-     * Sets a compressor that compresses change macros.
-     * @param compressor the compressor
+     * Sets a combinator that combines document macros.
+     * @param a listener that receives a change macro event
+     * @param combinator the combinator
+     * @return <code>true</code> if the combinator is attached to the listener, otherwise <code>false</code>
      */
     @Override
-    public void setMacroCompressor(IMacroCompressor compressor) {
-        assert compressor != null;
-        internalRecorder.setMacroCompressor(compressor);
+    public boolean setDocMacroCombinator(IMacroListener listener, IDocMacroCombinator combinator) {
+        assert listener != null;
+        MacroNotifier notifier = getMacroNotifier(listener);
+        if (notifier == null) {
+            return false;
+        }
+        
+        notifier.setDocMacroProcessor(combinator);
+        return true;
     }
     
     /**
@@ -212,31 +269,29 @@ public class MacroRecorder implements IMacroRecorder {
     
     /**
      * Sends a change macro event to all the listeners.
+     * @param listener a listener that receives the change macro
      * @param macro the change macro sent to the listeners
      */
-    public void notifyMacro(Macro macro) {
+    public void notifyMacro(IMacroListener listener, Macro macro) {
         if (displayMacro) {
             MacroConsole.println(macro.getDescription());
         }
         
         MacroEvent evt = new MacroEvent(MacroEvent.Type.GENERIC_MACRO, macro);
-        for (IMacroListener listener : macroListeners) {
-            listener.macroAdded(evt);
-        }
+        listener.macroAdded(evt);
     }
     
     /**
      * Sends a raw change macro event to all the listeners.
+     * @param listener a listener that receives the raw change macro
      * @param macro the raw change macro sent to the listeners
      */
-    public void notifyRawMacro(Macro macro) {
+    public void notifyRawMacro(IMacroListener listener, Macro macro) {
         if (displayRawMacro) {
             MacroConsole.println("-" + macro.getDescription());
         }
         
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);
-        for (IMacroListener listener : macroListeners) {
-            listener.rawMacroAdded(evt);
-        }
+        listener.rawMacroAdded(evt);
     }
 }

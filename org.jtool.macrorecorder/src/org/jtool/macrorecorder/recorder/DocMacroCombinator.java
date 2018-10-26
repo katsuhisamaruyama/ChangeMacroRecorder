@@ -9,10 +9,10 @@ package org.jtool.macrorecorder.recorder;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 
 /**
- * Compresses macros.
+ * Combines document macros.
  * @author Katsuhisa Maruyama
  */
-public class MacroCompressor implements IMacroCompressor {
+public class DocMacroCombinator implements IDocMacroCombinator {
     
     /**
      * Defines the default delimiters
@@ -27,12 +27,12 @@ public class MacroCompressor implements IMacroCompressor {
     /**
      * Creates an object compressing macros.
      */
-    protected MacroCompressor() {
+    protected DocMacroCombinator() {
         setDelimiter(DEFAULT_DELIMITERS);
     }
     
     /**
-     * Sets characters that delimit recorded document change macros.
+     * Sets characters that delimit recorded document macros.
      * @param chars characters representing delimiters
      */
     protected void setDelimiter(char[] chars) {
@@ -40,7 +40,7 @@ public class MacroCompressor implements IMacroCompressor {
     }
     
     /**
-     * Sets characters that delimit recorded document change macros.
+     * Sets characters that delimit recorded document macros.
      * @param delimiters string that contains delimiter characters
      */
     protected void setDelimiter(String delimiters) {
@@ -51,7 +51,7 @@ public class MacroCompressor implements IMacroCompressor {
     }
     
     /**
-     * Tests if a document change macros can be combined with its previous document change macro.
+     * Tests if a document macros can be combined with its previous document macro.
      * @param macro the document macro
      * @return <code>true</code> if the macros can be combined, otherwise <code>false</code>
      */
@@ -77,10 +77,10 @@ public class MacroCompressor implements IMacroCompressor {
     }
     
     /**
-     * Combines successive two document change macros.
-     * @param last the former document change macro 
-     * @param next the latter document change macro
-     * @return the combined document change macro, or <code>null</code> if the macro cannot be combined
+     * Combines successive two document macros.
+     * @param last the former document macro 
+     * @param next the latter document macro
+     * @return the combined document macro, or <code>null</code> if the macro cannot be combined
      */
     @Override
     public DocumentMacro combine(DocumentMacro last, DocumentMacro next) {
@@ -104,10 +104,10 @@ public class MacroCompressor implements IMacroCompressor {
     }
     
     /**
-     * Combines successive two document change macro.
-     * @param last the former document change macro
-     * @param next the latter document change macro that represents the insertion
-     * @return the combined document change macro, or <code>null</code> if the macros cannot be combined
+     * Combines successive two document macro.
+     * @param last the former document macro
+     * @param next the latter document macro that represents the insertion
+     * @return the combined document macro, or <code>null</code> if the macros cannot be combined
      */
     protected DocumentMacro combineInsertMacro(DocumentMacro last, DocumentMacro next) {
         if (last == null) {
@@ -128,10 +128,10 @@ public class MacroCompressor implements IMacroCompressor {
     }
     
     /**
-     * Combines successive two document change macros.
-     * @param last the former document change macro
-     * @param next the latter document change macro that represents deletion
-     * @return the combined document change macro, or <code>null</code> if the macros cannot be combined
+     * Combines successive two document macros.
+     * @param last the former document macro
+     * @param next the latter document macro that represents deletion
+     * @return the combined document macro, or <code>null</code> if the macros cannot be combined
      */
     protected DocumentMacro combineDeleteMacro(DocumentMacro last, DocumentMacro next) {
         if (last == null) {
@@ -163,10 +163,10 @@ public class MacroCompressor implements IMacroCompressor {
     }
     
     /**
-     * Compresses successive two document change macros.
-     * @param last the former document change macro
-     * @param next the latter document change macro that represents replacement
-     * @return the combined document change macro, or <code>null</code> if the macros cannot be combined
+     * Compresses successive two document macros.
+     * @param last the former document macro
+     * @param next the latter document macro that represents replacement
+     * @return the combined document macro, or <code>null</code> if the macros cannot be combined
      */
     protected DocumentMacro compressReplaceMacro(DocumentMacro last, DocumentMacro next) {
         if (last == null) {

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2018
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -26,13 +26,17 @@ public interface IMacroRecorder {
     
     /**
      * Sets characters that delimit recorded document change macros.
+     * @param a listener that receives a change macro event
      * @param delimiters string that contains delimiter characters
+     * @return <code>true</code> if the delimiters are attached to a combinator corresponding to the listener, otherwise <code>false</code>
      */
-    public void setDelimiters(String delimiters);
+    public boolean setDelimiters(IMacroListener listener, String delimiters);
     
     /**
-     * Sets a compressor that compresses change macros.
-     * @param compressor the compressor
+     * Sets a combinator that combines document macros.
+     * @param a listener that receives a change macro event
+     * @param combinator the combinator
+     * @return <code>true</code> if the combinator is attached to the listener, otherwise <code>false</code>
      */
-    public void setMacroCompressor(IMacroCompressor compressor);
+    public boolean setDocMacroCombinator(IMacroListener listener, IDocMacroCombinator combinator);
 }

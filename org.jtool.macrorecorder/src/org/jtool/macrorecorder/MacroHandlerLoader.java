@@ -12,10 +12,10 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.jtool.macrorecorder.recorder.IDocMacroCombinator;
 import org.jtool.macrorecorder.recorder.IMacroHandler;
-
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Loads extensions for a macro hander.
@@ -36,7 +36,12 @@ public class MacroHandlerLoader {
     /**
      * The attribute name that specifies a macro handler class to be loaded.
      */
-    static final String ATTRIBUTE_CALSS = "class";
+    static final String ATTRIBUTE_CLASS = "class";
+    
+    /**
+     * The attribute name that specifies a combinator class to be loaded.
+     */
+    static final String ATTRIBUTE_COMBINATOR = "combinator";
     
     /**
      * The attribute name that specifies commandId of a macro handler to be loaded.
@@ -45,9 +50,10 @@ public class MacroHandlerLoader {
     
     /**
      * Loads macro handlers that are specified in the extension point.
+     * @return the collection of handlers.
      */
-    public static Set<IMacroHandler> load() {
-        Set<IMacroHandler> handlers = new HashSet<IMacroHandler>();
+    public static Map<IMacroHandler, IDocMacroCombinator> load() {
+        Map<IMacroHandler, IDocMacroCombinator> handlers = new HashMap<IMacroHandler, IDocMacroCombinator>();
         
         IExtensionRegistry registry = Platform.getExtensionRegistry();
         IExtensionPoint point = registry.getExtensionPoint(EXTENSION_POINT_ID);
@@ -61,11 +67,18 @@ public class MacroHandlerLoader {
             for (IConfigurationElement elem : elems) {
                 if (elem.getName().equals(ELEMENT_NAME)) {
                     try {
-                        Object obj = elem.createExecutableExtension(ATTRIBUTE_CALSS);
+                        Object obj = elem.createExecutableExtension(ATTRIBUTE_CLASS);
                         if (obj instanceof IMacroHandler) {
                             IMacroHandler handler = (IMacroHandler)obj;
                             if (handler.recordingAllowed()) {
-                                handlers.add(handler);
+                                
+                                Object obj2 = elem.createExecutableExtension(ATTRIBUTE_COMBINATOR);
+                                IDocMacroCombinator combinator = null;
+                                if (obj2 instanceof IDocMacroCombinator) {
+                                    combinator = (IDocMacroCombinator)obj2;
+                                }
+                                
+                                handlers.put(handler, combinator);
                             }
                         }
                     } catch (CoreException e) {

@@ -19,6 +19,7 @@ public class MacroHandlerPluginWizard extends NewPluginTemplateWizard {
      * Creates templates that will appear in this wizard.
      * @return an array of template sections that will appear in this wizard
      */
+    @Override
     public ITemplateSection[] createTemplateSections() {
         return new ITemplateSection[]{ new MacroHandlerTemplateSection() };
     }

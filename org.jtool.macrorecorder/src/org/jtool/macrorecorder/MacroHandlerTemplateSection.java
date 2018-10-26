@@ -39,6 +39,11 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
     private static final String DEFAULT_CLASS_NAME = "SampleMacroHandler";
     
     /**
+     * The default processor name.
+     */
+    private static final String DEFAULT_COMBINATOR_NAME = "";
+    
+    /**
      * The default prefix string of the command ID.
      */
     private static final String COMMAND_ID_PREFIX = "org.eclipse.macrorecorder.handler";
@@ -49,9 +54,14 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
     private static final String KEY_PACKAGE_NAME = "packageName";
     
     /**
-     * A key that indicates the class name in the option page.
+     * A key that indicates the class name for a handler in the option page.
      */
     private static final String KEY_CLASS_NAME = "className";
+    
+    /**
+     * A key that indicates the class name of a combinator in the option page.
+     */
+    private static final String KEY_COMBINATOR_NAME = "combinatorName";
     
     /**
      * The identifier for this section.
@@ -70,8 +80,9 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
      * Creates a options.
      */
     private void createOptions() {
-        addOption(KEY_PACKAGE_NAME, "Java Package Name", DEFAULT_PACKAGE_NAME, 0);
+        addOption(KEY_PACKAGE_NAME, "Package Name", DEFAULT_PACKAGE_NAME, 0);
         addOption(KEY_CLASS_NAME, "Handler Class Name ", DEFAULT_CLASS_NAME, 0);
+        addOption(KEY_COMBINATOR_NAME , "Processor Class Name ", DEFAULT_COMBINATOR_NAME, 0);
     }
     
     /**
@@ -101,6 +112,7 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
      * Returns the directory where all the templates are located in the contributing plug-in.
      * @return the constant string Eclipse 3.0
      */
+    @Override
     protected String getTemplateDirectory() { 
         return "templates_3.0"; 
     }
@@ -158,14 +170,8 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
     }
     
     /**
-     *     
-    <extension
-    point="org.jtool.macrorecorder.handlers">
- <handler
-       class="org.jtool.macrorecorder.sample2.SampleMacroPrintHandler"
-       commandId="org.eclipse.macrorecorder.handler.SampleMacroPrintHandler">
- </handler>
- 
+     * Updates the plug-in configuration.
+     * @param monitor the progress monitor to be used
      */
     @Override
     protected void updateModel(IProgressMonitor monitor) throws CoreException {
@@ -173,12 +179,19 @@ public class MacroHandlerTemplateSection extends OptionTemplateSection {
         IPluginModelFactory factory = model.getPluginFactory();
         
         String fqn = getStringOption(KEY_PACKAGE_NAME) + "." + getStringOption(KEY_CLASS_NAME);
+        String combinatorName = getStringOption(KEY_COMBINATOR_NAME);
+        if (combinatorName.length() > 0) {
+            combinatorName = getStringOption(KEY_PACKAGE_NAME) + "." + combinatorName;
+        }
         String commandId = COMMAND_ID_PREFIX + "." + getStringOption(KEY_CLASS_NAME);
         
         IPluginExtension extension = createExtension(getUsedExtensionPoint(), true);
         IPluginElement element = factory.createElement(extension);
         element.setName(MacroHandlerLoader.ELEMENT_NAME);
-        element.setAttribute(MacroHandlerLoader.ATTRIBUTE_CALSS, fqn);
+        element.setAttribute(MacroHandlerLoader.ATTRIBUTE_CLASS, fqn);
+        if (combinatorName.length() > 0) {
+            element.setAttribute(MacroHandlerLoader.ATTRIBUTE_COMBINATOR, combinatorName);
+        }
         element.setAttribute(MacroHandlerLoader.ATTRIBUTE_COMMAND_ID, commandId);
         extension.add(element);
         
