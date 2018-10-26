@@ -44,9 +44,13 @@ public class DocMacroCombinator implements IDocMacroCombinator {
      * @param delimiters string that contains delimiter characters
      */
     protected void setDelimiter(String delimiters) {
-        delimiterChars = new char[delimiters.length()];
-        for (int i = 0; i < delimiters.length(); i++) {
-            delimiterChars[i] = delimiters.charAt(i);
+        if (delimiters == null) {
+            delimiterChars = null;
+        } else {
+            delimiterChars = new char[delimiters.length()];
+            for (int i = 0; i < delimiters.length(); i++) {
+                delimiterChars[i] = delimiters.charAt(i);
+            }
         }
     }
     
@@ -78,26 +82,26 @@ public class DocMacroCombinator implements IDocMacroCombinator {
     
     /**
      * Combines successive two document macros.
-     * @param last the former document macro 
-     * @param next the latter document macro
+     * @param former the former document macro 
+     * @param latter the latter document macro
      * @return the combined document macro, or <code>null</code> if the macro cannot be combined
      */
     @Override
-    public DocumentMacro combine(DocumentMacro last, DocumentMacro next) {
-        if (next == null) {
+    public DocumentMacro combine(DocumentMacro former, DocumentMacro latter) {
+        if (latter == null) {
             return null;
         }
         
-        if (next.inserted()) {
-            return combineInsertMacro(last, next);
+        if (latter.inserted()) {
+            return combineInsertMacro(former, latter);
         }
         
-        if (next.deleted()) {
-            return combineDeleteMacro(last, next);
+        if (latter.deleted()) {
+            return combineDeleteMacro(former, latter);
         }
         
-        if (next.replaced()) {
-            return compressReplaceMacro(last, next);
+        if (latter.replaced()) {
+            return compressReplaceMacro(former, latter);
         }
         
         return null;

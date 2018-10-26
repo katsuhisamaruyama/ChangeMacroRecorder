@@ -23,9 +23,9 @@ public interface IDocMacroCombinator {
     
     /**
      * Combines successive two document macros.
-     * @param last the former document macro 
-     * @param next the latter document macro
+     * @param former the former document macro 
+     * @param latter the latter document macro
      * @return the combined document macro, or <code>null</code> if the macro cannot be combined
      */
-    public DocumentMacro combine(DocumentMacro last, DocumentMacro next);
+    public DocumentMacro combine(DocumentMacro former, DocumentMacro latter);
 }
