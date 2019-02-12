@@ -2,7 +2,7 @@
 <feature
       id="org.jtool.macrorecorder.feature"
       label="ChangeMacroRecorder for Eclipse"
-      version="1.1.0.qualifier"
+      version="1.1.1.qualifier"
       provider-name="FSE@Ristumeikan Univ.">
 
    <description>
@@ -134,7 +134,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="org.jtool.macrorecorder"
          download-size="0"
          install-size="0"
-         version="1.1.0.qualifier"
+         version="1.1.1.qualifier"
          unpack="false"/>
 
 </feature>
