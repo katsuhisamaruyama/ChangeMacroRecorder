@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018
+ *  Copyright 2018-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -7,6 +7,7 @@
 package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.DocumentMacro;
+import org.jtool.macrorecorder.recorder.DocMacroCombinator;
 import org.jtool.macrorecorder.recorder.IDocMacroCombinator;
 import org.jtool.macrorecorder.recorder.IMacroListener;
 
@@ -14,7 +15,7 @@ import org.jtool.macrorecorder.recorder.IMacroListener;
  * A notifier that sends change macros to each listener.
  * @author Katsuhisa Maruyama
  */
-public class MacroNotifier {
+public class Notifier {
     
     /**
      * A listener that receives macro events.
@@ -36,7 +37,7 @@ public class MacroNotifier {
      * @param listener a listener that receives macro events
      * @param combinator a processor that processes document macros
      */
-    public MacroNotifier(IMacroListener listener, IDocMacroCombinator combinator) {
+    public Notifier(IMacroListener listener, DocMacroCombinator combinator) {
         macroListener = listener;
         docMacroCombinator = combinator;
     }

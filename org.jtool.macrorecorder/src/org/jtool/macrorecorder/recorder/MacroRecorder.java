@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -8,7 +8,7 @@ package org.jtool.macrorecorder.recorder;
 
 import org.jtool.macrorecorder.macro.Macro;
 import org.jtool.macrorecorder.MacroHandlerLoader;
-import org.jtool.macrorecorder.internal.recorder.MacroNotifier;
+import org.jtool.macrorecorder.internal.recorder.Notifier;
 import org.jtool.macrorecorder.internal.recorder.Recorder;
 import java.util.List;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class MacroRecorder implements IMacroRecorder {
     /**
      * The collection of notifiers that send change macros.
      */
-    private List<MacroNotifier> macroNotifiers = new ArrayList<MacroNotifier>();
+    private List<Notifier> macroNotifiers = new ArrayList<Notifier>();
     
     /**
      * The collection of macro handlers that are loaded from the extension point.
@@ -80,7 +80,7 @@ public class MacroRecorder implements IMacroRecorder {
     @Override
     public void addMacroListener(IMacroListener listener) {
         assert listener != null;
-        macroNotifiers.add(new MacroNotifier(listener, new DocMacroCombinator()));
+        macroNotifiers.add(new Notifier(listener, new DocMacroCombinator()));
         
         start();
     }
@@ -92,7 +92,7 @@ public class MacroRecorder implements IMacroRecorder {
     @Override
     public void removeMacroListener(IMacroListener listener) {
         assert listener != null;
-        MacroNotifier notifier = getMacroNotifier(listener);
+        Notifier notifier = getNotifier(listener);
         if (notifier != null) {
             macroNotifiers.remove(notifier);
         }
@@ -105,8 +105,8 @@ public class MacroRecorder implements IMacroRecorder {
      * @param listener the listener
      * @return the corresponding notifier
      */
-    private MacroNotifier getMacroNotifier(IMacroListener listener) {
-        for (MacroNotifier notifier : macroNotifiers) {
+    private Notifier getNotifier(IMacroListener listener) {
+        for (Notifier notifier : macroNotifiers) {
             if (notifier.getMacroListener().equals(listener)) {
                 return notifier;
             }
@@ -174,7 +174,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Returns notifiers that send macro events.
      * @return the collection of notifiers
      */
-    public List<MacroNotifier> getMacroNotifiers() {
+    public List<Notifier> getNotifiers() {
         return macroNotifiers;
     }
     
@@ -187,7 +187,7 @@ public class MacroRecorder implements IMacroRecorder {
     @Override
     public boolean setDelimiters(IMacroListener listener, String delimiters) {
         assert listener != null;
-        MacroNotifier notifier = getMacroNotifier(listener);
+        Notifier notifier = getNotifier(listener);
         if (notifier == null) {
             return false;
         }
@@ -210,7 +210,7 @@ public class MacroRecorder implements IMacroRecorder {
     @Override
     public boolean setDocMacroCombinator(IMacroListener listener, IDocMacroCombinator combinator) {
         assert listener != null;
-        MacroNotifier notifier = getMacroNotifier(listener);
+        Notifier notifier = getNotifier(listener);
         if (notifier == null) {
             return false;
         }

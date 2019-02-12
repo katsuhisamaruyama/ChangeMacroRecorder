@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -304,11 +304,11 @@ public class Recorder {
         }
         
         if (macro instanceof DocumentMacro) {
-            for (MacroNotifier notifier : macroRecorder.getMacroNotifiers()) {
+            for (Notifier notifier : macroRecorder.getNotifiers()) {
                 notifyDocMacro(notifier, (DocumentMacro)macro);
             }
         } else {
-            for (MacroNotifier notifier : macroRecorder.getMacroNotifiers()) {
+            for (Notifier notifier : macroRecorder.getNotifiers()) {
                 macroRecorder.notifyMacro(notifier.getMacroListener(), macro);
             }
         }
@@ -319,7 +319,7 @@ public class Recorder {
      * Records a document macro.
      * @param macro the document macro to be recorded
      */
-    void notifyDocMacro(MacroNotifier notifier, DocumentMacro macro) {
+    void notifyDocMacro(Notifier notifier, DocumentMacro macro) {
         if (macro.isCut() || macro.isPaste()) {
             macroRecorder.notifyMacro(notifier.getMacroListener(), macro);
             return;
@@ -373,7 +373,7 @@ public class Recorder {
      * @param macro the raw macro sent to the listeners
      */
     private void notifyRawMacro(Macro macro) {
-        for (MacroNotifier notifier : macroRecorder.getMacroNotifiers()) {
+        for (Notifier notifier : macroRecorder.getNotifiers()) {
             macroRecorder.notifyRawMacro(notifier.getMacroListener(), macro);
         }
     }
