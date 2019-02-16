@@ -4,7 +4,7 @@
  *  Department of Computer Science, Ritsumeikan University
  */
 
-package org.jtool.macrorecorder.internal.recorder;
+package org.jtool.macrorecorder.recorder;
 
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.IConsole;
