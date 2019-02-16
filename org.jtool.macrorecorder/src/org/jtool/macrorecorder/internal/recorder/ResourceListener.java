@@ -10,7 +10,6 @@ import org.jtool.macrorecorder.macro.ResourceMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
 import org.jtool.macrorecorder.macro.FileMacro;
 import org.jtool.macrorecorder.macro.MacroPath;
-import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResource;
