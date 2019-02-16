@@ -14,7 +14,6 @@ import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.CancelMacro;
 import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.CodeCompletionMacro;
-import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.jtool.macrorecorder.internal.diff.DiffMacro;
 import org.jtool.macrorecorder.internal.diff.DiffMacroGenerator;
 import java.util.List;
