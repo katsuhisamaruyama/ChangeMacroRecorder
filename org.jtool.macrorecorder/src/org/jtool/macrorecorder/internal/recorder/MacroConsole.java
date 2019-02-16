@@ -1,10 +1,10 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
 
-package org.jtool.macrorecorder.recorder;
+package org.jtool.macrorecorder.internal.recorder;
 
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.IConsole;
