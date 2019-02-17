@@ -42,6 +42,11 @@ public class MacroRecorder implements IMacroRecorder {
     private Set<IMacroHandler> macroHandlers = new HashSet<IMacroHandler>();
     
     /**
+     * A flag that indicates if this macro recorder is running.
+     */
+    private boolean running = false;
+    
+    /**
      * A flag that indicates if recorded macros are displayed.
      */
     private boolean displayMacro = false;
@@ -52,9 +57,9 @@ public class MacroRecorder implements IMacroRecorder {
     private boolean displayRawMacro = false;
     
     /**
-     * A flag that indicates if this macro recorder is running.
+     * A handler that displays recorded change macros.
      */
-    private boolean running = false;
+    private IMacroListener macroHandlerForConsole = null;
     
     /**
      * Creates an object that records macros.
@@ -118,7 +123,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Starts the recording of change macros.
      */
     private void start() {
-        if (!displayMacro && !displayRawMacro && macroNotifiers.size() == 0) {
+        if (macroNotifiers.size() == 0) {
             return;
         }
         
@@ -132,7 +137,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Stops the recording of change macros.
      */
     private void stop() {
-        if (displayMacro || displayRawMacro || macroNotifiers.size() > 0) {
+        if (macroNotifiers.size() > 0) {
             return;
         }
         
@@ -224,7 +229,9 @@ public class MacroRecorder implements IMacroRecorder {
      * @param display <code>true</code> if recorded macros are displayed, otherwise <code>false</code>
      */
     public void displayMacrosOnConsole(boolean display) {
+        setMacroHandlerForConsole(display || displayRawMacro);
         displayMacro = display;
+        
         if (displayMacro) {
             start();
         } else {
@@ -237,7 +244,9 @@ public class MacroRecorder implements IMacroRecorder {
      * @param display <code>true</code> if recorded raw macros are displayed, otherwise <code>false</code>
      */
     public void displayRawMacrosOnConsole(boolean display) {
+        setMacroHandlerForConsole(display || displayMacro);
         displayRawMacro = display;
+        
         if (displayRawMacro) {
             start();
         } else {
@@ -246,15 +255,39 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
+     * Adds or Removes a handler that displays recorded change macros.
+     * @param display <code>true</code> if recorded macros is displayed, otherwise <code>false</code>
+     */
+    private void setMacroHandlerForConsole(boolean display) {
+        if (macroHandlerForConsole == null && display) {
+            macroHandlerForConsole = new IMacroListener() {
+                public void macroAdded(MacroEvent evt) {
+                    if (displayMacro) {
+                        MacroConsole.println(evt.getMacro().getDescription());
+                    }
+                }
+                
+                public void rawMacroAdded(MacroEvent evt) {
+                    if (displayRawMacro) {
+                        MacroConsole.println("- " + evt.getMacro().getDescription());
+                    }
+                }
+            };
+            addMacroListener(macroHandlerForConsole);
+            
+        } if (macroHandlerForConsole != null && !display) {
+            removeMacroListener(macroHandlerForConsole);
+            macroHandlerForConsole = null;
+        }
+    }
+    
+    
+    /**
      * Sends a change macro event to all the listeners.
      * @param listener a listener that receives the change macro
      * @param macro the change macro sent to the listeners
      */
     public void notifyMacro(IMacroListener listener, Macro macro) {
-        if (displayMacro) {
-            MacroConsole.println(macro.getDescription());
-        }
-        
         MacroEvent evt = new MacroEvent(MacroEvent.Type.GENERIC_MACRO, macro);
         listener.macroAdded(evt);
     }
@@ -265,10 +298,6 @@ public class MacroRecorder implements IMacroRecorder {
      * @param macro the raw change macro sent to the listeners
      */
     public void notifyRawMacro(IMacroListener listener, Macro macro) {
-        if (displayRawMacro) {
-            MacroConsole.println("-" + macro.getDescription());
-        }
-        
         MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);
         listener.rawMacroAdded(evt);
     }

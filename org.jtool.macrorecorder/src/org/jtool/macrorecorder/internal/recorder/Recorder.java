@@ -369,6 +369,14 @@ public class Recorder {
     }
     
     /**
+     * Returns the last raw macro.
+     * @return the last raw macro
+     */
+    Macro getLastRawMacro() {
+        return lastRawMacro;
+    }
+    
+    /**
      * Sends a raw macro event to all the listeners.
      * @param macro the raw macro sent to the listeners
      */
@@ -376,13 +384,5 @@ public class Recorder {
         for (Notifier notifier : macroRecorder.getNotifiers()) {
             macroRecorder.notifyRawMacro(notifier.getMacroListener(), macro);
         }
-    }
-    
-    /**
-     * Returns the last raw macro.
-     * @return the last raw macro
-     */
-    Macro getLastRawMacro() {
-        return lastRawMacro;
     }
 }
