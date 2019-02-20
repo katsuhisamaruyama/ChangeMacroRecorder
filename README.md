@@ -32,12 +32,14 @@ Recorded change macros include more detailed information such as the inserted an
 
 You can see change macros on the console, which were recorded by ChangeMacroRecorder.
 
-<img src="https://user-images.githubusercontent.com/4454230/47577000-cc370800-d980-11e8-91fe-46ab22c5f419.png" width="800px" alt="screenshot" border="2">
+<img src="https://user-images.githubusercontent.com/4454230/47577000-cc370800-d980-11e8-91fe-46ab22c5f419.png" width="800px" alt="screenshot" border="1"/>
 
 The following four [demonstrations](<http://www.jtool.org/cmr/demos/demo.html>) are available.  
 
-* Demo 1: Recording textual changes in programmer's edit and refactoring</li>
-* Demo 2: Recording textual changes in refactoring and its undoing</li>
+* Demo 1: Recording textual changes in programmer's edit and refactoring  
+* Demo 2: Recording textual changes in refactoring and its undoing  
+* Demo 3: Recording textual changes in code completion  
+* Demo 4: Creating a plug-in containing a macro handler that receives change macros  
 
 ## Requirement
 
@@ -63,6 +65,8 @@ and put it in the 'plug-ins' directory under the Eclipse. Eclipse needs to be re
 ### Checking Installation
 
 Select menu items: "Eclipse" -> "Preferences..." -> "ChangemacroRecorder" and toggle the check boxes for displaying raw and treated change macros.  
+
+<img src="https://user-images.githubusercontent.com/4454230/53064667-0158fe80-350c-11e9-8c13-f318723f25fc.jpg"/ alt="preferences" border="1"/>
 
 ## Usage
 
