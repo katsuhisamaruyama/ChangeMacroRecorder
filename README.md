@@ -66,7 +66,7 @@ and put it in the 'plug-ins' directory under the Eclipse. Eclipse needs to be re
 
 Select menu items: "Eclipse" -> "Preferences..." -> "ChangemacroRecorder" and toggle the check boxes for displaying raw and treated change macros.  
 
-<img src="https://user-images.githubusercontent.com/4454230/53064667-0158fe80-350c-11e9-8c13-f318723f25fc.jpg"/ alt="preferences" border="1"/>
+<img src="https://user-images.githubusercontent.com/4454230/53064667-0158fe80-350c-11e9-8c13-f318723f25fc.jpg" alt="preferences" border="1"/>
 
 ## Usage
 
