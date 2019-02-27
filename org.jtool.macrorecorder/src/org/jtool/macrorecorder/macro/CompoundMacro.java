@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -245,7 +245,7 @@ public class CompoundMacro extends Macro {
             path = getPath();
         }
         
-        JsonObjectBuilder builder = MacroJSON.getJSONObjectBuikder(this)
+        JsonObjectBuilder builder = MacroJSON.getJSONObjectBuilder(this)
           .add(MacroJSON.JSON_MACRO, getThisClassName())
           .add(MacroJSON.JSON_MACRO_TIME, getTimeAsISOString(time))
           .add(MacroJSON.JSON_MACRO_ACTION, action)

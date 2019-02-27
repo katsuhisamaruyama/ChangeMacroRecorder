@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -57,7 +57,7 @@ public class MacroJSON {
      * @param macro the macro
      * @return the created JSON object builder
      */
-    protected static JsonObjectBuilder getJSONObjectBuikder(Macro macro) {
+    protected static JsonObjectBuilder getJSONObjectBuilder(Macro macro) {
         String path = "";
         if (macro.getPath() != null) {
             path = macro.getPath();

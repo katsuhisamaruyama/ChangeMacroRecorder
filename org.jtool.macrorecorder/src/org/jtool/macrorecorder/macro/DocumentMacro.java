@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -213,7 +213,7 @@ public class DocumentMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
+        JsonObject json = MacroJSON.getJSONObjectBuilder(this)
           .add(MacroJSON.JSON_ATTR_OFFSET, start)
           .add(MacroJSON.JSON_ATTR_INSERTED_TEXT, insertedText)
           .add(MacroJSON.JSON_ATTR_DELETED_TEXT, deletedText)

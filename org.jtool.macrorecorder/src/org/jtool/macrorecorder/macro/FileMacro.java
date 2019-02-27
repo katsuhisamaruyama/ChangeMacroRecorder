@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -264,7 +264,7 @@ public class FileMacro extends Macro {
      */
     @Override
     public JsonObject getJSON() {
-        JsonObject json = MacroJSON.getJSONObjectBuikder(this)
+        JsonObject json = MacroJSON.getJSONObjectBuilder(this)
           .add(MacroJSON.JSON_ATTR_CODE, code)
           .add(MacroJSON.JSON_ATTR_CHARSET, charset)
           .add(MacroJSON.JSON_ATTR_SRD_DST_PATH, srcDstPath)

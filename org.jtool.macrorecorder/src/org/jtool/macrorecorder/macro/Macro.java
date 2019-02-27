@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2017
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -264,7 +264,7 @@ public class Macro {
      * @return the JSON object
      */
     public JsonObject getJSON() {
-        JsonObject json = MacroJSON.getJSONObjectBuikder(this).build();
+        JsonObject json = MacroJSON.getJSONObjectBuilder(this).build();
         return json;
     }
     
