@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -15,7 +15,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -275,7 +274,7 @@ class GlobalMacroRecorder {
             return "";
         }
         
-        int index = pathname.indexOf(File.separatorChar, 1);
+        int index = pathname.indexOf(PathInfoFinder.separatorChar, 1);
         if (index == -1) {
             return pathname.substring(1);
         }

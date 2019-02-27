@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -25,7 +25,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -461,7 +460,7 @@ class ResourceListener implements IResourceChangeListener {
      * @return  the last segment of the path name
      */
     private String getName(String path) {
-        int sep = path.lastIndexOf(File.separatorChar);
+        int sep = path.lastIndexOf(PathInfoFinder.separatorChar);
         if (sep != -1) {
             return path.substring(sep + 1);
         }

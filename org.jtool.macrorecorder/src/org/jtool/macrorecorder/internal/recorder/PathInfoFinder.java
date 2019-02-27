@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -15,7 +15,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -39,6 +38,12 @@ public class PathInfoFinder {
      * The string value that represents a Java default package.
      */
     public static final String JAVA_DEFAULT_PACKAGE = "(default package)";
+    
+    /**
+     * The filename-separator character.
+     * On both UNIX and Windows systems, the value of this field is <code>'/'</code>.
+     */
+    public static final char separatorChar = '/';
     
     /**
      * Prohibits an object.
@@ -68,7 +73,7 @@ public class PathInfoFinder {
             return "";
         }
         
-        int index = path.indexOf(File.separatorChar, 1);
+        int index = path.indexOf(separatorChar, 1);
         if (index == -1) {
             return path.substring(1);
         }
@@ -87,7 +92,7 @@ public class PathInfoFinder {
             return "";
         }
         
-        int index = path.lastIndexOf(File.separatorChar);
+        int index = path.lastIndexOf(separatorChar);
         if (index == -1 || index == 0) {
             return "";
         }
@@ -104,9 +109,9 @@ public class PathInfoFinder {
             return JAVA_DEFAULT_PACKAGE;
         }
         
-        index = path.lastIndexOf(File.separatorChar);
+        index = path.lastIndexOf(separatorChar);
         path = path.substring(1);
-        return path.replace(File.separatorChar, '.');
+        return path.replace(separatorChar, '.');
     }
     
     /**
@@ -119,7 +124,7 @@ public class PathInfoFinder {
             return "";
         }
         
-        int index = path.lastIndexOf(File.separatorChar);
+        int index = path.lastIndexOf(separatorChar);
         if (index == -1) {
             return "";
         }
