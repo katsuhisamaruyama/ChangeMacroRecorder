@@ -17,7 +17,7 @@ import org.jtool.macrorecorder.recorder.MacroConsole;
  * This is intended to be specified in the extension point of <code>org.jtool.macrorecorder.handlers</code>.
  * <pre><code>
  * <extension point="org.jtool.macrorecorder.handlers">
- *     <handler class="org.jtool.macrorecorder.sample4.SampleMacroPrintHandler">
+ *     <handler class="org.jtool.macrorecorder.sample2.SampleMacroPrintHandler">
  *     </handler>
  *  </extension>
  * </code></pre>
