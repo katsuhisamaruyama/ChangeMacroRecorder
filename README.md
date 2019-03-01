@@ -65,7 +65,7 @@ and put it in the 'plug-ins' directory under the Eclipse. Eclipse needs to be re
 
 ### Checking Installation
 
-Select menu items: "Eclipse" -> "Preferences..." -> "ChangemacroRecorder" and toggle the check boxes for displaying raw and treated change macros.  
+Select menu items: "Eclipse" -> "Preferences..." -> "ChangeMacroRecorder" and toggle the check boxes for displaying raw and/or treated change macros. If you try to post recorded change macros, an HTTP server receiving them is required. See [http_server](<https://github.com/katsuhisamaruyama/ChangeMacroRecorder/tree/master/org.jtool.macrorecorder/http_server>)
 
 <img src="https://user-images.githubusercontent.com/4454230/53639220-f1f45680-3c6b-11e9-876d-4a350cc9ff6f.png" alt="preferences" border="1"/>
 
