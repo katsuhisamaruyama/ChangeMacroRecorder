@@ -27,3 +27,4 @@ Export-Package: org.jtool.macrorecorder.macro,
 Bundle-ClassPath: .,
  lib/javax.json-1.1.jar
 Bundle-Vendor: FSE@Ristumeikan Univ.
+Automatic-Module-Name: org.jtool.macrorecorder

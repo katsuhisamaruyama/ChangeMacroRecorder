@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.ui,
  org.jtool.macrorecorder;bundle-version="1.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.jtool.macrorecorder.sample2
