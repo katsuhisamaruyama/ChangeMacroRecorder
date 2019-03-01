@@ -225,7 +225,7 @@ After writing a listener class, you registers it into the extension point (`org.
 
 To make your work easier, ChangeMacroRecorder provides the Eclipse's "Extension Point Selection" wizard that creates a template of the listener class and registers it. It automatically starts notifying it of recorded macros when Eclipse is activated.  
 
-<img src="https://user-images.githubusercontent.com/4454230/47562786-a434ae00-d95a-11e8-85b3-1ef769dd6dc8.png" width="350px" alt="wizard1" hspace="5px"><img src="https://user-images.githubusercontent.com/4454230/47562816-c0d0e600-d95a-11e8-9b56-33faf2ec06ad.png" width="350px" alt="wizard2" hspace="5px">
+<img src="https://user-images.githubusercontent.com/4454230/53641086-3f26f700-3c71-11e9-8ae6-0aaf98eef606.png" width="350px" alt="wizard1" hspace="5px"><img src="https://user-images.githubusercontent.com/4454230/53641089-4221e780-3c71-11e9-831a-cb206ca32261.png" width="350px" alt="wizard2" hspace="5px">
 
 ## Samples
 
