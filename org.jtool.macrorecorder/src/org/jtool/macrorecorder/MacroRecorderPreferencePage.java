@@ -1,17 +1,18 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
 
 package org.jtool.macrorecorder;
 
+import org.jtool.macrorecorder.recorder.MacroRecorder;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
-import org.jtool.macrorecorder.recorder.MacroRecorder;
 
 /**
  * Manages the preference page.
@@ -28,6 +29,26 @@ public class MacroRecorderPreferencePage extends FieldEditorPreferencePage imple
      * Displays recorded raw macros on the console for debugging.
      */
     static final String DISPLAY_RAW_MACROS = "display.rawmacros";
+    
+    /**
+     * Posts recorded macros for debugging.
+     */
+    static final String POST_MACROS = "post.macros";
+    
+    /**
+     * The URL of a server which macros are posted to.
+     */
+    static final String URL_FOR_POST = "url.post.macros";
+    
+    /**
+     * The boolean editor that specifies whether macros are posted. 
+     */
+    private BooleanFieldEditor postBooleanEditor;
+    
+    /**
+     * The field editor that specifies the URL of a server. 
+     */
+    private StringFieldEditor postFieldEditor;
     
     /**
      * Creates an object for a preference page.
@@ -70,6 +91,34 @@ public class MacroRecorderPreferencePage extends FieldEditorPreferencePage imple
                 macroRecorder.displayRawMacrosOnConsole(getBooleanValue());
             }
         });
+        
+        postBooleanEditor = new BooleanFieldEditor(POST_MACROS,
+                "Posts recorded macros to", getFieldEditorParent()) {
+            
+            /**
+             * Stores the preference value from this field editor into the preference store.
+             */
+            @Override
+            protected void doStore() {
+                super.doStore();
+                postMacros(postBooleanEditor.getBooleanValue(), postFieldEditor.getStringValue());
+            }
+        };
+        addField(postBooleanEditor);
+        
+        postFieldEditor = new StringFieldEditor(URL_FOR_POST, "", getFieldEditorParent()) {
+            
+            /**
+             * Stores the preference value from this field editor into the preference store.
+             */
+            @Override
+            protected void doStore() {
+                super.doStore();
+                postMacros(postBooleanEditor.getBooleanValue(), postFieldEditor.getStringValue());
+            }
+        };
+        postFieldEditor.setEmptyStringAllowed(false);
+        addField(postFieldEditor);
     }
     
     /**
@@ -80,20 +129,30 @@ public class MacroRecorderPreferencePage extends FieldEditorPreferencePage imple
     }
     
     /**
-     * Tests if recorded macros will be displayed.
-     * @return <code>true</code> if the displaying is required, otherwise <code>false</code>
+     * Initializes the values of the stored preference.
      */
-    static boolean displayMacros() {
+    static void init() {
         IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
-        return store.getBoolean(DISPLAY_MACROS);
+        MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
+        macroRecorder.displayMacrosOnConsole(store.getBoolean(DISPLAY_MACROS));
+        macroRecorder.displayRawMacrosOnConsole(store.getBoolean(DISPLAY_RAW_MACROS));
+        postMacros(store.getBoolean(POST_MACROS), store.getString(URL_FOR_POST));
     }
     
     /**
-     * Tests if recorded raw macros will be displayed.
-     * @return <code>true</code> if the displaying is required, otherwise <code>false</code>
+     * Sets the URL of a server which macros are posted to.
+     * @param post <code>true</code> if the posting is required, otherwise <code>false</code>
+     * @param url the URL of the server
      */
-    static boolean displayRawMacros() {
-        IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
-        return store.getBoolean(DISPLAY_RAW_MACROS);
+    private static void postMacros(boolean post, String url) {
+        MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
+        if (post) {
+            if (!url.startsWith("http://")) {
+                url = "http://" + url;
+            }
+            macroRecorder.postMacros(url);
+        } else {
+            macroRecorder.postMacros(null);
+        }
     }
 }

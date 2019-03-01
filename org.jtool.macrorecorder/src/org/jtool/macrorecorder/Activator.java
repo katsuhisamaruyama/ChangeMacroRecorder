@@ -1,5 +1,5 @@
 /*
- *  Copyright 2016-2018
+ *  Copyright 2016-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -41,10 +41,10 @@ public class Activator extends AbstractUIPlugin implements IStartup {
      */
     @Override
     public void earlyStartup() {
+        MacroRecorderPreferencePage.init();
+        
         MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
         macroRecorder.registerHandlers();
-        macroRecorder.displayMacrosOnConsole(MacroRecorderPreferencePage.displayMacros());
-        macroRecorder.displayRawMacrosOnConsole(MacroRecorderPreferencePage.displayRawMacros());
     }
     
     /**
@@ -69,6 +69,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         macroRecorder.unregisterHandlers();
         macroRecorder.displayMacrosOnConsole(false);
         macroRecorder.displayRawMacrosOnConsole(false);
+        macroRecorder.postMacros(null);
         
         super.stop(context);
         plugin = null;

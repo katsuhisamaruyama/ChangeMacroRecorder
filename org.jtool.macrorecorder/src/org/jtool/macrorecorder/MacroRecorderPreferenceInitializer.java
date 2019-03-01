@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017
+ *  Copyright 2017-2019
  *  Software Science and Technology Lab.
  *  Department of Computer Science, Ritsumeikan University
  */
@@ -16,6 +16,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public class MacroRecorderPreferenceInitializer extends AbstractPreferenceInitializer {
     
     /**
+     * The default URL of a server which macros are posted to.
+     */
+    private static final String DEFAULT_URL_FOR_POST = "http://localhost:1337/post";
+    
+    /**
      * Stores initial preference values.
      */
     @Override
@@ -23,5 +28,7 @@ public class MacroRecorderPreferenceInitializer extends AbstractPreferenceInitia
         IPreferenceStore store = Activator.getPlugin().getPreferenceStore();
         store.setDefault(MacroRecorderPreferencePage.DISPLAY_MACROS, false);
         store.setDefault(MacroRecorderPreferencePage.DISPLAY_RAW_MACROS, false);
+        store.setDefault(MacroRecorderPreferencePage.POST_MACROS, false);
+        store.setDefault(MacroRecorderPreferencePage.URL_FOR_POST, DEFAULT_URL_FOR_POST);
     }
 }

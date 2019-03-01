@@ -11,6 +11,11 @@ import org.jtool.macrorecorder.MacroHandlerLoader;
 import org.jtool.macrorecorder.internal.recorder.Notifier;
 import org.jtool.macrorecorder.internal.recorder.Recorder;
 import java.util.List;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
@@ -57,9 +62,14 @@ public class MacroRecorder implements IMacroRecorder {
     private boolean displayRawMacro = false;
     
     /**
+     * The URL of a server which macros are posted to.
+     */
+    private String urlForPost = null;
+    
+    /**
      * A handler that displays recorded change macros.
      */
-    private IMacroListener macroHandlerForConsole = null;
+    private IMacroListener macroHandlerForDebugging = null;
     
     /**
      * Creates an object that records macros.
@@ -207,6 +217,26 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
+     * Sends a change macro event to all the listeners.
+     * @param listener a listener that receives the change macro
+     * @param macro the change macro sent to the listeners
+     */
+    public void notifyMacro(IMacroListener listener, Macro macro) {
+        MacroEvent evt = new MacroEvent(MacroEvent.Type.GENERIC_MACRO, macro);
+        listener.macroAdded(evt);
+    }
+    
+    /**
+     * Sends a raw change macro event to all the listeners.
+     * @param listener a listener that receives the raw change macro
+     * @param macro the raw change macro sent to the listeners
+     */
+    public void notifyRawMacro(IMacroListener listener, Macro macro) {
+        MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);
+        listener.rawMacroAdded(evt);
+    }
+    
+    /**
      * Sets a combinator that combines document macros.
      * @param a listener that receives a change macro event
      * @param combinator the combinator
@@ -225,11 +255,11 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Sets flags that indicate if macros are displayed on the console for debugging.
+     * Sets a flag that indicates if macros are displayed on the console for debugging.
      * @param display <code>true</code> if recorded macros are displayed, otherwise <code>false</code>
      */
     public void displayMacrosOnConsole(boolean display) {
-        setMacroHandlerForConsole(display || displayRawMacro);
+        setMacroHandlerForDebugging(display || displayRawMacro || urlForPost != null);
         displayMacro = display;
         
         if (displayMacro) {
@@ -240,11 +270,11 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Sets flags that indicate if raw macros are displayed on the console for debugging.
+     * Sets a flag that indicates if raw macros are displayed on the console for debugging.
      * @param display <code>true</code> if recorded raw macros are displayed, otherwise <code>false</code>
      */
     public void displayRawMacrosOnConsole(boolean display) {
-        setMacroHandlerForConsole(display || displayMacro);
+        setMacroHandlerForDebugging(display || displayMacro || urlForPost != null);
         displayRawMacro = display;
         
         if (displayRawMacro) {
@@ -255,50 +285,93 @@ public class MacroRecorder implements IMacroRecorder {
     }
     
     /**
-     * Adds or Removes a handler that displays recorded change macros.
-     * @param display <code>true</code> if recorded macros is displayed, otherwise <code>false</code>
+     * Sets the URL of a server for debugging.
+     * @param url the URL of a server which macros are posted to
      */
-    private void setMacroHandlerForConsole(boolean display) {
-        if (macroHandlerForConsole == null && display) {
-            macroHandlerForConsole = new IMacroListener() {
+    public void postMacros(String url) {
+        setMacroHandlerForDebugging(url != null || displayMacro || displayRawMacro);
+        urlForPost = url;
+        
+        if (urlForPost != null) {
+            start();
+        } else {
+            stop();
+        }
+    }
+    
+    /**
+     * Adds or removes a handler that displays recorded change macros.
+     * @param addition <code>true</code> if the handler is added, otherwise <code>false</code>
+     */
+    private void setMacroHandlerForDebugging(boolean addition) {
+        if (macroHandlerForDebugging == null && addition) {
+            macroHandlerForDebugging = new IMacroListener() {
+                
+                /**
+                 * Receives an event when a new change macro is added.
+                 * @param evt the macro event
+                 */
                 public void macroAdded(MacroEvent evt) {
                     if (displayMacro) {
                         MacroConsole.println(evt.getMacro().getDescription());
                     }
+                    if (urlForPost != null) {
+                        postMacro(evt.getMacro().getDescription());
+                    }
                 }
                 
+                /**
+                 * Receives an event when a new raw change macro is added.
+                 * @param evt the raw macro event
+                 */
                 public void rawMacroAdded(MacroEvent evt) {
                     if (displayRawMacro) {
                         MacroConsole.println("- " + evt.getMacro().getDescription());
                     }
+                    if (urlForPost != null) {
+                        postMacro("- " + evt.getMacro().getDescription());
+                    }
                 }
             };
-            addMacroListener(macroHandlerForConsole);
+            addMacroListener(macroHandlerForDebugging);
             
-        } if (macroHandlerForConsole != null && !display) {
-            removeMacroListener(macroHandlerForConsole);
-            macroHandlerForConsole = null;
+        } if (macroHandlerForDebugging != null && !addition) {
+            removeMacroListener(macroHandlerForDebugging);
+            macroHandlerForDebugging = null;
         }
     }
     
-    
     /**
-     * Sends a change macro event to all the listeners.
-     * @param listener a listener that receives the change macro
-     * @param macro the change macro sent to the listeners
+     * Posts macros to a server.
+     * @param description the description of the macro to be posted
      */
-    public void notifyMacro(IMacroListener listener, Macro macro) {
-        MacroEvent evt = new MacroEvent(MacroEvent.Type.GENERIC_MACRO, macro);
-        listener.macroAdded(evt);
-    }
-    
-    /**
-     * Sends a raw change macro event to all the listeners.
-     * @param listener a listener that receives the raw change macro
-     * @param macro the raw change macro sent to the listeners
-     */
-    public void notifyRawMacro(IMacroListener listener, Macro macro) {
-        MacroEvent evt = new MacroEvent(MacroEvent.Type.RAW_MACRO, macro);
-        listener.rawMacroAdded(evt);
+    private void postMacro(String description) {
+        try {
+            URL url = new URL(urlForPost);
+            HttpURLConnection connection = null;
+            
+            try {
+                connection = (HttpURLConnection)url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/plain; charset=utf-8");
+                connection.setRequestProperty("Content-Length", String.valueOf(description.length()));
+                
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
+                writer.write(description);
+                writer.flush();
+                
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    MacroConsole.println("POST FAILURE: " + description);
+                }
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            
+        } catch (IOException e) {
+            MacroConsole.println("POST FAILURE: " + description);
+        }
     }
 }
