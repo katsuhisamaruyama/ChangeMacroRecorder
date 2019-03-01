@@ -32,7 +32,8 @@ Recorded change macros include more detailed information such as the inserted an
 
 You can see change macros on the console, which were recorded by ChangeMacroRecorder.
 
-<img src="https://user-images.githubusercontent.com/4454230/47577000-cc370800-d980-11e8-91fe-46ab22c5f419.png" width="800px" alt="screenshot" border="1"/>
+<img src="https://user-images.githubusercontent.com/4454230/53638830-e3596f80-3c6a-11e9-989c-871d8c2d447a.png" width="800px" alt="screenshot" border="1"/> 
+
 
 The following four [demonstrations](<http://www.jtool.org/cmr/demos/demo.html>) are available.  
 
@@ -66,7 +67,7 @@ and put it in the 'plug-ins' directory under the Eclipse. Eclipse needs to be re
 
 Select menu items: "Eclipse" -> "Preferences..." -> "ChangemacroRecorder" and toggle the check boxes for displaying raw and treated change macros.  
 
-<img src="https://user-images.githubusercontent.com/4454230/53064667-0158fe80-350c-11e9-8c13-f318723f25fc.jpg" alt="preferences" border="1"/>
+<img src="https://user-images.githubusercontent.com/4454230/53639220-f1f45680-3c6b-11e9-876d-4a350cc9ff6f.png" alt="preferences" border="1"/>
 
 ## Usage
 
