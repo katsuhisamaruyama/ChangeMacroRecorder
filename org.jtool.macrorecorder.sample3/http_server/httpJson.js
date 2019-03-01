@@ -1,7 +1,7 @@
 // 
 // A simple server for testing HTTP POST requests
 // This program for node.js. To run,
-//   % node http.js
+//   % node httpJson.js
 
 const http = require('http');
 const port = 1337;
@@ -15,7 +15,6 @@ const server = http.createServer(function (request, response) {
         response.end('This is a ChangeMacroRecorder HTTP server!\n');
 
     } else if (request.method === 'POST') {
-
         request.on("data", function(chunk) {
             const data = JSON.parse(chunk);            
             console.log(data);            
@@ -25,7 +24,8 @@ const server = http.createServer(function (request, response) {
     
     } else {
         respond.statusCode = 404;
-        response.end(JSON.stringify({ 'result': 'Not Found!' }));
+        response.writeHead(404, {'Content-Type': 'text/plain; charset=utf-8'});
+        response.end('Not Found\n');
     }
 });
 server.listen(1337, '127.0.0.1');
