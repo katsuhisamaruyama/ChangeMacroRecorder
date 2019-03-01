@@ -67,7 +67,7 @@ public class SampleMacroPostHandler implements IMacroHandler {
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
+                connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
                 connection.setRequestProperty("Content-Length", String.valueOf(jsonString.length()));
                 
                 OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
