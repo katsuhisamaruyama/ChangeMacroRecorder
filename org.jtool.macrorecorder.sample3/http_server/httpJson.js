@@ -16,8 +16,8 @@ const server = http.createServer(function (request, response) {
 
     } else if (request.method === 'POST') {
         request.on("data", function(chunk) {
-            const data = JSON.parse(chunk);            
-            console.log(data);            
+            const data = JSON.parse(chunk);
+            console.log(data);
             response.statusCode = 200;
             response.end(JSON.stringify({ 'result': 'Ok' }));
         });
