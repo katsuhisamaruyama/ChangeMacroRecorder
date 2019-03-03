@@ -8,7 +8,6 @@ package org.jtool.macrorecorder.internal.recorder;
 
 import org.jtool.macrorecorder.macro.FileMacro;
 import org.jtool.macrorecorder.macro.GitMacro;
-import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.events.IndexChangedListener;
@@ -104,28 +103,24 @@ class GitRepositoryListener implements RefsChangedListener, IndexChangedListener
             if (macro != null) {
                 globalRecorder.recordMacro(macro);
                 
-                TriggerMacro bmacro = new TriggerMacro(TriggerMacro.Action.GIT, macro.getMacroPath(), TriggerMacro.Timing.BEGIN);
-                globalRecorder.recordTriggerMacro(bmacro);
                 Status status = git.status().call();
                 String branch = macro.getBranch();
                 
                 for (String path : status.getAdded()) {
-                    FileMacro fmacro = new FileMacro(FileMacro.Action.ADDED_GIT_INDEX_CHANGED,
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_ADDED_INDEX_CHANGED,
                             PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
-                    globalRecorder.recordMacro(fmacro);
+                    globalRecorder.recordRawMacro(fmacro);
                 }
                 for (String path : status.getRemoved()) {
-                    FileMacro fmacro = new FileMacro(FileMacro.Action.REMOVED_GIT_INDEX_CHANGED,
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_REMOVED_INDEX_CHANGED,
                             PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
-                    globalRecorder.recordMacro(fmacro);
+                    globalRecorder.recordRawMacro(fmacro);
                 }
                 for (String path : status.getModified()) {
-                    FileMacro fmacro = new FileMacro(FileMacro.Action.MODIFIED_GIT_INDEX_CHANGED,
+                    FileMacro fmacro = new FileMacro(FileMacro.Action.GIT_MODIFIED_INDEX_CHANGED,
                             PathInfoFinder.getMacroPath(path, branch), "", "UTF-8");
-                    globalRecorder.recordMacro(fmacro);
+                    globalRecorder.recordRawMacro(fmacro);
                 }
-                TriggerMacro emacro = new TriggerMacro(TriggerMacro.Action.GIT, macro.getMacroPath(), TriggerMacro.Timing.END);
-                globalRecorder.recordTriggerMacro(emacro);
             }
         } catch (NoWorkTreeException e) { /* empty */
         } catch (GitAPIException e) { /* empty */ }

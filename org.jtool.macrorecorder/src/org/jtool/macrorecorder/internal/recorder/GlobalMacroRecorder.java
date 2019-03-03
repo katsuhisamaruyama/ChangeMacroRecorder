@@ -287,6 +287,15 @@ class GlobalMacroRecorder {
      * @param macro the macro to be recorded
      */
     void recordMacro(Macro macro) {
+        recordRawMacro(macro);
+        recorder.recordMacro(macro);
+    }
+    
+    /**
+     * Records a raw macro.
+     * @param macro the raw macro to be recorded
+     */
+    void recordRawMacro(Macro macro) {
         String path = macro.getPath();
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
@@ -294,12 +303,11 @@ class GlobalMacroRecorder {
         }
         
         recorder.recordRawMacro(macro);
-        recorder.recordMacro(macro);
     }
     
     /**
-     * Records a resource macro.
-     * @param macro the resource macro to be recorded
+     * Records a command macro.
+     * @param macro the command macro to be recorded
      */
     void recordCommandMacro(CommandMacro macro) {
         String path = macro.getPath();

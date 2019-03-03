@@ -21,7 +21,7 @@ public class FileMacro extends Macro {
     public enum Action {
         ADDED, REMOVED, OPENED, CLOSED, SAVED, ACTIVATED, REFACTORED,
         MOVED_FROM, MOVED_TO, RENAMED_FROM, RENAMED_TO, CONTENT_CHANGED,
-        ADDED_GIT_INDEX_CHANGED, REMOVED_GIT_INDEX_CHANGED, MODIFIED_GIT_INDEX_CHANGED;
+        GIT_ADDED_INDEX_CHANGED, GIT_REMOVED_INDEX_CHANGED, GIT_MODIFIED_INDEX_CHANGED;
     }
     
     /**
@@ -226,7 +226,7 @@ public class FileMacro extends Macro {
      * @return <code>true</code> if this macro adds a file to the git repository, otherwise <code>false</code>
      */
     public boolean isGitAdded() {
-        return action.equals(Action.ADDED_GIT_INDEX_CHANGED.toString());
+        return action.equals(Action.GIT_ADDED_INDEX_CHANGED.toString());
     }
     
     /**
@@ -234,7 +234,7 @@ public class FileMacro extends Macro {
      * @return <code>true</code> if this macro removes a file from the git repository, otherwise <code>false</code>
      */
     public boolean isGitRemoved() {
-        return action.equals(Action.REMOVED_GIT_INDEX_CHANGED.toString());
+        return action.equals(Action.GIT_REMOVED_INDEX_CHANGED.toString());
     }
     
     /**
@@ -242,7 +242,7 @@ public class FileMacro extends Macro {
      * @return <code>true</code> if this macro modifies a file within the git repository, otherwise <code>false</code>
      */
     public boolean isGitModified() {
-        return action.equals(Action.MODIFIED_GIT_INDEX_CHANGED.toString());
+        return action.equals(Action.GIT_MODIFIED_INDEX_CHANGED.toString());
     }
     
     /**
