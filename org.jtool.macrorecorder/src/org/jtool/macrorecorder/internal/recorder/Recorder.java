@@ -11,6 +11,7 @@ import org.jtool.macrorecorder.recorder.IDocMacroCombinator;
 import org.jtool.macrorecorder.recorder.MacroConsole;
 import org.jtool.macrorecorder.macro.CompoundMacro;
 import org.jtool.macrorecorder.macro.DocumentMacro;
+import org.jtool.macrorecorder.macro.CancelMacro;
 import org.jtool.macrorecorder.macro.TriggerMacro;
 import org.jtool.macrorecorder.macro.Macro;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -326,7 +327,7 @@ public class Recorder {
         }
         
         IDocMacroCombinator combinator = notifier.getDocMacroCombinator();
-        if (combinator.canCombine(macro)) {
+        if (!(macro instanceof CancelMacro) && combinator.canCombine(macro)) {
             DocumentMacro newMacro = combinator.combine(notifier.getLastDocumentMacro(), macro);
             if (newMacro != null) {
                 notifier.setLastDocumentMacro(newMacro);
