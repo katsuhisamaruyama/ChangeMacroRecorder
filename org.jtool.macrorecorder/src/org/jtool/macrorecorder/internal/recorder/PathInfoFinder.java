@@ -57,6 +57,10 @@ public class PathInfoFinder {
      * @param branch the branch of the resource
      */
     public static MacroPath getMacroPath(String path, String branch) {
+        if (path.charAt(0) != separatorChar) {
+            path = separatorChar + path;
+        }
+        
         String projectName = getProjectName(path);
         String packageName = getPackageName(projectName, path);
         String fileName = getFileName(path);
