@@ -57,6 +57,10 @@ public class PathInfoFinder {
      * @param branch the branch of the resource
      */
     public static MacroPath getMacroPath(String path, String branch) {
+        if (path == null || path.length() == 0) {
+            return new MacroPath(path, branch, "", "", "");
+        }
+        
         if (path.charAt(0) != separatorChar) {
             path = separatorChar + path;
         }
@@ -73,10 +77,6 @@ public class PathInfoFinder {
      * @return the project name of the resource, or an empty string if the path is invalid
      */
     private static String getProjectName(String path) {
-        if (path == null || path.length() == 0) {
-            return "";
-        }
-        
         int index = path.indexOf(separatorChar, 1);
         if (index == -1) {
             return path.substring(1);
@@ -92,7 +92,7 @@ public class PathInfoFinder {
      * @return the package name of the resource, or an empty string if the path is invalid
      */
     public static String getPackageName(String projectName, String path) {
-        if (path == null || path.length() == 0 || projectName == null || projectName.length() == 0) {
+        if (projectName == null || projectName.length() == 0) {
             return "";
         }
         
@@ -124,7 +124,7 @@ public class PathInfoFinder {
      * @return the file name of the resource without its location information
      */
     private static String getFileName(String path) {
-        if (path == null || path.length() == 0 || !path.endsWith(JAVA_FILE_EXT)) {
+        if (!path.endsWith(JAVA_FILE_EXT)) {
             return "";
         }
         
