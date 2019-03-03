@@ -122,26 +122,6 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     void recordDocumentMacro(DocumentMacro macro) {
         recorder.recordRawMacro(macro);
         dumpMacro(macro);
-        
-        /*
-        if (macro.isCut() || macro.isPaste()) {
-            dumpMacro(macro);
-            return;
-        }
-        
-        if (compressor.canCombine(macro)) {
-            DocumentMacro newMacro = compressor.combine(lastDocumentMacro, macro);
-            if (newMacro != null) {
-                lastDocumentMacro = newMacro;
-            } else {
-                dumpLastDocumentMacro();
-                lastDocumentMacro = macro;
-            }
-            
-        } else {
-            dumpMacro(macro);
-        }
-        */
     }
     
     /**
