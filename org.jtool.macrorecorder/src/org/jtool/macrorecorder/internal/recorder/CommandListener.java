@@ -116,10 +116,14 @@ class CommandListener implements IExecutionListener {
      */
     private boolean isCommandToBeRecorded(ExecutionEvent event) {
         try {
+            
+            System.out.println(event.getCommand().getCategory().getId());
+            
             String commandCategory = event.getCommand().getCategory().getId();
             if (commandCategory.endsWith("category.file") ||
                 commandCategory.endsWith("category.edit") ||
-                commandCategory.endsWith("category.refactoring")) {
+                commandCategory.endsWith("category.refactoring") || 
+                commandCategory.endsWith("org.eclipse.egit.ui.commandCategory")) {
                 return true;
             }
         } catch (NotDefinedException e) { /* empty */ }
