@@ -62,11 +62,6 @@ class DocMacroRecorder {
     protected CompoundMacro compoundMacro;
     
     /**
-     * The last document macro stored for macro compression.
-     */
-    protected DocumentMacro lastDocumentMacro;
-    
-    /**
      * The previous contents of the source code.
      */
     protected String preCode = "";
@@ -111,7 +106,6 @@ class DocMacroRecorder {
     void start() {
         rawMacros.clear();
         compoundMacro = null;
-        lastDocumentMacro = null;
     }
     
     /**
@@ -119,6 +113,7 @@ class DocMacroRecorder {
      */
     void stop() {
         dumpLastDocumentMacro();
+        
         rawMacros.clear();
         applyDiff(false);
         
@@ -220,8 +215,9 @@ class DocMacroRecorder {
      */
     void recordCodeCompletionMacro(CodeCompletionMacro macro) {
         dumpLastDocumentMacro();
+        
         recorder.recordRawMacro(macro);
-        recordMacro(macro);
+        dumpMacro(macro);
     }
     
     /**
@@ -245,8 +241,9 @@ class DocMacroRecorder {
      */
     void recordTriggerMacro(TriggerMacro macro) {
         dumpLastDocumentMacro();
+        
         recorder.recordRawMacro(macro);
-        recordMacro(macro);
+        dumpMacro(macro);
     }
     
     /**
@@ -289,38 +286,19 @@ class DocMacroRecorder {
     }
     
     /**
-     * Dumps the last macro.
+     * Dumps the last document macro.
      */
     void dumpLastDocumentMacro() {
-        if (lastDocumentMacro != null) {
-            
-            if (!hasInconsistency(preCode, lastDocumentMacro)) {
-                recordMacro(lastDocumentMacro);
-                applyMacro(lastDocumentMacro);
-                
-                lastDocumentMacro = null;
-            }
-        }
+        recorder.dumpLastDocumentMacro();
     }
     
     /**
-     * Dumps both the last macro and the latest one.
-     * @param macro the latest macro
+     * Dumps a macro.
+     * @param macro the macro
      */
     void dumpMacro(Macro macro) {
-        dumpLastDocumentMacro();
+        checkMacro(macro);
         
-        if (!hasInconsistency(preCode, macro)) {
-            recordMacro(macro);
-            applyMacro(macro);
-        }
-    }
-    
-    /**
-     * Notifies a macro.
-     * @param macro the macro to be recorded
-     */
-    void recordMacro(Macro macro) {
         if (macro instanceof TriggerMacro) {
             TriggerMacro tmacro = (TriggerMacro)macro;
             if (compoundMacro == null && tmacro.isBegin()) {
@@ -408,46 +386,37 @@ class DocMacroRecorder {
     }
     
     /**
-     * Applies a specified normal operation into given code.
+     * Checks if a macro can be uneventfully applied.
      * @param macro the macro to be applied
+     * @return <code>true</code> if the macro can be applied, otherwise <code>false</code>
      */
-    boolean applyMacro(Macro macro) {
-        if (!(macro instanceof DocumentMacro)) {
-            return false;
+    private boolean checkMacro(Macro macro) {
+        if (macro instanceof DocumentMacro) {
+            DocumentMacro dmacro = (DocumentMacro)macro;
+            if (hasInconsistency(dmacro)) {
+                return false;
+            } else {
+                return applyMacro(dmacro);
+            }
         }
-        
-        DocumentMacro dmacro = (DocumentMacro)macro;
-        StringBuilder postCode = new StringBuilder(preCode);
-        
-        int start = dmacro.getStart();
-        int end = start + dmacro.getDeletedText().length();
-        String itext = dmacro.getInsertedText();
-        postCode.replace(start, end, itext);
-        preCode = postCode.toString();
         return true;
     }
     
     /**
-     * Tests if the deletion derives any inconsistency.
-     * @param code the code before the application
-     * @param macro the macro to be applied
+     * Tests if the application of a document macro causes any inconsistency.
+     * @param macro the document macro to be applied
      * @return <code>true</code> if a inconsistency exists, otherwise <code>false</code>
      */
-    private boolean hasInconsistency(String code, Macro macro) {
-        if (!(macro instanceof DocumentMacro)) {
-            return false;
-        }
-        
-        DocumentMacro dmacro = (DocumentMacro)macro;
-        int start = dmacro.getStart();
-        if (start > code.length()) {
+    private boolean hasInconsistency(DocumentMacro macro) {
+        int start = macro.getStart();
+        if (start > preCode.length()) {
             return true;
         }
         
-        String dtext = dmacro.getDeletedText();
+        String dtext = macro.getDeletedText();
         int end = start + dtext.length();
         if (dtext.length() > 0) {
-            String rtext = code.substring(start, end);
+            String rtext = preCode.substring(start, end);
             if (rtext != null && !rtext.equals(dtext)) {
                 
                 for (int i = 0; i < rtext.length(); i++) {
@@ -461,5 +430,23 @@ class DocMacroRecorder {
             }
         }
         return false;
+    }
+    
+    /**
+     * Applies a document macro to previous code.
+     * @param macro the document macro to be applied
+     */
+    private boolean applyMacro(DocumentMacro macro) {
+        StringBuilder postCode = new StringBuilder(preCode);
+        int start = macro.getStart();
+        int end = start + macro.getDeletedText().length();
+        String itext = macro.getInsertedText();
+        try {
+            postCode.replace(start, end, itext);
+            preCode = postCode.toString();
+            return true;
+        } catch (StringIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 }

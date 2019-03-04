@@ -291,6 +291,19 @@ public class Recorder {
     }
     
     /**
+     * Dumps the last macro.
+     */
+    void dumpLastDocumentMacro() {
+        for (Notifier notifier : macroRecorder.getNotifiers()) {
+            DocumentMacro lastDocumentMacro = notifier.getLastDocumentMacro();
+            if (lastDocumentMacro != null) {
+                macroRecorder.notifyMacro(notifier.getMacroListener(), lastDocumentMacro);
+                notifier.setLastDocumentMacro(null);
+            }
+        }
+    }
+    
+    /**
      * Sends a macro event to all the listeners.
      * @param macro the macro sent to the listeners
      */
@@ -320,7 +333,7 @@ public class Recorder {
      * Records a document macro.
      * @param macro the document macro to be recorded
      */
-    void notifyDocMacro(Notifier notifier, DocumentMacro macro) {
+    private void notifyDocMacro(Notifier notifier, DocumentMacro macro) {
         if (macro.isCut() || macro.isPaste()) {
             macroRecorder.notifyMacro(notifier.getMacroListener(), macro);
             return;
@@ -332,12 +345,15 @@ public class Recorder {
             if (newMacro != null) {
                 notifier.setLastDocumentMacro(newMacro);
             } else {
-                macroRecorder.notifyMacro(notifier.getMacroListener(), notifier.getLastDocumentMacro());
-                notifier.setLastDocumentMacro(macro);
+                DocumentMacro lastDocumentMacro = notifier.getLastDocumentMacro();
+                if (lastDocumentMacro != null) {
+                    macroRecorder.notifyMacro(notifier.getMacroListener(), lastDocumentMacro);
+                    notifier.setLastDocumentMacro(macro);
+                }
             }
             
         } else {
-            Macro lastDocumentMacro = notifier.getLastDocumentMacro();
+            DocumentMacro lastDocumentMacro = notifier.getLastDocumentMacro();
             if (lastDocumentMacro != null) {
                 macroRecorder.notifyMacro(notifier.getMacroListener(), lastDocumentMacro);
                 notifier.setLastDocumentMacro(null);
