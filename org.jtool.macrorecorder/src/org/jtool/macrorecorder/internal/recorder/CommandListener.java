@@ -116,9 +116,6 @@ class CommandListener implements IExecutionListener {
      */
     private boolean isCommandToBeRecorded(ExecutionEvent event) {
         try {
-            
-            System.out.println(event.getCommand().getCategory().getId());
-            
             String commandCategory = event.getCommand().getCategory().getId();
             if (commandCategory.endsWith("category.file") ||
                 commandCategory.endsWith("category.edit") ||
