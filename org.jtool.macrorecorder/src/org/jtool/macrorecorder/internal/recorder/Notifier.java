@@ -30,7 +30,7 @@ public class Notifier {
     /**
      * The last document macro stored for char concatenation.
      */
-    private DocumentMacro lastDocumentMacro;
+    private DocumentMacro lastDocumentMacro = null;
     
     /**
      * Creates an agent that records macros for each listener.
