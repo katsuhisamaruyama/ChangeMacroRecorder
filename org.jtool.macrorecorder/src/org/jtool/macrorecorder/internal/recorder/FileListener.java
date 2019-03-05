@@ -100,6 +100,7 @@ class FileListener implements IPartListener {
         IEditorPart editor = (IEditorPart)part;
         String path = EditorUtilities.getInputFilePath(editor);
         String branch = globalRecorder.getBranch(path);
+        
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
             docRecorder.applyDiff(false);
@@ -131,18 +132,19 @@ class FileListener implements IPartListener {
         if (path.equals(prevFilePath)) {
             return;
         }
-        String code = getCode(editor);
-        String charset = getCharset(editor);
         String branch = globalRecorder.getBranch(path);
-        
-        FileMacro macro = new FileMacro(FileMacro.Action.ACTIVATED,
-                PathInfoFinder.getMacroPath(path, branch), code, charset);
-        globalRecorder.recordMacro(macro);
-        prevFilePath = path;
         
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
         if (docRecorder != null) {
             docRecorder.applyDiff(false);
+            
+            String code = getCode(editor);
+            String charset = getCharset(editor);
+            
+            FileMacro macro = new FileMacro(FileMacro.Action.ACTIVATED,
+                    PathInfoFinder.getMacroPath(path, branch), code, charset);
+            globalRecorder.recordMacro(macro);
+            prevFilePath = path;
         }
     }
     
