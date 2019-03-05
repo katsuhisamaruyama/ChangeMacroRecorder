@@ -32,7 +32,7 @@ Recorded change macros include more detailed information such as the inserted an
 
 You can see change macros on the console, which were recorded by ChangeMacroRecorder.
 
-<img src="https://user-images.githubusercontent.com/4454230/53638830-e3596f80-3c6a-11e9-989c-871d8c2d447a.png" width="800px" alt="screenshot" border="1"/> 
+<img src="https://user-images.githubusercontent.com/4454230/53783535-5443a480-3f55-11e9-8c07-35297ec220dc.png" width="800px" alt="screenshot" border="1"/> 
 
 
 The following four [demonstrations](<http://www.jtool.org/cmr/demos/demo.html>) are available.  
