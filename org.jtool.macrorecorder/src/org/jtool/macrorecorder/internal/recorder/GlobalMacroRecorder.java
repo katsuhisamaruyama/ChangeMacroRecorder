@@ -346,19 +346,19 @@ class GlobalMacroRecorder {
         String path = macro.getPath();
         DocMacroRecorder docRecorder = recorder.getDocMacroRecorder(path);
         
-        if (macro.cursorChanged()) {
-            if (docRecorder != null) {
-                docRecorder.cancelCodeCompletion();
-            }
-            cancelRefactoring();
-        }
-        
         if (docRecorder != null) {
             docRecorder.recordTriggerMacro(macro);
         } else {
             recorder.recordRawMacro(macro);
         }
         recorder.recordMacro(macro);
+        
+        if (macro.cursorChanged()) {
+            if (docRecorder != null) {
+                docRecorder.cancelCodeCompletion();
+            }
+            cancelRefactoring();
+        }
     }
     
     /**
