@@ -85,11 +85,13 @@ class CodeCompletionListener implements ICompletionListener, ICompletionListener
         MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
         String commandId = event.assistant.getClass().getCanonicalName();
         
+        TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CODE_COMPLETION, mpath, TriggerMacro.Timing.BEGIN);
+        docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
+        
         CodeCompletionMacro.Action action = CodeCompletionMacro.Action.CONTENT_ASSIST_BEGIN;
         codeCompletionMacro = new CodeCompletionMacro(action, PathInfoFinder.getMacroPath(path, branch), commandId);
         
-        TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CODE_COMPLETION, mpath, TriggerMacro.Timing.BEGIN);
-        docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
+        docRecorder.recordCodeCompletionMacro(codeCompletionMacro);
         
         this.contentAssistActive = false;
     }
@@ -147,10 +149,6 @@ class CodeCompletionListener implements ICompletionListener, ICompletionListener
                 compoundMacro.addMacro(macro);
             }
         }
-        
-        docRecorder.recordCodeCompletionMacro(codeCompletionMacro);
-        compoundMacro.removeMacro(compoundMacro.getMacroNumber() - 1);
-        compoundMacro.addMacro(0, codeCompletionMacro);
         
         TriggerMacro tmacro = new TriggerMacro(TriggerMacro.Action.CODE_COMPLETION, mpath, TriggerMacro.Timing.END);
         docRecorder.getGlobalMacroRecorder().recordTriggerMacro(tmacro);
