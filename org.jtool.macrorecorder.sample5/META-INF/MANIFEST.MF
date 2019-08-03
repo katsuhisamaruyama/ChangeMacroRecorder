@@ -10,3 +10,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.13.200"
 Automatic-Module-Name: org.jtool.macrorecorder.sample5
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.jtool.macrorecorder.sample5
