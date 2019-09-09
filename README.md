@@ -1,8 +1,6 @@
 # ChangeMacroRecorder
 
-An Eclipse plug-in that automatically records fine-grained textual changes of Java source code
-
-ChangeMacroRecorder is an Eclipse plug-in that automatically records fine-grained textual changes of source code and actions involving those changes while programmers (developers or maintainers) write and modify their source code.
+An Eclipse plug-in that automatically records fine-grained textual changes of source code and actions involving those changes while programmers (developers or maintainers) write and modify their source code.
 
 ### Changes
 
@@ -215,7 +213,7 @@ Besides the basic usage of manually starting and stopping receiving macros, an e
 
 The method `initialize()` is invoked when Eclipse is activated (not the time when ChangeMacroRecorder starts), and the method `terminate()` is invoked when Eclipse stops. The method <code>recordingAllowed()</code> is responsible for determining whether the change recording is allowed or not. A listener instance is successfully registered if <code>true</code> is returned, otherwise it is never registered.  
 
-After writing a listener class, you registers it into the extension point (`org.jtool.macrorecorder.handlers`) of the plug-in configuration file. For the listener class `SampleMacroHandler`, the following code is described in `plugin.xml`.  
+After writing a listener class, you register it into the extension point (`org.jtool.macrorecorder.handlers`) of the plug-in configuration file. For the listener class `SampleMacroHandler`, the following code is described in `plugin.xml`.  
 
     <extension
           point="org.jtool.macrorecorder.handlers">
