@@ -17,7 +17,7 @@ public class DocMacroCombinator implements IDocMacroCombinator {
     /**
      * Defines the default delimiters
      */
-    protected final String DEFAULT_DELIMITERS = "\n\r ,.;()[]{}";
+    protected final String DEFAULT_DELIMITERS = "\n\r \t,.;()[]{}";
     
     /**
      * The collection of characters that represent delimiters.
