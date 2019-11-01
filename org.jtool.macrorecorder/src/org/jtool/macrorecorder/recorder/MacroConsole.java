@@ -15,7 +15,7 @@ import org.eclipse.ui.console.MessageConsoleStream;
 /**
  * Displays a dialog with a message.
  * @author Katsuhisa Maruyama
- */;;
+ */
 public class MacroConsole {
     
     /**
