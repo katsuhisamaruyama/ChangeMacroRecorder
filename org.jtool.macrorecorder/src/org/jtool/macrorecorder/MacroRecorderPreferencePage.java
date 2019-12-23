@@ -136,7 +136,7 @@ public class MacroRecorderPreferencePage extends FieldEditorPreferencePage imple
         MacroRecorder macroRecorder = (MacroRecorder)MacroRecorder.getInstance();
         macroRecorder.displayMacrosOnConsole(store.getBoolean(DISPLAY_MACROS));
         macroRecorder.displayRawMacrosOnConsole(store.getBoolean(DISPLAY_RAW_MACROS));
-        postMacros(store.getBoolean(POST_MACROS), store.getString(URL_FOR_POST));
+        postMacros(false, store.getString(URL_FOR_POST));
     }
     
     /**
