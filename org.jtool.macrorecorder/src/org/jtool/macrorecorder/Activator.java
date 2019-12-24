@@ -69,7 +69,7 @@ public class Activator extends AbstractUIPlugin implements IStartup {
         macroRecorder.unregisterHandlers();
         macroRecorder.displayMacrosOnConsole(false);
         macroRecorder.displayRawMacrosOnConsole(false);
-        macroRecorder.postMacros(null);
+        macroRecorder.postMacroOnURL(null);
         
         super.stop(context);
         plugin = null;

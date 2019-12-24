@@ -150,9 +150,9 @@ public class MacroRecorderPreferencePage extends FieldEditorPreferencePage imple
             if (!url.startsWith("http://")) {
                 url = "http://" + url;
             }
-            macroRecorder.postMacros(url);
+            macroRecorder.postMacroOnURL(url);
         } else {
-            macroRecorder.postMacros(null);
+            macroRecorder.postMacroOnURL(null);
         }
     }
 }

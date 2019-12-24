@@ -288,7 +288,7 @@ public class MacroRecorder implements IMacroRecorder {
      * Sets the URL of a server for debugging.
      * @param url the URL of a server which macros are posted to
      */
-    public void postMacros(String url) {
+    public void postMacroOnURL(String url) {
         setMacroHandlerForDebugging(url != null || displayMacro || displayRawMacro);
         urlForPost = url;
         
