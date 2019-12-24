@@ -221,7 +221,7 @@ public class Macro {
             return "NULL";
         }
         
-        final int LESS_LEN = 20;
+        final int LESS_LEN = 100;
         String text2;
         if (text.length() > LESS_LEN) {
             text2 = text.substring(0, LESS_LEN) + "...";
