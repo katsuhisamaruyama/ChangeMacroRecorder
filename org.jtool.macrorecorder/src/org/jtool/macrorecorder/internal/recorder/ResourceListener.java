@@ -104,7 +104,7 @@ class ResourceListener implements IResourceChangeListener {
                     if (resource.getType() == IResource.FILE) {
                         if (globalRecorder.getSaveInProgress()) { 
                             String branch = globalRecorder.getBranch(path);
-                            String code = getCode(resource);
+                            String code = getCurrentCode(resource);
                             String charset = getCharset(resource);
                             
                             FileMacro macro = new FileMacro(FileMacro.Action.SAVED,
@@ -113,7 +113,7 @@ class ResourceListener implements IResourceChangeListener {
                             
                         } else if (globalRecorder.getRefactoringInProgress()) {
                             String branch = globalRecorder.getBranch(path);
-                            String code = getCode(resource);
+                            String code = getCurrentCode(resource);
                             String charset = getCharset(resource);
                             
                             FileMacro macro = new FileMacro(FileMacro.Action.REFACTORED,
@@ -153,7 +153,7 @@ class ResourceListener implements IResourceChangeListener {
         MacroPath mpath = PathInfoFinder.getMacroPath(path, branch);
         
         IResource resource = delta.getResource();
-        String code = getCode(resource);
+        String code = getCurrentCode(resource);
         String charset = getCharset(resource);
         
         ResourceMacro rmacro = null;
@@ -184,12 +184,13 @@ class ResourceListener implements IResourceChangeListener {
         
         if (ftype == FileMacro.Action.MOVED_FROM || ftype == FileMacro.Action.RENAMED_FROM) {
             String preCode = getPrevCode(resource);
+            String curCode = getCurrentCode(resource);
             
             FileMacro fmacro = new FileMacro(ftype, mpath, preCode, charset, fromPath);
             globalRecorder.recordMacro(fmacro);
             
             docRecorder.setPreCode(preCode);
-            docRecorder.applyDiff(true);
+            docRecorder.applyDiff(curCode, true);
             
         } else {
             FileMacro fmacro = new FileMacro(ftype, mpath, "", charset, path);
@@ -349,7 +350,7 @@ class ResourceListener implements IResourceChangeListener {
         }
         
         String preCode = getPrevCode(resource);
-        String code = getCode(resource);
+        String curCode = getCurrentCode(resource);
         String charset = getCharset(resource);
         
         if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
@@ -361,10 +362,10 @@ class ResourceListener implements IResourceChangeListener {
         ResourceMacro rmacro = new ResourceMacro(ResourceMacro.Action.CHANGED, mpath, target, path);
         globalRecorder.recordMacro(rmacro);
         
-        FileMacro fmacro = new FileMacro(FileMacro.Action.CONTENT_CHANGED, mpath, code, charset);
+        FileMacro fmacro = new FileMacro(FileMacro.Action.CONTENT_CHANGED, mpath, curCode, charset);
         globalRecorder.recordMacro(fmacro);
         
-        docRecorder.applyDiff(true);
+        docRecorder.applyDiff(curCode, true);
     }
     
     /**
@@ -401,7 +402,7 @@ class ResourceListener implements IResourceChangeListener {
      * @param resource the file resource
      * @return the contents of the file resource, or <code>null</code> if the resource is not a file
      */
-    private String getCode(IResource resource) {
+    private String getCurrentCode(IResource resource) {
         if (resource.getType() == IResource.FILE) {
             IFile file = (IFile)resource;
             
@@ -411,7 +412,7 @@ class ResourceListener implements IResourceChangeListener {
             } catch (CoreException e) {
             }
         }
-        return null;
+        return "";
     }
     
     /**

@@ -355,15 +355,24 @@ class DocMacroRecorder {
     
     /**
      * Confirms the necessity of generation of difference macros.
+     * @param expected <code>true</code> if the difference is expected, otherwise <code>false</code>
      */
     void applyDiff(boolean expected) {
+        String code = getCurrentCode();
+        applyDiff(code, expected);
+    }
+    
+    /**
+     * Generates document macros that represent differences.
+     * @param code the current code
+     * @param expected <code>true</code> if the difference is expected, otherwise <code>false</code>
+     */
+    void applyDiff(String code, boolean expected) {
         dumpLastDocumentMacro();
         
-        String code = getCurrentCode();
         if (code == null) {
             code = "";
         }
-        
         if (!code.equals(preCode)) {
             
             List<DiffMacro> diffs = DiffMacroGenerator.generate(path, branch, preCode, code);
