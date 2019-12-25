@@ -64,8 +64,8 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
         assert editor != null;
         this.editor = editor;
         this.doc = EditorUtilities.getDocument(editor);
-        this.preCode = doc.get();
         this.styledText = EditorUtilities.getStyledText(editor);
+        setPreCode(doc.get());
     }
     
     /**
@@ -199,11 +199,13 @@ class DocMacroRecorderOnEdit extends DocMacroRecorder {
     @Override
     String getCurrentCode() {
         if (dispose) {
-            return "";
+            return null;
         }
         
         IDocument doc = EditorUtilities.getDocument(editor);
-        assert doc != null;
-        return doc.get();
+        if (doc != null) {
+            return doc.get();
+        }
+        return null;
     }
 }

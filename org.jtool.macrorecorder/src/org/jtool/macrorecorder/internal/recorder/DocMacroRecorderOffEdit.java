@@ -30,7 +30,7 @@ class DocMacroRecorderOffEdit extends DocMacroRecorder {
         
         assert file != null;
         this.file = file;
-        this.preCode = getCurrentCode();
+        setPreCode(getCurrentCode());
     }
     
     /**
@@ -56,7 +56,7 @@ class DocMacroRecorderOffEdit extends DocMacroRecorder {
     @Override
     String getCurrentCode() {
         if (dispose) {
-            return "";
+            return null;
         }
         
         IDocument doc = EditorUtilities.getDocument(file);

@@ -149,7 +149,11 @@ class DocMacroRecorder {
      * @param code the contents of the source code
      */
     void setPreCode(String code) {
-        preCode = code;
+        if (code != null) {
+            preCode = code;
+        } else {
+            preCode = "";
+        }
     }
     
     /**
@@ -372,6 +376,9 @@ class DocMacroRecorder {
         if (code == null) {
             code = backupCode;
         }
+        
+        System.out.println("CODE = " + code);
+        
         generateDiff(code, expected);
     }
     
