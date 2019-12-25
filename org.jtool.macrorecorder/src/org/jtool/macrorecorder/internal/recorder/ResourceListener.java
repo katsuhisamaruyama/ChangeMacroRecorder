@@ -409,8 +409,7 @@ class ResourceListener implements IResourceChangeListener {
             try {
                 InputStream is = file.getContents();
                 return read(is);
-            } catch (CoreException e) {
-            }
+            } catch (CoreException e) { /* empty */ }
         }
         return "";
     }
@@ -433,8 +432,7 @@ class ResourceListener implements IResourceChangeListener {
                     MacroConsole.println("NO HISTORY " + file.getFullPath().toString());
                 }
             }
-        } catch (CoreException e) {
-        }
+        } catch (CoreException e) { /* empty */ }
         return "";
     }
     
@@ -449,8 +447,7 @@ class ResourceListener implements IResourceChangeListener {
             
             try {
                 return file.getCharset();
-            } catch (CoreException e) {
-            }
+            } catch (CoreException e) { /* empty */ }
         }
         return null;
     }
@@ -482,8 +479,7 @@ class ResourceListener implements IResourceChangeListener {
                     builder.append(buf, 0, num);
             }
             return builder.toString();
-        } catch (IOException e) {
-        }
+        } catch (IOException e) { /* empty */ }
         return null;
     }
 }

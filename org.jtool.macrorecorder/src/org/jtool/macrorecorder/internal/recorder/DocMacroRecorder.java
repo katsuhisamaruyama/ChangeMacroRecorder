@@ -359,7 +359,20 @@ class DocMacroRecorder {
      */
     void applyDiff(boolean expected) {
         String code = getCurrentCode();
-        applyDiff(code, expected);
+        generateDiff(code, expected);
+    }
+    
+    /**
+     * Confirms the necessity of generation of difference macros.
+     * @param backupCode the current code
+     * @param expected <code>true</code> if the difference is expected, otherwise <code>false</code>
+     */
+    void applyDiff(String backupCode, boolean expected) {
+        String code = getCurrentCode();
+        if (code == null) {
+            code = backupCode;
+        }
+        generateDiff(code, expected);
     }
     
     /**
@@ -367,7 +380,7 @@ class DocMacroRecorder {
      * @param code the current code
      * @param expected <code>true</code> if the difference is expected, otherwise <code>false</code>
      */
-    void applyDiff(String code, boolean expected) {
+    private void generateDiff(String code, boolean expected) {
         dumpLastDocumentMacro();
         
         if (code == null) {
