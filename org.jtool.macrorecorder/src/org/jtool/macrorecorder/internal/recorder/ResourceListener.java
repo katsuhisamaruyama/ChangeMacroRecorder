@@ -177,6 +177,7 @@ class ResourceListener implements IResourceChangeListener {
         
         globalRecorder.recordMacro(rmacro);
         
+        globalRecorder.removeDocMacroRecorder(fromPath);
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
         if (docRecorder == null) {
             docRecorder = globalRecorder.getRecorder().off((IFile)resource);

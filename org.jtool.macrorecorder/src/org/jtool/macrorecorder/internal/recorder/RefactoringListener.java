@@ -18,6 +18,7 @@ import org.eclipse.ltk.core.refactoring.history.RefactoringExecutionEvent;
 import org.eclipse.ltk.core.refactoring.history.IRefactoringHistoryListener;
 import org.eclipse.ltk.core.refactoring.history.IRefactoringHistoryService;
 import org.eclipse.ltk.core.refactoring.history.RefactoringHistoryEvent;
+import org.eclipse.ui.IEditorPart;
 import java.util.Map;
 
 /**
@@ -107,9 +108,19 @@ class RefactoringListener implements IRefactoringExecutionListener, IRefactoring
             globalRecorder.recordMacro(macro);
             globalRecorder.setRefactoringInProgress(false);
             
-            DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
-            if (docRecorder != null) {
-                docRecorder.dispose();
+            updateRecorders();
+        }
+    }
+    
+    /**
+     * Updates recorders corresponding to opened files.
+     */
+    private void updateRecorders() {
+        for (IEditorPart editor : EditorUtilities.getEditors()) {
+            String fpath = EditorUtilities.getInputFilePath(editor);
+            DocMacroRecorder recorder = globalRecorder.getDocMacroRecorder(fpath);
+            if (recorder != null && recorder.isOff()) {
+                globalRecorder.getRecorder().on(editor);
             }
         }
     }

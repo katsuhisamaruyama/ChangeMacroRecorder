@@ -376,9 +376,6 @@ class DocMacroRecorder {
         if (code == null) {
             code = backupCode;
         }
-        
-        System.out.println("CODE = " + code);
-        
         generateDiff(code, expected);
     }
     

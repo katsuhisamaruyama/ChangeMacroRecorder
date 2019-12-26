@@ -121,6 +121,14 @@ class GlobalMacroRecorder {
     }
     
     /**
+     * Removes a recorder that records document macros related to a file.
+     * @param path the path of the file
+     */
+    void removeDocMacroRecorder(String path) {
+        recorder.removeDocMacroRecorder(path);
+    }
+    
+    /**
      * Starts the recording of menu actions.
      */
     void start() {
