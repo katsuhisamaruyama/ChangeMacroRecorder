@@ -26,6 +26,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Listens resource change events.
@@ -37,6 +39,11 @@ class ResourceListener implements IResourceChangeListener {
      * A recorder that records global macros.
      */
     private GlobalMacroRecorder globalRecorder;
+    
+    /**
+     * The collection of contents of removed files.
+     */
+    private Map<String, String> removedFiles = new HashMap<String, String>();
     
     /**
      * Creates an object that records resource change events.
@@ -66,11 +73,17 @@ class ResourceListener implements IResourceChangeListener {
      */
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
+        removedFiles.clear();
         if (event.getType() == IResourceChangeEvent.POST_CHANGE) {
-            
-            IResourceDeltaVisitor visitor = new ResourceDeltaVisitor();
             try {
-                event.getDelta().accept(visitor);
+                IResourceDeltaVisitor rvisitor = new ResourceRemovedVisitor();
+                event.getDelta().accept(rvisitor);
+                
+                IResourceDeltaVisitor avisitor = new ResourceAddedVisitor();
+                event.getDelta().accept(avisitor);
+                
+                IResourceDeltaVisitor cvisitor = new ResourceChangedVisitor();
+                event.getDelta().accept(cvisitor);
             } catch (CoreException e1) {
                 e1.printStackTrace();
             }
@@ -78,12 +91,14 @@ class ResourceListener implements IResourceChangeListener {
     }
     
     /**
-     * Visits resource change deltas.
+     * Visits resource change deltas related to added elements.
      */
-    class ResourceDeltaVisitor implements IResourceDeltaVisitor {
+    class ResourceAddedVisitor implements IResourceDeltaVisitor {
         
         /**
          * Visits the given resource delta.
+         * @param delta the resource delta
+         * @return <code>true</code> if the resource delta's children should be visited, otherwise <code>false</code>
          */
         @Override
         public boolean visit(IResourceDelta delta) {
@@ -94,11 +109,56 @@ class ResourceListener implements IResourceChangeListener {
             if (path != null && target != null) {
                 if (delta.getKind() == IResourceDelta.ADDED) {
                     recordResourceAddedMacro(delta, path, target);
-                    
-                } else if (delta.getKind() == IResourceDelta.REMOVED) {
+                }
+            }
+            return true;
+        }
+    }
+    
+    /**
+     * Visits resource change deltas related to removed elements.
+     */
+    class ResourceRemovedVisitor implements IResourceDeltaVisitor {
+        
+        /**
+         * Visits the given resource delta.
+         * @param delta the resource delta
+         * @return <code>true</code> if the resource delta's children should be visited, otherwise <code>false</code>
+         */
+        @Override
+        public boolean visit(IResourceDelta delta) {
+            IResource resource = delta.getResource();
+            String path = resource.getFullPath().toString();
+            ResourceMacro.Target target = getTarget(resource);
+            
+            if (path != null && target != null) {
+                if (delta.getKind() == IResourceDelta.REMOVED) {
                     recordResourceRemovedMacro(delta, path, target);
                     
-                } else if (delta.getKind() == IResourceDelta.CHANGED) {
+                }
+            }
+            return true;
+        }
+    }
+    
+    /**
+     * Visits resource change deltas related to changed elements.
+     */
+    class ResourceChangedVisitor implements IResourceDeltaVisitor {
+        
+        /**
+         * Visits the given resource delta.
+         * @param delta the resource delta
+         * @return <code>true</code> if the resource delta's children should be visited, otherwise <code>false</code>
+         */
+        @Override
+        public boolean visit(IResourceDelta delta) {
+            IResource resource = delta.getResource();
+            String path = resource.getFullPath().toString();
+            ResourceMacro.Target target = getTarget(resource);
+            
+            if (path != null && target != null) {
+                if (delta.getKind() == IResourceDelta.CHANGED) {
                     recordResourceChangedMacro(delta, path, target);
                     
                     if (resource.getType() == IResource.FILE) {
@@ -123,7 +183,6 @@ class ResourceListener implements IResourceChangeListener {
                     }
                 }
             }
-            
             return true;
         }
     }
@@ -184,7 +243,7 @@ class ResourceListener implements IResourceChangeListener {
         }
         
         if (ftype == FileMacro.Action.MOVED_FROM || ftype == FileMacro.Action.RENAMED_FROM) {
-            String preCode = getPrevCode(resource);
+            String preCode = removedFiles.get(fromPath);
             String curCode = getCurrentCode(resource);
             
             FileMacro fmacro = new FileMacro(ftype, mpath, preCode, charset, fromPath);
@@ -278,11 +337,13 @@ class ResourceListener implements IResourceChangeListener {
             ftype = FileMacro.Action.REMOVED;
         }
         
+        String prevCode = getPrevCode(resource);
+        removedFiles.put(path, prevCode);
+        
         DocMacroRecorder docRecorder = globalRecorder.getDocMacroRecorder(path);
         if (docRecorder == null) {
             docRecorder = globalRecorder.getRecorder().off((IFile)resource);
         }
-        docRecorder.setPreCode("");
         docRecorder.willDispose();
         
         globalRecorder.recordMacro(rmacro);
