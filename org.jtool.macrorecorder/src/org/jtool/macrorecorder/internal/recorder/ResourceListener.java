@@ -344,6 +344,7 @@ class ResourceListener implements IResourceChangeListener {
         if (docRecorder == null) {
             docRecorder = globalRecorder.getRecorder().off((IFile)resource);
         }
+        docRecorder.setPreCode("");
         docRecorder.willDispose();
         
         globalRecorder.recordMacro(rmacro);
