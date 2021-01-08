@@ -19,7 +19,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.ui.templates,
  org.eclipse.pde.core,
  org.eclipse.pde.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Name: ChangeMacroRecorder for Eclipse
 Export-Package: org.jtool.macrorecorder,
@@ -31,3 +30,4 @@ Bundle-ClassPath: .,
  lib/javax.json-1.1.jar
 Bundle-Vendor: FSE@Ristumeikan Univ.
 Automatic-Module-Name: org.jtool.macrorecorder
+Bundle-RequiredExecutionEnvironment: JavaSE-11
